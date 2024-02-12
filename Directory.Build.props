@@ -16,11 +16,13 @@
     <Version>1.0.0</Version>
     <PackageReleaseNotes>https://github.com/FactorioParanoidal/FactorioUtilities/releases</PackageReleaseNotes>
     <PackageTags>factorio</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
 
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)\.editorconfig" Link=".editorconfig"/>
+    <None Include="../icon.png" Pack="true" PackagePath="/" />
   </ItemGroup>
 </Project>
