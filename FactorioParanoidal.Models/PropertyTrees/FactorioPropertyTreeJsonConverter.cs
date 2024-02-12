@@ -6,8 +6,10 @@ namespace FactorioParanoidal.Models.PropertyTrees;
 public class FactorioPropertyTreeJsonConverter : JsonConverter<FactorioPropertyTree> {
     const string AnyTypeFlagPropertyName = "anyTypeFlag";
     const string ValuePropertyName = "value";
+
     /// <inheritdoc />
-    public override FactorioPropertyTree? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+    public override FactorioPropertyTree? Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options) {
         switch (reader.TokenType) {
             case JsonTokenType.None:
             case JsonTokenType.Null:
@@ -38,7 +40,9 @@ public class FactorioPropertyTreeJsonConverter : JsonConverter<FactorioPropertyT
                 throw new JsonException("Can't read FactorioPropertyTree from this JSON");
         }
     }
-    static FactorioPropertyTree? ProcessAnyTypeFlagElement(JsonElement anyTypeFlagElement, JsonElement jElementObject, JsonSerializerOptions options) {
+
+    static FactorioPropertyTree? ProcessAnyTypeFlagElement(JsonElement anyTypeFlagElement, JsonElement jElementObject,
+        JsonSerializerOptions options) {
         var anyTypeFlag = anyTypeFlagElement.GetBoolean();
         var actualValueElement = jElementObject.GetProperty(ValuePropertyName);
         switch (actualValueElement.ValueKind) {
@@ -64,8 +68,10 @@ public class FactorioPropertyTreeJsonConverter : JsonConverter<FactorioPropertyT
         }
     }
 
-    static FactorioPropertyTree? EnumerateToPropertyTree(JsonElement.ObjectEnumerator objectEnumerator, JsonSerializerOptions options, bool anyTypeFlag) {
-        var propertyTrees = objectEnumerator.ToDictionary(property => property.Name, property => property.Value.Deserialize<FactorioPropertyTree>(options)!);
+    static FactorioPropertyTree? EnumerateToPropertyTree(JsonElement.ObjectEnumerator objectEnumerator,
+        JsonSerializerOptions options, bool anyTypeFlag) {
+        var propertyTrees = objectEnumerator.ToDictionary(property => property.Name,
+            property => property.Value.Deserialize<FactorioPropertyTree>(options)!);
         return FactorioPropertyTree.Create(propertyTrees, anyTypeFlag);
     }
 
@@ -107,6 +113,7 @@ public class FactorioPropertyTreeJsonConverter : JsonConverter<FactorioPropertyT
                     writer.WritePropertyName(key);
                     JsonSerializer.Serialize(writer, value, options);
                 }
+
                 writer.WriteEndObject();
                 break;
             default:

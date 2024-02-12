@@ -4,8 +4,7 @@ using FactorioParanoidal.Models.PropertyTrees;
 namespace FactorioParanoidal.ModSettingsDat;
 
 public class ModSettingsContent {
-    [JsonPropertyName("startup")]
-    public Dictionary<string, FactorioPropertyTree> Startup { get; set; } = new();
+    [JsonPropertyName("startup")] public Dictionary<string, FactorioPropertyTree> Startup { get; set; } = new();
 
     [JsonPropertyName("runtime-global")]
     public Dictionary<string, FactorioPropertyTree> RuntimeGlobal { get; set; } = new();

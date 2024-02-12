@@ -22,7 +22,8 @@ public class FactorioPropertyTree {
     public static FactorioPropertyTree Create(IEnumerable<FactorioPropertyTree> value, bool anyTypeFlag = false)
         => new(FactorioPropertyTreeType.List, value.ToList(), anyTypeFlag);
 
-    public static FactorioPropertyTree Create(IReadOnlyDictionary<string, FactorioPropertyTree> value, bool anyTypeFlag = false)
+    public static FactorioPropertyTree Create(IReadOnlyDictionary<string, FactorioPropertyTree> value,
+        bool anyTypeFlag = false)
         => new(FactorioPropertyTreeType.Dictionary, value.ToDictionary(), anyTypeFlag);
 
     public FactorioPropertyTreeType Type { get; }

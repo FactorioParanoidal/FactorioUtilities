@@ -22,6 +22,7 @@ public class ModSettingsStreamWriter {
 
     public void WriteByte(byte value) {
         if (Stream.Position > 51330) { }
+
         Stream.WriteByte(value);
     }
 

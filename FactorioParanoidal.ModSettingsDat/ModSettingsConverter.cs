@@ -38,7 +38,8 @@ public static class ModSettingsConverter {
 
         var factorioPropertyTrees = GetModSettingsContentProperties()
             .ToDictionary(pair => pair.Key, pair => {
-                var jsonValueDictionary = (IReadOnlyDictionary<string, FactorioPropertyTree>)pair.Value.GetValue(modSettings.Content)!;
+                var jsonValueDictionary =
+                    (IReadOnlyDictionary<string, FactorioPropertyTree>)pair.Value.GetValue(modSettings.Content)!;
                 var valuedDictionary = jsonValueDictionary
                     .ToDictionary(jsonPair => jsonPair.Key, jsonPair => {
                         var tempDictionary = new Dictionary<string, FactorioPropertyTree>() {
@@ -56,6 +57,7 @@ public static class ModSettingsConverter {
         if (ModSettingsContentProperties is not null) return ModSettingsContentProperties;
         var modSettingsContentType = typeof(ModSettingsContent);
         var propertyInfos = modSettingsContentType.GetProperties();
-        return ModSettingsContentProperties = propertyInfos.ToDictionary(info => ((JsonPropertyNameAttribute)info.GetCustomAttribute(typeof(JsonPropertyNameAttribute))!).Name);
+        return ModSettingsContentProperties = propertyInfos.ToDictionary(info =>
+            ((JsonPropertyNameAttribute)info.GetCustomAttribute(typeof(JsonPropertyNameAttribute))!).Name);
     }
 }

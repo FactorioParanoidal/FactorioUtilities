@@ -81,13 +81,13 @@ public class ModSettingsSteamReader {
         var anyTypeFlag = ReadBool();
 
         object? content = type switch {
-            FactorioPropertyTreeType.None       => null,
-            FactorioPropertyTreeType.Bool       => ReadBool(),
-            FactorioPropertyTreeType.Number     => ReadDouble(),
-            FactorioPropertyTreeType.String     => ReadString(),
-            FactorioPropertyTreeType.List       => ReadList(),
+            FactorioPropertyTreeType.None => null,
+            FactorioPropertyTreeType.Bool => ReadBool(),
+            FactorioPropertyTreeType.Number => ReadDouble(),
+            FactorioPropertyTreeType.String => ReadString(),
+            FactorioPropertyTreeType.List => ReadList(),
             FactorioPropertyTreeType.Dictionary => ReadDictionary(),
-            _                                   => throw new ArgumentOutOfRangeException(nameof(type), "No such PropertyTree type supported")
+            _ => throw new ArgumentOutOfRangeException(nameof(type), "No such PropertyTree type supported")
         };
 
         return new FactorioPropertyTree(type, content, anyTypeFlag);
