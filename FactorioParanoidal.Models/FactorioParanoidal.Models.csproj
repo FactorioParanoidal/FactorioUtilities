@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>FactorioParanoidal.Models contains C# classes equvalent to Factorio prototypes. Do not cover all prototypes.</Description>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <InternalsVisibleTo Include="FactorioParanoidal.ModSettingsDat" />
-    </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="FactorioParanoidal.ModSettingsDat" />
+  </ItemGroup>
 
 </Project>

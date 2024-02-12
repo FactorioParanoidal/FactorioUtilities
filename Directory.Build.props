@@ -1,0 +1,26 @@
+<Project>
+  <Import Project="SourceLink.props" Condition="'$(DisableSourceLink)' == ''"/>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+    <Authors>SKProCH</Authors>
+    <Company>SKProCH</Company>
+    <PackageProjectUrl>https://github.com/FactorioParanoidal/FactorioUtilities</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/FactorioParanoidal/FactorioUtilities</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>https://github.com/FactorioParanoidal/FactorioUtilities/releases</PackageReleaseNotes>
+    <PackageTags>factorio</PackageTags>
+
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)\.editorconfig" Link=".editorconfig"/>
+  </ItemGroup>
+</Project>
