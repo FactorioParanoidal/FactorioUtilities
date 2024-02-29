@@ -1,7 +1,7 @@
 ﻿namespace FactorioParanoidal.ModSettingsDat;
 
 public class ModSettings {
-    public Version Version { get; set; }
+    public required Version Version { get; set; }
 
-    public ModSettingsContent Content { get; set; }
+    public required ModSettingsContent Content { get; set; }
 }
