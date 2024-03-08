@@ -1,0 +1,14 @@
+{
+  "name": "second-mod",
+  "version": "1.0.1",
+  "title": "Second mod",
+  "factorio_version": "1.1",
+  "author": "SKProCH",
+  "contact": "contact",
+  "homepage": "homepage",
+  "description": "Second test mod",
+  "dependencies": [
+    "base >= 1.1.100",
+    "? angelsindustries"
+  ]
+}
