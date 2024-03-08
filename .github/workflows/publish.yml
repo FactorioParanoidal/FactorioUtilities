@@ -21,9 +21,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet pack
+      run: dotnet build
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --verbosity normal
+    - name: Pack
+      run: dotnet pack
     - name: Publish to Nuget
       run: | 
         dotnet nuget push "**.nupkg" --api-key ${{secrets.NUGET_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
