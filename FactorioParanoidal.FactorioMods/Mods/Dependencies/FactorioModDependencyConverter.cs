@@ -109,6 +109,6 @@ public partial class FactorioModDependencyConverter : JsonConverter<FactorioModD
         writer.WriteStringValue(type + value.Name + version);
     }
 
-    [GeneratedRegex(@"(!|\?|\(\?\)|~)? *([a-zA-Z-_]{1,100}) *(?:(<=|>=|=|<|>) *([\d]{1,5}.[\d]{1,5}.[\d]{1,5}))?")]
+    [GeneratedRegex(@"(!|\?|\(\?\)|~)? *([a-zA-Z1-9-_]{1,100}) *(?:(<=|>=|=|<|>) *([\d]{1,5}.[\d]{1,5}(?:.[\d]{1,5})?))?")]
     private static partial Regex DependencyStringRegex();
 }
