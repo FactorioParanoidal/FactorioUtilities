@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EED08398
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactorioParanoidal.FactorioMods.Tests", "FactorioParanoidal.FactorioMods.Tests\FactorioParanoidal.FactorioMods.Tests.csproj", "{826FF88F-2167-4900-A3F6-F01F7CB0395C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactorioParanoidal.FactorioMods.Execution", "FactorioParanoidal.FactorioMods.Execution\FactorioParanoidal.FactorioMods.Execution.csproj", "{9533C308-6498-4733-AC80-043E8BD50FAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{826FF88F-2167-4900-A3F6-F01F7CB0395C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{826FF88F-2167-4900-A3F6-F01F7CB0395C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{826FF88F-2167-4900-A3F6-F01F7CB0395C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9533C308-6498-4733-AC80-043E8BD50FAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9533C308-6498-4733-AC80-043E8BD50FAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9533C308-6498-4733-AC80-043E8BD50FAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9533C308-6498-4733-AC80-043E8BD50FAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{826FF88F-2167-4900-A3F6-F01F7CB0395C} = {EED08398-BAF8-41F2-B1DD-B520DB36FBC5}

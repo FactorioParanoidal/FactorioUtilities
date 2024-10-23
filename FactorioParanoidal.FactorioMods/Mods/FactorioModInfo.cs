@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 using FactorioParanoidal.FactorioMods.Mods.Dependencies;
 
@@ -24,5 +25,14 @@ public class FactorioModInfo {
     [JsonPropertyName("factorio_version")]
     public Version? FactorioVersion { get; set; }
 
-    [JsonPropertyName("dependencies")] public IList<FactorioModDependency>? Dependencies { get; set; }
+    [JsonPropertyName("dependencies")]
+    public IList<FactorioModDependency> Dependencies { get; set; } = new List<FactorioModDependency>();
+
+    public IReadOnlyList<FactorioModDependency> GetDependenciesWhatAffectLoadOrder() {
+        return Dependencies.Where(dependency => dependency.Type
+                is FactorioModDependencyType.Optional
+                or FactorioModDependencyType.HardRequirement
+                or FactorioModDependencyType.HiddenOptional)
+            .ToImmutableArray();
+    }
 }
