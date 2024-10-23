@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/FactorioParanoidal/FactorioUtilities</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <PackageReleaseNotes>https://github.com/FactorioParanoidal/FactorioUtilities/releases</PackageReleaseNotes>
     <PackageTags>factorio</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
