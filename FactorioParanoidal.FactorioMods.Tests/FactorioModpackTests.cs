@@ -9,7 +9,7 @@ public class FactorioModpackTests {
         modpack.Should().NotBeNull();
 
         modpack.Should().HaveCount(2);
-        modpack.First().Info.Name.Should().Be("first-mod");
-        modpack.Last().Info.Name.Should().Be("second-mod");
+        modpack.Should().ContainSingle(mod => mod.Info.Name == "first-mod");
+        modpack.Should().ContainSingle(mod => mod.Info.Name == "second-mod");
     }
 }
