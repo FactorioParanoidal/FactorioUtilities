@@ -26,10 +26,13 @@ public class FactorioModInfo {
     public Version? FactorioVersion { get; set; }
 
     [JsonPropertyName("dependencies")]
-    public IList<FactorioModDependency> Dependencies { get; set; } = new List<FactorioModDependency>();
+    public IList<FactorioModDependency>? Dependencies { get; set; }
+
+    public bool HasExplicitDependencies => Dependencies != null;
 
     public IReadOnlyList<FactorioModDependency> GetDependenciesWhatAffectLoadOrder() {
-        return Dependencies.Where(dependency => dependency.Type
+        return (Dependencies ?? Enumerable.Empty<FactorioModDependency>())
+            .Where(dependency => dependency.Type
                 is FactorioModDependencyType.Optional
                 or FactorioModDependencyType.HardRequirement
                 or FactorioModDependencyType.HiddenOptional)

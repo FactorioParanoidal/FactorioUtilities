@@ -22,4 +22,22 @@ public class FolderFactorioModTests {
         mod.Info.Description.Should().Be("First test mod");
         mod.Info.Dependencies.Should().HaveCount(2);
     }
+
+    
+    [Fact]
+    public async Task Test() {
+        var modpack = await FactorioModpack.LoadFromDirectory("C:\\ParanoidalTest\\mods");
+        modpack.SortModsByLoadOrder();
+
+        var loadedMods = modpack.Mods.ToList();
+        for (var i = loadedMods.Count - 1; i >= 0; i--) {
+            var beforeMods = loadedMods[i..];
+            var dependencies = loadedMods[i].Info.Dependencies ?? Enumerable.Empty<Mods.Dependencies.FactorioModDependency>();
+            var all = dependencies.Where(dependency => dependency.AffectsSorting && beforeMods.Any(mod => mod.Info.Name == dependency.Name));
+            if (all.Count() != 0) {
+                Console.Write("");
+            }
+        }
+    }
+    
 }
