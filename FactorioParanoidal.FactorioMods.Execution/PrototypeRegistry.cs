@@ -9,7 +9,8 @@ public class PrototypeRegistry {
     private static readonly Dictionary<string, Type> TypeCache = new(StringComparer.OrdinalIgnoreCase);
 
     // type -> name -> prototype
-    public Dictionary<string, Dictionary<string, PrototypeBase>> Prototypes { get; } = new();
+    private readonly Dictionary<string, IReadOnlyDictionary<string, PrototypeBase>> _prototypes = new();
+    public IReadOnlyDictionary<string, IReadOnlyDictionary<string, PrototypeBase>> Prototypes => _prototypes;
 
     public void ConvertAndRegister(string type, string name, LuaTable prototypeTable) {
         var obj = CreatePrototypeInstance(type);
@@ -18,16 +19,17 @@ public class PrototypeRegistry {
 
         LuaValueUtility.PopulateObjectFromTable(obj, prototypeTable);
 
-        if (!Prototypes.TryGetValue(type, out var typeDict)) {
-            typeDict = new Dictionary<string, PrototypeBase>();
-            Prototypes[type] = typeDict;
+        if (!_prototypes.TryGetValue(type, out var typeDict)) {
+            var newDict = new Dictionary<string, PrototypeBase>();
+            _prototypes[type] = newDict;
+            typeDict = newDict;
         }
 
-        typeDict[name] = obj;
+        ((Dictionary<string, PrototypeBase>)typeDict)[name] = obj;
     }
 
     public PrototypeBase? GetPrototype(string type, string name) {
-        if (Prototypes.TryGetValue(type, out var typeDict) && typeDict.TryGetValue(name, out var prototype)) {
+        if (_prototypes.TryGetValue(type, out var typeDict) && typeDict.TryGetValue(name, out var prototype)) {
             return prototype;
         }
 
@@ -35,8 +37,8 @@ public class PrototypeRegistry {
     }
 
     public void RemovePrototype(string type, string name) {
-        if (Prototypes.TryGetValue(type, out var typeDict)) {
-            typeDict.Remove(name);
+        if (_prototypes.TryGetValue(type, out var typeDict)) {
+            ((Dictionary<string, PrototypeBase>)typeDict).Remove(name);
         }
     }
 
