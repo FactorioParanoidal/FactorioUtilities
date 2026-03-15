@@ -43,7 +43,6 @@ namespace FactorioParanoidal.FactorioMods.Execution.SourceGenerator
                 foreach (var attributeSyntax in attributeListSyntax.Attributes) {
                     if (context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is IMethodSymbol attributeSymbol) {
                         var attributeName = attributeSymbol.ContainingType.ToDisplayString();
-                        // Support both the original and our own if someone explicitly refers to it
                         if (attributeName ==
                             "FactorioParanoidal.FactorioMods.Execution.SourceGenerator.LuaExtraObjectAttribute") {
                             return typeDeclaration;
@@ -60,24 +59,31 @@ namespace FactorioParanoidal.FactorioMods.Execution.SourceGenerator
             if (classes.IsDefaultOrEmpty)
                 return;
 
-            foreach (var classDeclaration in classes.Distinct()) {
+            var processedFileHints = new HashSet<string>();
+
+            foreach (var classDeclaration in classes) {
                 if (classDeclaration == null) continue;
 
                 var semanticModel = compilation.GetSemanticModel(classDeclaration.SyntaxTree);
                 if (semanticModel.GetDeclaredSymbol(classDeclaration) is not INamedTypeSymbol classSymbol)
                     continue;
 
-                GenerateLuaObjectCode(classSymbol, classDeclaration, context);
+                // Use a consistent hint name for uniqueness check and file generation
+                var fileHintName = classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                    .Replace("global::", "")
+                    .Replace("<", "_")
+                    .Replace(">", "_");
+
+                if (!processedFileHints.Add(fileHintName))
+                    continue;
+
+                GenerateLuaObjectCode(classSymbol, classDeclaration, context, fileHintName);
             }
         }
 
         private static void GenerateLuaObjectCode(INamedTypeSymbol classSymbol, TypeDeclarationSyntax classDeclaration,
-            SourceProductionContext context) {
+            SourceProductionContext context, string fileHintName) {
             if (classSymbol.IsAbstract) {
-                // For abstract classes, don't generate the explicit ILuaUserData.Metatable implementation or implicit operators
-                // Instead, just generate standard protected virtual methods to provide the metamethods.
-                // We'll skip this for now as ILuaUserData is required to be applied directly on concrete types
-                // but the concrete type generator will walk the base types.
                 return;
             }
 
@@ -85,6 +91,7 @@ namespace FactorioParanoidal.FactorioMods.Execution.SourceGenerator
             var className = classSymbol.Name;
 
             var properties = new List<(string LuaName, string CSharpName, ITypeSymbol Type)>();
+            var seenLuaNames = new HashSet<string>();
             string? extraFieldsProperty = null;
 
             var currentType = classSymbol;
@@ -97,7 +104,6 @@ namespace FactorioParanoidal.FactorioMods.Execution.SourceGenerator
                             .Any(a => a.AttributeClass?.Name == "LuaExtraFieldsAttribute");
 
                         if (hasLuaMember) {
-                            // If it has JsonPropertyNameAttribute, use that as the Lua name
                             var jsonPropAttr = prop.GetAttributes()
                                 .FirstOrDefault(a => a.AttributeClass?.Name == "JsonPropertyNameAttribute");
                             string luaName = prop.Name.ToLowerInvariant();
@@ -106,10 +112,12 @@ namespace FactorioParanoidal.FactorioMods.Execution.SourceGenerator
                                 luaName = jsonPropAttr.ConstructorArguments[0].Value?.ToString() ?? luaName;
                             }
 
-                            properties.Add((luaName, prop.Name, prop.Type));
+                            if (seenLuaNames.Add(luaName)) {
+                                properties.Add((luaName, prop.Name, prop.Type));
+                            }
                         }
 
-                        if (hasExtraFields) {
+                        if (hasExtraFields && extraFieldsProperty == null) {
                             extraFieldsProperty = prop.Name;
                         }
                     }
@@ -146,13 +154,10 @@ namespace FactorioParanoidal.FactorioMods.Execution.SourceGenerator
                     $"                    if (userData.{extraFieldsProperty}.TryGetValue(key, out var extraValue))");
                 sb.AppendLine(
                     $"                        return new global::System.Threading.Tasks.ValueTask<int>(context.Return(global::FactorioParanoidal.FactorioMods.Execution.Proxies.LuaValueUtility.ObjectToLuaValue(context.State, extraValue)));");
-                sb.AppendLine(
-                    $"                    return new global::System.Threading.Tasks.ValueTask<int>(context.Return(global::Lua.LuaValue.Nil));");
             }
-            else {
-                sb.AppendLine(
-                    "                    return new global::System.Threading.Tasks.ValueTask<int>(context.Return(global::Lua.LuaValue.Nil));");
-            }
+
+            sb.AppendLine(
+                "                    return new global::System.Threading.Tasks.ValueTask<int>(context.Return(global::Lua.LuaValue.Nil));");
 
             sb.AppendLine("            }");
             sb.AppendLine("        });");
@@ -168,7 +173,8 @@ namespace FactorioParanoidal.FactorioMods.Execution.SourceGenerator
             sb.AppendLine("            {");
             var fullyQualifiedFormat = new SymbolDisplayFormat(
                 globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
-                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
+                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+                genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
 
             int propIndex = 0;
             foreach (var prop in properties) {
@@ -221,11 +227,10 @@ namespace FactorioParanoidal.FactorioMods.Execution.SourceGenerator
             sb.AppendLine("        {");
             sb.AppendLine("            return global::Lua.LuaValue.FromUserData(value);");
             sb.AppendLine("        }");
-
             sb.AppendLine("    }");
             sb.AppendLine("}");
 
-            context.AddSource($"{className}.LuaExtraObject.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+            context.AddSource($"{fileHintName}.LuaExtraObject.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
         }
     }
 }

@@ -18,6 +18,7 @@
         Path="FactorioParanoidal.FactorioMods.Execution.SourceGenerator/FactorioParanoidal.FactorioMods.Execution.SourceGenerator.csproj"/>
   <Project Path="FactorioParanoidal.FactorioMods.Execution/FactorioParanoidal.FactorioMods.Execution.csproj" />
   <Project Path="FactorioParanoidal.FactorioMods/FactorioParanoidal.FactorioMods.csproj" />
+    <Project Path="FactorioParanoidal.Generator.Prototypes/FactorioParanoidal.Generator.Prototypes.csproj"/>
   <Project Path="FactorioParanoidal.Models/FactorioParanoidal.Models.csproj" />
   <Project Path="FactorioParanoidal.ModSettingsDat/FactorioParanoidal.ModSettingsDat.csproj" />
 </Solution>

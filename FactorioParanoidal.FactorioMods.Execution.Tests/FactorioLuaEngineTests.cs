@@ -48,7 +48,7 @@ public class FactorioLuaEngineTests : IDisposable {
         engine.Registry.Prototypes["item"].Should().ContainKey("test-item");
 
         var item = engine.Registry.Prototypes["item"]["test-item"];
-        var stackSize = (int)item.GetType().GetProperty("StackSize")?.GetValue(item)!;
+        var stackSize = (uint)item.GetType().GetProperty("StackSize")?.GetValue(item)!;
         stackSize.Should().Be(50);
     }
 

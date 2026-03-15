@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Text.Json.Serialization;
 using FactorioParanoidal.FactorioMods.Execution.Prototypes;
 using FactorioParanoidal.FactorioMods.Execution.Proxies;
 using Lua;
@@ -7,25 +6,27 @@ using Lua;
 namespace FactorioParanoidal.FactorioMods.Execution;
 
 public class PrototypeRegistry {
+    private static readonly Dictionary<string, Type> TypeCache = new(StringComparer.OrdinalIgnoreCase);
+
     // type -> name -> prototype
-    public Dictionary<string, Dictionary<string, FactorioPrototype>> Prototypes { get; } = new();
+    public Dictionary<string, Dictionary<string, PrototypeBase>> Prototypes { get; } = new();
 
     public void ConvertAndRegister(string type, string name, LuaTable prototypeTable) {
         var obj = CreatePrototypeInstance(type);
         obj.Type = type;
         obj.Name = name;
 
-        PopulateFromLuaTable(obj, prototypeTable);
+        LuaValueUtility.PopulateObjectFromTable(obj, prototypeTable);
 
         if (!Prototypes.TryGetValue(type, out var typeDict)) {
-            typeDict = new Dictionary<string, FactorioPrototype>();
+            typeDict = new Dictionary<string, PrototypeBase>();
             Prototypes[type] = typeDict;
         }
 
         typeDict[name] = obj;
     }
 
-    public FactorioPrototype? GetPrototype(string type, string name) {
+    public PrototypeBase? GetPrototype(string type, string name) {
         if (Prototypes.TryGetValue(type, out var typeDict) && typeDict.TryGetValue(name, out var prototype)) {
             return prototype;
         }
@@ -52,33 +53,37 @@ public class PrototypeRegistry {
         }
     }
 
-    private FactorioPrototype CreatePrototypeInstance(string type) {
-        // Simple factory logic. Can be expanded via reflection later.
-        if (type == "item") return new ItemPrototype();
+    private PrototypeBase CreatePrototypeInstance(string type) {
+        if (TypeCache.TryGetValue(type, out var cachedType)) {
+            return (PrototypeBase)Activator.CreateInstance(cachedType)!;
+        }
+
+        // Convert snake-case to PascalCase and append Prototype
+        var className = SnakeToPascal(type) + "Prototype";
+
+        // Search in the prototypes namespace
+        var prototypeType = Assembly.GetExecutingAssembly().GetTypes()
+            .FirstOrDefault(t => t.Namespace == "FactorioParanoidal.FactorioMods.Execution.Prototypes" &&
+                                 t.Name.Equals(className, StringComparison.OrdinalIgnoreCase));
+
+        if (prototypeType != null) {
+            TypeCache[type] = prototypeType;
+            return (PrototypeBase)Activator.CreateInstance(prototypeType)!;
+        }
 
         // Fallback generic prototype if specific class doesn't exist
-        return new FactorioPrototype();
+        return new GenericPrototype();
     }
 
-    private void PopulateFromLuaTable(FactorioPrototype obj, LuaTable table) {
-        var properties = obj.GetType()
-            .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
-        foreach (var entry in table) {
-            if (!entry.Key.TryRead<string>(out var keyStr)) continue;
-
-            if (keyStr == "type" || keyStr == "name") continue;
-
-            var prop = Array.Find(properties, p => p.Name.Equals(keyStr, StringComparison.OrdinalIgnoreCase) ||
-                                                   (p.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name == keyStr));
-
-            if (prop != null && prop.CanWrite) {
-                var val = LuaValueUtility.LuaValueToObject(entry.Value, prop.PropertyType);
-                prop.SetValue(obj, val);
-            }
-            else {
-                obj.ExtraFields[keyStr] = LuaValueUtility.LuaValueToObject(entry.Value, typeof(object))!;
+    private static string SnakeToPascal(string snake) {
+        if (string.IsNullOrEmpty(snake)) return snake;
+        var words = snake.Split(new[] { '_', '-' }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < words.Length; i++) {
+            if (words[i].Length > 0) {
+                words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1);
             }
         }
+
+        return string.Join("", words);
     }
 }
