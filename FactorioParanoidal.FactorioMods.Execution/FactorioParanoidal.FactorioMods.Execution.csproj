@@ -17,4 +17,8 @@
     <ProjectReference Include="..\FactorioParanoidal.Models\FactorioParanoidal.Models.csproj"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="Data\prototype-api.json" Link="prototype-api.json"/>
+  </ItemGroup>
+
 </Project>
