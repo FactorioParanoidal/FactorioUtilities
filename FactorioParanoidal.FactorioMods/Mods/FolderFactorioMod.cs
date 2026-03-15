@@ -7,7 +7,19 @@ public class FolderFactorioMod : IFactorioMod {
         Info = info;
         Directory = directory;
     }
-    
+
+    public string Directory { get; set; }
+
+    public FactorioModInfo Info { get; }
+
+    public bool FileExists(string subPath) {
+        return File.Exists(Path.Combine(Directory, subPath));
+    }
+
+    public Task<string> ReadFileTextAsync(string subPath, CancellationToken cancellationToken = default) {
+        return File.ReadAllTextAsync(Path.Combine(Directory, subPath), cancellationToken);
+    }
+
     public static async Task<FolderFactorioMod> LoadFromDirectory(string modDirectory) {
         try {
             modDirectory = Path.GetFullPath(modDirectory);
@@ -21,8 +33,4 @@ public class FolderFactorioMod : IFactorioMod {
                 $"Factorio mod loading from {modDirectory} failed. See inner exception for details", e);
         }
     }
-
-    public FactorioModInfo Info { get; }
-
-    public string Directory { get; set; }
 }

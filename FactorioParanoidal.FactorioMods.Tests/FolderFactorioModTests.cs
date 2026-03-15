@@ -22,4 +22,17 @@ public class FolderFactorioModTests {
         mod.Info.Description.Should().Be("First test mod");
         mod.Info.Dependencies.Should().HaveCount(2);
     }
+
+    [Fact]
+    public async Task FolderFactorioMod_FileAccess_WorksCorrectly() {
+        // Arrange
+        var mod = await FolderFactorioMod.LoadFromDirectory("Data/first-mod");
+
+        // Act & Assert
+        mod.FileExists("info.json").Should().BeTrue();
+        mod.FileExists("non-existent.lua").Should().BeFalse();
+
+        var content = await mod.ReadFileTextAsync("info.json");
+        content.Should().Contain("\"name\": \"first-mod\"");
+    }
 }

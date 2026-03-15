@@ -4,33 +4,30 @@ using Lua;
 namespace FactorioParanoidal.FactorioMods.Execution;
 
 public class FactorioModuleLoader : ILuaModuleLoader {
-    private readonly Dictionary<string, string> _modPaths;
+    private readonly Dictionary<string, IFactorioMod> _mods;
 
     public FactorioModuleLoader(IEnumerable<IFactorioMod> mods) {
-        _modPaths = new Dictionary<string, string>();
-        foreach (var mod in mods) {
-            if (mod is FolderFactorioMod folderMod) {
-                _modPaths[mod.Info.Name] = folderMod.Directory;
-            }
-        }
+        _mods = mods.ToDictionary(m => m.Info.Name);
     }
 
     public bool Exists(string moduleName) {
-        var path = ResolvePath(moduleName);
-        return path != null && File.Exists(path);
+        var resolved = Resolve(moduleName);
+        return resolved != null && resolved.Value.Mod.FileExists(resolved.Value.SubPath);
     }
 
     public async ValueTask<LuaModule> LoadAsync(string moduleName, CancellationToken cancellationToken = default) {
-        var path = ResolvePath(moduleName);
-        if (path == null) {
+        var resolved = Resolve(moduleName);
+        if (resolved == null) {
             throw new FileNotFoundException($"Could not resolve Lua module: {moduleName}");
         }
 
-        var content = await File.ReadAllTextAsync(path, cancellationToken);
-        return new LuaModule(content, path);
+        var (mod, subPath) = resolved.Value;
+        var content = await mod.ReadFileTextAsync(subPath, cancellationToken);
+        var virtualPath = $"__{mod.Info.Name}__/{subPath}";
+        return new LuaModule(content, virtualPath);
     }
 
-    private string? ResolvePath(string moduleName) {
+    private (IFactorioMod Mod, string SubPath)? Resolve(string moduleName) {
         // Factorio uses dots or slashes, and __mod-name__ prefix
         // Example: require("__base__.prototypes.entity.demo-entities")
         // Example: require("__base__/prototypes/entity/demo-entities.lua")
@@ -49,8 +46,8 @@ public class FactorioModuleLoader : ILuaModuleLoader {
                 var modName = path.Substring(2, secondDoubleUnderscore - 2);
                 var subPath = path.Substring(secondDoubleUnderscore + 2).TrimStart('/');
 
-                if (_modPaths.TryGetValue(modName, out var modDirectory)) {
-                    return Path.Combine(modDirectory, subPath);
+                if (_mods.TryGetValue(modName, out var mod)) {
+                    return (mod, subPath);
                 }
             }
         }

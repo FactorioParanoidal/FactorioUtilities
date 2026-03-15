@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Text.Json;
+﻿using System.Text.Json;
 using FactorioParanoidal.FactorioMods.ModLists;
 using FactorioParanoidal.FactorioMods.Mods;
 using FactorioParanoidal.FactorioMods.Mods.Dependencies;
@@ -7,9 +6,6 @@ using FactorioParanoidal.FactorioMods.Mods.Dependencies;
 namespace FactorioParanoidal.FactorioMods;
 
 public class FactorioModpack {
-    public IReadOnlyList<CanBeDisabledMod> AllMods { get; private set; }
-    public IReadOnlyList<IFactorioMod> Mods { get; private set; }
-
     public FactorioModpack(IEnumerable<CanBeDisabledMod> enumerableImplementation) {
         AllMods = enumerableImplementation.ToList();
         Mods = AllMods
@@ -17,6 +13,9 @@ public class FactorioModpack {
             .Select(mod => mod.Mod)
             .ToList();
     }
+
+    public IReadOnlyList<CanBeDisabledMod> AllMods { get; private set; }
+    public IReadOnlyList<IFactorioMod> Mods { get; private set; }
 
     /// <remarks>
     /// Only loading mods from folders are supported by now
@@ -259,6 +258,11 @@ public class FactorioModpack {
             Title = string.Empty,
             Author = string.Empty
         };
+
+        public bool FileExists(string subPath) => false;
+
+        public Task<string> ReadFileTextAsync(string subPath, CancellationToken cancellationToken = default) =>
+            throw new FileNotFoundException($"Mod '{Info.Name}' is missing and cannot provide files.");
     }
 
     public class CanBeDisabledMod {
@@ -274,12 +278,11 @@ public class FactorioModpack {
     }
 
     private class LoadingOrderInfo(IFactorioMod mod, bool isValid, bool isEnabled, bool isReal) {
+        private Dictionary<ModOrderType, OrderingData> _orderingDatas = new();
         public IFactorioMod Mod { get; } = mod;
         public bool IsValid { get; set; } = isValid;
         public bool IsEnabled { get; } = isEnabled;
         public bool IsReal { get; } = isReal;
-
-        private Dictionary<ModOrderType, OrderingData> _orderingDatas = new();
 
         public OrderingData GetOrderingData(ModOrderType type) {
             return _orderingDatas.GetOrCreate(type, () => new OrderingData());

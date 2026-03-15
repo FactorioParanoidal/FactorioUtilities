@@ -1,34 +1,19 @@
+using FactorioParanoidal.FactorioMods.Execution.Tests.Helpers;
 using FactorioParanoidal.FactorioMods.Mods;
 using FluentAssertions;
 using Xunit;
 
 namespace FactorioParanoidal.FactorioMods.Execution.Tests;
 
-public class FactorioLuaEngineTests : IDisposable {
-    private readonly string _modDir;
-    private readonly string _tempDir;
-
-    public FactorioLuaEngineTests() {
-        _tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        _modDir = Path.Combine(_tempDir, "test-mod");
-        Directory.CreateDirectory(_modDir);
-    }
-
-    public void Dispose() {
-        if (Directory.Exists(_tempDir)) {
-            Directory.Delete(_tempDir, true);
-        }
-    }
-
+public class FactorioLuaEngineTests {
     [Fact]
     public async Task RunAllStages_ExecutesDataLuaAndPopulatesRegistry() {
         // Arrange
         var info = new FactorioModInfo
             { Name = "test-mod", Version = new Version(1, 0, 0), Title = "test", Author = "test" };
-        var mod = new FolderFactorioMod(info, _modDir);
+        var mod = new InMemoryFactorioMod(info);
 
-        var dataLuaPath = Path.Combine(_modDir, "data.lua");
-        File.WriteAllText(dataLuaPath, @"
+        mod.AddFile("data.lua", @"
             data:extend({
                 {
                     type = 'item',
@@ -57,12 +42,12 @@ public class FactorioLuaEngineTests : IDisposable {
         // Arrange
         var info = new FactorioModInfo
             { Name = "test-mod", Version = new Version(1, 0, 0), Title = "test", Author = "test" };
-        var mod = new FolderFactorioMod(info, _modDir);
+        var mod = new InMemoryFactorioMod(info);
 
-        File.WriteAllText(Path.Combine(_modDir, "data.lua"), @"
+        mod.AddFile("data.lua", @"
             data:extend({{type = 'item', name = 'test-item', value = 1}})
         ");
-        File.WriteAllText(Path.Combine(_modDir, "data-updates.lua"), @"
+        mod.AddFile("data-updates.lua", @"
             data.raw['item']['test-item'].value = 2
         ");
 

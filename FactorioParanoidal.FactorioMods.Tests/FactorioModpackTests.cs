@@ -1,3 +1,5 @@
+using FactorioParanoidal.FactorioMods.Mods;
+using FactorioParanoidal.FactorioMods.Mods.Dependencies;
 using FluentAssertions;
 
 namespace FactorioParanoidal.FactorioMods.Tests;
@@ -42,7 +44,7 @@ public class FactorioModpackTests {
         var core = new MockMod("core");
         var baseMod = new MockMod("base"); // No explicit deps, but we add core implicitly
         var beltViz = new MockMod("belt-visualizer");
-        beltViz.Info.Dependencies = new List<Mods.Dependencies.FactorioModDependency>(); // Explicit []
+        beltViz.Info.Dependencies = new List<FactorioModDependency>(); // Explicit []
         var ruins = new MockMod("AbandonedRuins");
         ruins.Info.Dependencies = null; // Missing field
 
@@ -74,21 +76,27 @@ public class FactorioModpackTests {
         names.IndexOf("base").Should().BeLessThan(names.IndexOf("belt-visualizer"));
     }
 
-    private class MockMod : Mods.IFactorioMod {
+    private class MockMod : IFactorioMod {
         public MockMod(string name, params (string Name, bool IsOptional, bool IsIncompatible)[] dependencies) {
-            Info = new Mods.FactorioModInfo {
+            Info = new FactorioModInfo {
                 Name = name,
                 Title = name,
                 Version = new Version(1, 0, 0),
                 Author = "Test",
-                Dependencies = dependencies.Select(d => new Mods.Dependencies.FactorioModDependency {
+                Dependencies = dependencies.Select(d => new FactorioModDependency {
                     Name = d.Name,
-                    Type = d.IsIncompatible ? Mods.Dependencies.FactorioModDependencyType.Incompatibility :
-                           d.IsOptional ? Mods.Dependencies.FactorioModDependencyType.Optional :
-                           Mods.Dependencies.FactorioModDependencyType.HardRequirement
+                    Type = d.IsIncompatible ? FactorioModDependencyType.Incompatibility :
+                        d.IsOptional ? FactorioModDependencyType.Optional :
+                        FactorioModDependencyType.HardRequirement
                 }).ToList()
             };
         }
-        public Mods.FactorioModInfo Info { get; }
+
+        public FactorioModInfo Info { get; }
+
+        public bool FileExists(string subPath) => false;
+
+        public Task<string> ReadFileTextAsync(string subPath, CancellationToken cancellationToken = default) =>
+            throw new FileNotFoundException();
     }
 }

@@ -1,35 +1,20 @@
 using FactorioParanoidal.FactorioMods.Execution.Prototypes;
+using FactorioParanoidal.FactorioMods.Execution.Tests.Helpers;
 using FactorioParanoidal.FactorioMods.Mods;
 using FluentAssertions;
 using Xunit;
 
 namespace FactorioParanoidal.FactorioMods.Execution.Tests;
 
-public class GeneratedPrototypesTests : IDisposable {
-    private readonly string _modDir;
-    private readonly string _tempDir;
-
-    public GeneratedPrototypesTests() {
-        _tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        _modDir = Path.Combine(_tempDir, "test-mod");
-        Directory.CreateDirectory(_modDir);
-    }
-
-    public void Dispose() {
-        if (Directory.Exists(_tempDir)) {
-            Directory.Delete(_tempDir, true);
-        }
-    }
-
+public class GeneratedPrototypesTests {
     [Fact]
     public async Task RunAllStages_PopulatesAccumulatorPrototype() {
         // Arrange
         var info = new FactorioModInfo
             { Name = "test-mod", Version = new Version(1, 0, 0), Title = "test", Author = "test" };
-        var mod = new FolderFactorioMod(info, _modDir);
+        var mod = new InMemoryFactorioMod(info);
 
-        var dataLuaPath = Path.Combine(_modDir, "data.lua");
-        File.WriteAllText(dataLuaPath, @"
+        mod.AddFile("data.lua", @"
             data:extend({
                 {
                     type = 'accumulator',

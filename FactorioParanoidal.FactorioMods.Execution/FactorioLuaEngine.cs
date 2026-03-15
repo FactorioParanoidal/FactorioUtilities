@@ -108,12 +108,10 @@ public class FactorioLuaEngine : IDisposable {
     }
 
     public async Task ExecuteModDataPhase(IFactorioMod mod, string fileName) {
-        if (mod is FolderFactorioMod folderMod) {
-            var filePath = Path.Combine(folderMod.Directory, fileName);
-            if (File.Exists(filePath)) {
-                var content = await File.ReadAllTextAsync(filePath);
-                await _state.DoStringAsync(content, filePath);
-            }
+        if (mod.FileExists(fileName)) {
+            var content = await mod.ReadFileTextAsync(fileName);
+            var virtualPath = $"__{mod.Info.Name}__/{fileName}";
+            await _state.DoStringAsync(content, virtualPath);
         }
     }
 
