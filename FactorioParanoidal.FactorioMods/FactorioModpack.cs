@@ -17,24 +17,28 @@ public class FactorioModpack {
     public IReadOnlyList<CanBeDisabledMod> AllMods { get; private set; }
     public IReadOnlyList<IFactorioMod> Mods { get; private set; }
 
-    /// <remarks>
-    /// Only loading mods from folders are supported by now
-    /// </remarks>
-    public static async Task<FactorioModpack> LoadFromDirectory(string directory) {
+    public static async Task<FactorioModpack> LoadFromDirectory(string directory, bool ignoreModList = false) {
         var modListPath = Path.Combine(directory, "mod-list.json");
         var factorioModList = new FactorioModList();
-        if (File.Exists(modListPath)) {
+        if (!ignoreModList && File.Exists(modListPath)) {
             await using var modListFileStream = File.OpenRead(modListPath);
             factorioModList = (await JsonSerializer.DeserializeAsync<FactorioModList>(modListFileStream))!;
         }
 
         var directories = Directory.GetDirectories(directory);
-        var loadingTasks = directories.Select(FolderFactorioMod.LoadFromDirectory);
-        var mods = await Task.WhenAll(loadingTasks);
+        var folderLoadingTasks = directories.Select(FolderFactorioMod.LoadFromDirectory);
+
+        var zipFiles = Directory.GetFiles(directory, "*.zip");
+        var zipLoadingTasks = zipFiles.Select(ZipFactorioMod.LoadFromFile);
+
+        var mods = (await Task.WhenAll(folderLoadingTasks)).Cast<IFactorioMod>()
+            .Concat(await Task.WhenAll(zipLoadingTasks))
+            .ToList();
 
         var allMods =
             mods.Select(mod => {
-                var isEnabled = !factorioModList.Mods.Any(item => item.Name == mod.Info.Name && !item.Enabled);
+                var isEnabled = ignoreModList ||
+                                !factorioModList.Mods.Any(item => item.Name == mod.Info.Name && !item.Enabled);
                 return new CanBeDisabledMod(mod, isEnabled);
             });
         return new FactorioModpack(allMods);
