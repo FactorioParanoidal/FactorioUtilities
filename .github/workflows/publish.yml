@@ -1,32 +1,31 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: Publish .NET packages
+name: .NET Publish
 
 on:
-  push:
-    branches: [ "main" ]
+    push:
+        branches:
+            - master
+            - main
+            - release/**
+        tags:
+            - v**
+
+permissions:
+    id-token: write
+    contents: write
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-          dotnet-version: 10
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build
-    - name: Test
-      run: dotnet test --verbosity normal
-    - name: Pack
-      run: dotnet pack
-    - name: Publish to Nuget
-      run: | 
-        dotnet nuget push "**.nupkg" --api-key ${{secrets.NUGET_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        dotnet nuget push "**.snupkg" --api-key ${{secrets.NUGET_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
+    build:
+        
+        runs-on: windows-latest
+        
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: Setup .NET
+                uses: actions/setup-dotnet@v4
+                with:
+                    dotnet-version: 10
+            -   name: Build and Publish
+                uses: SKProCH/CommonWorkflows/actions/build-publish@main
+                with:
+                    publish-nightly: true
+                    nuget-user: ${{ secrets.NUGET_USER }}
