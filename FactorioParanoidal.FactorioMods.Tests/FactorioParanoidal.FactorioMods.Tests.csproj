@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="TestModpack\**" CopyToOutputDirectory="Always"/>
-    <Content Include="TestModpacks\**" CopyToOutputDirectory="Always"/>
+    <Content Include="Data\**" CopyToOutputDirectory="Always"/>
   </ItemGroup>
 </Project>

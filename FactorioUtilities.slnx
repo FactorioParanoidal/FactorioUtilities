@@ -1,0 +1,21 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="SourceLink.props" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="FactorioParanoidal.FactorioMods.Execution.Tests/FactorioParanoidal.FactorioMods.Execution.Tests.csproj" />
+    <Project Path="FactorioParanoidal.FactorioMods.Tests/FactorioParanoidal.FactorioMods.Tests.csproj" />
+  </Folder>
+  <Project Path="FactorioParanoidal.FactorioMods.Execution/FactorioParanoidal.FactorioMods.Execution.csproj" />
+  <Project Path="FactorioParanoidal.FactorioMods/FactorioParanoidal.FactorioMods.csproj" />
+  <Project Path="FactorioParanoidal.Models/FactorioParanoidal.Models.csproj" />
+  <Project Path="FactorioParanoidal.ModSettingsDat/FactorioParanoidal.ModSettingsDat.csproj" />
+</Solution>

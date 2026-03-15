@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
     <Description>FactorioParanoidal.FactorioMods contains C# classes equvalent for Factorio mod structure</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Text.Json" />
-  </ItemGroup>
-
 </Project>
