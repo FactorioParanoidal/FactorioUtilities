@@ -1,5 +1,3 @@
-using System.Reflection;
-using FactorioParanoidal.Models.Prototypes;
 using Lua;
 
 namespace FactorioParanoidal.FactorioMods.Execution.Proxies;
@@ -36,8 +34,8 @@ public static class DataRawProxy {
                 if (!context.GetArgument(1).TryRead<string>(out var name)) return context.Return(LuaValue.Nil);
 
                 var prototype = registry.GetPrototype(type, name);
-                if (prototype != null) {
-                    return context.Return(CreatePrototypeProxy(state, prototype));
+                if (prototype is ILuaUserData userData) {
+                    return context.Return(LuaValue.FromUserData(userData));
                 }
 
                 return context.Return(LuaValue.Nil);
@@ -60,61 +58,6 @@ public static class DataRawProxy {
                     }
                     else {
                         throw new Exception($"Expected table or nil for data.raw['{type}']['{name}']");
-                    }
-                }
-
-                return context.Return();
-            });
-
-        table.Metatable = mt;
-        return table;
-    }
-
-    public static LuaTable CreatePrototypeProxy(LuaState state, FactorioPrototype obj) {
-        var table = new LuaTable();
-        var mt = new LuaTable();
-
-        mt["__index"] =
-            new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
-                if (context.ArgumentCount < 2) return context.Return(LuaValue.Nil);
-                if (!context.GetArgument(1).TryRead<string>(out var key)) return context.Return(LuaValue.Nil);
-
-                // 1. Try Reflection
-                var prop = obj.GetType().GetProperty(key,
-                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                if (prop != null) {
-                    var val = prop.GetValue(obj);
-                    return context.Return(LuaValueUtility.ObjectToLuaValue(state, val));
-                }
-
-                // 2. Try ExtraFields
-                if (obj.ExtraFields.TryGetValue(key, out var extraVal)) {
-                    return context.Return(LuaValueUtility.ObjectToLuaValue(state, extraVal));
-                }
-
-                return context.Return(LuaValue.Nil);
-            });
-
-        mt["__newindex"] =
-            new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
-                if (context.ArgumentCount < 3) return context.Return();
-                if (!context.GetArgument(1).TryRead<string>(out var key)) return context.Return();
-                var valArg = context.GetArgument(2);
-
-                // 1. Try Reflection Setter
-                var prop = obj.GetType().GetProperty(key,
-                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                if (prop != null && prop.CanWrite) {
-                    var typedVal = LuaValueUtility.LuaValueToObject(valArg, prop.PropertyType);
-                    prop.SetValue(obj, typedVal);
-                }
-                else {
-                    // 2. Fallback to ExtraFields
-                    if (valArg == LuaValue.Nil) {
-                        obj.ExtraFields.Remove(key);
-                    }
-                    else {
-                        obj.ExtraFields[key] = LuaValueUtility.LuaValueToObject(valArg, typeof(object))!;
                     }
                 }
 

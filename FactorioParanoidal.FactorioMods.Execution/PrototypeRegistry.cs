@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using FactorioParanoidal.FactorioMods.Execution.Prototypes;
 using FactorioParanoidal.FactorioMods.Execution.Proxies;
-using FactorioParanoidal.Models.Prototypes;
 using Lua;
 
 namespace FactorioParanoidal.FactorioMods.Execution;
@@ -11,7 +11,7 @@ public class PrototypeRegistry {
     public Dictionary<string, Dictionary<string, FactorioPrototype>> Prototypes { get; } = new();
 
     public void ConvertAndRegister(string type, string name, LuaTable prototypeTable) {
-        FactorioPrototype obj = CreatePrototypeInstance(type);
+        var obj = CreatePrototypeInstance(type);
         obj.Type = type;
         obj.Name = name;
 
@@ -57,7 +57,7 @@ public class PrototypeRegistry {
         if (type == "item") return new ItemPrototype();
 
         // Fallback generic prototype if specific class doesn't exist
-        return new GenericPrototype();
+        return new FactorioPrototype();
     }
 
     private void PopulateFromLuaTable(FactorioPrototype obj, LuaTable table) {
@@ -80,8 +80,5 @@ public class PrototypeRegistry {
                 obj.ExtraFields[keyStr] = LuaValueUtility.LuaValueToObject(entry.Value, typeof(object))!;
             }
         }
-    }
-
-    private class GenericPrototype : FactorioPrototype {
     }
 }

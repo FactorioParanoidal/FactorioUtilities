@@ -37,7 +37,7 @@ public class FactorioLuaEngine : IDisposable {
         // data:extend(table)
         dataTable["extend"] =
             new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
-                int tableArgIndex = context.ArgumentCount > 1 ? 1 : 0;
+                var tableArgIndex = context.ArgumentCount > 1 ? 1 : 0;
                 if (context.ArgumentCount > tableArgIndex &&
                     context.GetArgument(tableArgIndex).TryRead<LuaTable>(out var t)) {
                     _registry.Extend(t);
@@ -109,7 +109,7 @@ public class FactorioLuaEngine : IDisposable {
 
     public async Task ExecuteModDataPhase(IFactorioMod mod, string fileName) {
         if (mod is FolderFactorioMod folderMod) {
-            string filePath = Path.Combine(folderMod.Directory, fileName);
+            var filePath = Path.Combine(folderMod.Directory, fileName);
             if (File.Exists(filePath)) {
                 var content = await File.ReadAllTextAsync(filePath);
                 await _state.DoStringAsync(content, filePath);
