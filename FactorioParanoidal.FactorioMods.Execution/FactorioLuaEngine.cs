@@ -32,7 +32,8 @@ public class FactorioLuaEngine : IDisposable {
 
     private void SetupEnvironment() {
         // Setup 'package.searchers' for resolving relative mod file requires
-        var packageSearchers = _state.Environment[(LuaValue)"package"].Read<LuaTable>()[(LuaValue)"searchers"]
+        var packageSearchers = _state.Environment[(LuaValue)"package"]
+            .Read<LuaTable>()[(LuaValue)"searchers"]
             .Read<LuaTable>();
         packageSearchers[3] = new LuaFunction("resolve_relative_mod_file_path", _loader.ResolveRelativeModFilePathLua);
 
