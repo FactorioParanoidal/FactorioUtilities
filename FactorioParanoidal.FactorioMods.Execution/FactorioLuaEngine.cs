@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using FactorioParanoidal.FactorioMods.Execution.Proxies;
 using FactorioParanoidal.FactorioMods.Mods;
 using Lua;
@@ -7,13 +8,13 @@ namespace FactorioParanoidal.FactorioMods.Execution;
 
 public class FactorioLuaEngine : IDisposable {
     private readonly FactorioModuleLoader _loader;
-    private readonly IEnumerable<IFactorioMod> _mods;
+    private readonly ImmutableArray<IFactorioMod> _mods;
     private readonly PrototypeRegistry _registry;
     private readonly LuaState _state;
 
     public FactorioLuaEngine(IEnumerable<IFactorioMod> mods) {
-        _mods = mods;
-        _loader = new FactorioModuleLoader(mods);
+        _mods = [..mods];
+        _loader = new FactorioModuleLoader(_mods);
         _registry = new PrototypeRegistry();
 
         _state = LuaState.Create();
@@ -30,13 +31,18 @@ public class FactorioLuaEngine : IDisposable {
     }
 
     private void SetupEnvironment() {
+        // Setup 'package.searchers' for resolving relative mod file requires
+        var packageSearchers = _state.Environment[(LuaValue)"package"].Read<LuaTable>()[(LuaValue)"searchers"]
+            .Read<LuaTable>();
+        packageSearchers[3] = new LuaFunction("resolve_relative_mod_file_path", _loader.ResolveRelativeModFilePathLua);
+
         // Setup 'data' table
         var dataTable = new LuaTable();
         dataTable["raw"] = DataRawProxy.Create(_state, _registry);
 
         // data:extend(table)
         dataTable["extend"] =
-            new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
+            new LuaFunction(async (context, _) => {
                 var tableArgIndex = context.ArgumentCount > 1 ? 1 : 0;
                 if (context.ArgumentCount > tableArgIndex &&
                     context.GetArgument(tableArgIndex).TryRead<LuaTable>(out var t)) {
@@ -65,7 +71,7 @@ public class FactorioLuaEngine : IDisposable {
 
         // Common Factorio globals
         _state.Environment["log"] =
-            new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
+            new LuaFunction(async (context, _) => {
                 if (context.ArgumentCount > 0) {
                     Console.WriteLine($"[Lua Log] {context.GetArgument(0)}");
                 }
@@ -74,7 +80,7 @@ public class FactorioLuaEngine : IDisposable {
             });
 
         _state.Environment["table_size"] =
-            new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
+            new LuaFunction(async (context, _) => {
                 if (context.ArgumentCount > 0 && context.GetArgument(0).TryRead<LuaTable>(out var t)) {
                     return context.Return(t.ArrayLength + t.HashMapCount); // Approximate table size
                 }
@@ -90,17 +96,17 @@ public class FactorioLuaEngine : IDisposable {
     private LuaTable CreateSerpentMock() {
         var serpent = new LuaTable();
         serpent["dump"] =
-            new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
+            new LuaFunction(async (context, _) => {
                 if (context.ArgumentCount > 0) return context.Return(context.GetArgument(0).ToString());
                 return context.Return("");
             });
         serpent["line"] =
-            new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
+            new LuaFunction(async (context, _) => {
                 if (context.ArgumentCount > 0) return context.Return(context.GetArgument(0).ToString());
                 return context.Return("");
             });
         serpent["block"] =
-            new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
+            new LuaFunction(async (context, _) => {
                 if (context.ArgumentCount > 0) return context.Return(context.GetArgument(0).ToString());
                 return context.Return("");
             });
