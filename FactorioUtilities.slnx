@@ -13,6 +13,7 @@
   <Folder Name="/Tests/">
     <Project Path="FactorioParanoidal.FactorioMods.Execution.Tests/FactorioParanoidal.FactorioMods.Execution.Tests.csproj" />
     <Project Path="FactorioParanoidal.FactorioMods.Tests/FactorioParanoidal.FactorioMods.Tests.csproj" />
+      <Project Path="FactorioParanoidal.ModSettingsDat.Tests/FactorioParanoidal.ModSettingsDat.Tests.csproj"/>
   </Folder>
     <Project
         Path="FactorioParanoidal.FactorioMods.Execution.SourceGenerator/FactorioParanoidal.FactorioMods.Execution.SourceGenerator.csproj"/>
