@@ -1,5 +1,5 @@
+using AwesomeAssertions;
 using FactorioParanoidal.FactorioMods.Mods;
-using FluentAssertions;
 
 namespace FactorioParanoidal.FactorioMods.Tests;
 

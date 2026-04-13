@@ -1,30 +1,8 @@
-using FluentAssertions;
-using FactorioParanoidal.FactorioMods;
+using AwesomeAssertions;
 
 namespace FactorioParanoidal.FactorioMods.Tests;
 
 public class ParanoidalModpackRealTest {
-    [Fact]
-    public async Task SortModsByLoadOrder_ShouldMatchFactorioLogOrder() {
-        // Arrange
-        var modpack = await FactorioModpack.LoadFromDirectory("Data/Paranoidal");
-
-        // Act
-        modpack.SortModsByLoadOrder();
-
-        var actualOrder = modpack.Mods.Select(m => m.Info.Name).ToList();
-
-        // Expected order from Factorio log (relative order of these specific mods)
-
-        // Filter actual order to only include mods from the log
-        var filteredActualOrder = actualOrder
-            .Where(name => _expectedOrder.Contains(name))
-            .ToList();
-
-        // Assert
-        filteredActualOrder.Should().BeEquivalentTo(_expectedOrder, options => options.WithStrictOrdering());
-    }
-
     private readonly List<string> _expectedOrder = [
         "belt-visualizer",
         "EvoGUI",
@@ -236,4 +214,25 @@ public class ParanoidalModpackRealTest {
         "osm-lib-postprocess",
         "ParanoidalLocale"
     ];
+
+    [Fact]
+    public async Task SortModsByLoadOrder_ShouldMatchFactorioLogOrder() {
+        // Arrange
+        var modpack = await FactorioModpack.LoadFromDirectory("Data/Paranoidal");
+
+        // Act
+        modpack.SortModsByLoadOrder();
+
+        var actualOrder = modpack.Mods.Select(m => m.Info.Name).ToList();
+
+        // Expected order from Factorio log (relative order of these specific mods)
+
+        // Filter actual order to only include mods from the log
+        var filteredActualOrder = actualOrder
+            .Where(name => _expectedOrder.Contains(name))
+            .ToList();
+
+        // Assert
+        filteredActualOrder.Should().BeEquivalentTo(_expectedOrder, options => options.WithStrictOrdering());
+    }
 }

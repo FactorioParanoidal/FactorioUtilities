@@ -1,7 +1,7 @@
+using AwesomeAssertions;
 using FactorioParanoidal.FactorioMods.Execution.Prototypes;
 using FactorioParanoidal.FactorioMods.Execution.Tests.Helpers;
 using FactorioParanoidal.FactorioMods.Mods;
-using FluentAssertions;
 using Xunit;
 
 namespace FactorioParanoidal.FactorioMods.Execution.Tests;
