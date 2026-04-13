@@ -116,6 +116,12 @@ public class FactorioPropertyTreeJsonConverter : JsonConverter<FactorioPropertyT
 
                 writer.WriteEndObject();
                 break;
+            case FactorioPropertyTreeType.SignedInteger:
+                writer.WriteNumberValue(tree.AsSignedInteger());
+                break;
+            case FactorioPropertyTreeType.UnsignedInteger:
+                writer.WriteNumberValue(tree.AsUnsignedInteger());
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }

@@ -32,6 +32,12 @@ public class ModSettingsStreamWriter {
     public void WriteDouble(double value)
         => Stream.Write(BitConverter.GetBytes(value));
 
+    public void WriteLong(long value)
+        => Stream.Write(BitConverter.GetBytes(value));
+
+    public void WriteULong(ulong value)
+        => Stream.Write(BitConverter.GetBytes(value));
+
     public void WriteSpaceOptimizedUInt(uint value) {
         if (value < byte.MaxValue)
             Stream.WriteByte((byte)value);
@@ -93,6 +99,12 @@ public class ModSettingsStreamWriter {
                 break;
             case FactorioPropertyTreeType.Dictionary:
                 WriteDictionary(tree.AsDictionary());
+                break;
+            case FactorioPropertyTreeType.SignedInteger:
+                WriteLong(tree.AsSignedInteger());
+                break;
+            case FactorioPropertyTreeType.UnsignedInteger:
+                WriteULong(tree.AsUnsignedInteger());
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

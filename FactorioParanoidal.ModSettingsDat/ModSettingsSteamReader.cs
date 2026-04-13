@@ -35,6 +35,12 @@ public class ModSettingsSteamReader {
     public double ReadDouble()
         => BinaryPrimitives.ReadDoubleLittleEndian(ReadSpan(sizeof(double)));
 
+    public long ReadLong()
+        => BinaryPrimitives.ReadInt64LittleEndian(ReadSpan(sizeof(long)));
+
+    public ulong ReadULong()
+        => BinaryPrimitives.ReadUInt64LittleEndian(ReadSpan(sizeof(ulong)));
+
     public uint ReadSpaceOptimizedUInt() {
         var value = ReadByte();
         return value == byte.MaxValue ? ReadUInt() : value;
@@ -87,6 +93,8 @@ public class ModSettingsSteamReader {
             FactorioPropertyTreeType.String => ReadString(),
             FactorioPropertyTreeType.List => ReadList(),
             FactorioPropertyTreeType.Dictionary => ReadDictionary(),
+            FactorioPropertyTreeType.SignedInteger => ReadLong(),
+            FactorioPropertyTreeType.UnsignedInteger => ReadULong(),
             _ => throw new ArgumentOutOfRangeException(nameof(type), "No such PropertyTree type supported")
         };
 

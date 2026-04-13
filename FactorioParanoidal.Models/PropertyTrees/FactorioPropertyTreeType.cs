@@ -6,5 +6,7 @@ public enum FactorioPropertyTreeType {
     Number = 2,
     String = 3,
     List = 4,
-    Dictionary = 5
+    Dictionary = 5,
+    SignedInteger = 6,
+    UnsignedInteger = 7
 }

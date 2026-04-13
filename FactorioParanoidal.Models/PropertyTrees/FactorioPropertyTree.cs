@@ -7,6 +7,15 @@ public class FactorioPropertyTree {
         AnyTypeFlag = anyTypeFlag;
     }
 
+    public FactorioPropertyTreeType Type { get; }
+    public object? Value { get; }
+
+    /// <remarks>
+    /// 1 bool the any-type flag (currently not important outside of Factorio internals; default value is false)
+    /// according to https://wiki.factorio.com/Property_tree
+    /// </remarks>
+    public bool AnyTypeFlag { get; }
+
     public static FactorioPropertyTree CreateNone(bool anyTypeFlag = false)
         => new(FactorioPropertyTreeType.None, null, anyTypeFlag);
 
@@ -26,14 +35,11 @@ public class FactorioPropertyTree {
         bool anyTypeFlag = false)
         => new(FactorioPropertyTreeType.Dictionary, value.ToDictionary(), anyTypeFlag);
 
-    public FactorioPropertyTreeType Type { get; }
-    public object? Value { get; }
+    public static FactorioPropertyTree Create(long value, bool anyTypeFlag = false)
+        => new(FactorioPropertyTreeType.SignedInteger, value, anyTypeFlag);
 
-    /// <remarks>
-    /// 1 bool the any-type flag (currently not important outside of Factorio internals; default value is false)
-    /// according to https://wiki.factorio.com/Property_tree
-    /// </remarks>
-    public bool AnyTypeFlag { get; }
+    public static FactorioPropertyTree Create(ulong value, bool anyTypeFlag = false)
+        => new(FactorioPropertyTreeType.UnsignedInteger, value, anyTypeFlag);
 
     public bool AsBool()
         => (bool)Value!;
@@ -49,4 +55,10 @@ public class FactorioPropertyTree {
 
     public IReadOnlyDictionary<string, FactorioPropertyTree> AsDictionary()
         => (IReadOnlyDictionary<string, FactorioPropertyTree>)Value!;
+
+    public long AsSignedInteger()
+        => (long)Value!;
+
+    public ulong AsUnsignedInteger()
+        => (ulong)Value!;
 }
