@@ -7,6 +7,7 @@
     <PackageVersion Include="AwesomeAssertions" Version="9.4.0"/>
     <PackageVersion Include="NLua" Version="1.7.2"/>
     <PackageVersion Include="LuaCSharp" Version="0.5.3"/>
+    <PackageVersion Include="SharpCompress" Version="0.46.3"/>
     <PackageVersion Include="System.Text.Json" Version="10.0.5"/>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.201"/>
     <!--Tests-->

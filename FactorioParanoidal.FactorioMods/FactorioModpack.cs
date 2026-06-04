@@ -6,16 +6,23 @@ using FactorioParanoidal.FactorioMods.Mods.Dependencies;
 namespace FactorioParanoidal.FactorioMods;
 
 public class FactorioModpack {
-    public FactorioModpack(IEnumerable<CanBeDisabledMod> enumerableImplementation) {
-        AllMods = enumerableImplementation.ToList();
-        Mods = AllMods
-            .Where(mod => mod.IsEnabled)
-            .Select(mod => mod.Mod)
-            .ToList();
+    private readonly bool _applyModList;
+    private readonly FactorioModList _modList;
+
+    public FactorioModpack(IEnumerable<CanBeDisabledMod> enumerableImplementation)
+        : this(enumerableImplementation, new FactorioModList(), applyModList: false) {
+    }
+
+    private FactorioModpack(
+        IEnumerable<CanBeDisabledMod> mods, FactorioModList modList, bool applyModList) {
+        _modList = modList;
+        _applyModList = applyModList;
+        AllMods = mods.ToList();
+        RefreshEnabledMods();
     }
 
     public IReadOnlyList<CanBeDisabledMod> AllMods { get; private set; }
-    public IReadOnlyList<IFactorioMod> Mods { get; private set; }
+    public IReadOnlyList<IFactorioMod> Mods { get; private set; } = [];
 
     public static async Task<FactorioModpack> LoadFromDirectory(string directory, bool ignoreModList = false) {
         var modListPath = Path.Combine(directory, "mod-list.json");
@@ -25,7 +32,10 @@ public class FactorioModpack {
             factorioModList = (await JsonSerializer.DeserializeAsync<FactorioModList>(modListFileStream))!;
         }
 
-        var directories = Directory.GetDirectories(directory);
+        // Factorio silently ignores folders that don't contain an info.json (e.g. stray asset/scratch dirs),
+        // so we do the same instead of failing the whole load.
+        var directories = Directory.GetDirectories(directory)
+            .Where(dir => File.Exists(Path.Combine(dir, IFactorioMod.InfoJsonPath)));
         var folderLoadingTasks = directories.Select(FolderFactorioMod.LoadFromDirectory);
 
         var zipFiles = Directory.GetFiles(directory, "*.zip");
@@ -33,15 +43,69 @@ public class FactorioModpack {
 
         var mods = (await Task.WhenAll(folderLoadingTasks)).Cast<IFactorioMod>()
             .Concat(await Task.WhenAll(zipLoadingTasks))
-            .ToList();
+            .Select(mod => new CanBeDisabledMod(mod, IsEnabledInList(factorioModList, !ignoreModList, mod.Info.Name)));
 
-        var allMods =
-            mods.Select(mod => {
-                var isEnabled = ignoreModList ||
-                                !factorioModList.Mods.Any(item => item.Name == mod.Info.Name && !item.Enabled);
-                return new CanBeDisabledMod(mod, isEnabled);
-            });
-        return new FactorioModpack(allMods);
+        return new FactorioModpack(mods, factorioModList, !ignoreModList);
+    }
+
+    /// <summary>
+    ///     Adds the built-in game-data mods (core, base, elevated-rails, quality, space-age) to this modpack,
+    ///     downloading and caching them from the public headless Factorio packages. These mods ship with the game
+    ///     rather than in the mods folder, so they must be supplied externally for the Lua data stage to run.
+    ///     Any already-present mod with a built-in name (e.g. a placeholder) is replaced by the real downloaded one,
+    ///     and the built-ins inherit their enabled state from this modpack's mod-list (e.g. a disabled
+    ///     <c>space-age</c> stays disabled).
+    /// </summary>
+    /// <param name="version">
+    ///     The Factorio version whose game data to download. When <c>null</c>, the version is derived from the
+    ///     <c>factorio_version</c> of the mods already loaded into this pack (validated against the latest stable
+    ///     headless release on factorio.com).
+    /// </param>
+    public async Task AddGameDataModsAsync(
+        Version? version = null, string? cacheRoot = null, CancellationToken cancellationToken = default) {
+        version ??= await ResolveBuiltinVersionAsync(cancellationToken);
+        var builtinMods = await FactorioGameData.LoadBuiltinModsAsync(version, cacheRoot, cancellationToken);
+
+        var byName = AllMods.ToDictionary(mod => mod.Mod.Info.Name);
+        foreach (var builtin in builtinMods) {
+            byName[builtin.Info.Name] =
+                new CanBeDisabledMod(builtin, IsEnabledInList(_modList, _applyModList, builtin.Info.Name));
+        }
+
+        AllMods = byName.Values.ToList();
+        RefreshEnabledMods();
+    }
+
+    private async Task<Version> ResolveBuiltinVersionAsync(CancellationToken cancellationToken) {
+        var latest = await FactorioGameData.GetLatestHeadlessVersionAsync(cancellationToken: cancellationToken);
+
+        // Mods declare the major.minor they target via factorio_version. Make sure the resolved game data matches it,
+        // otherwise the data stage would mix incompatible APIs.
+        var target = Mods
+            .Select(mod => mod.Info.FactorioVersion)
+            .Where(factorioVersion => factorioVersion is not null)
+            .Select(factorioVersion => factorioVersion!)
+            .OrderByDescending(factorioVersion => factorioVersion)
+            .FirstOrDefault();
+
+        if (target is not null && (target.Major != latest.Major || target.Minor != latest.Minor)) {
+            throw new InvalidOperationException(
+                $"The modpack targets Factorio {target.ToString(2)}, but the latest stable headless release is " +
+                $"{latest.ToString(3)}. Pass an explicit version matching {target.ToString(2)} to load it.");
+        }
+
+        return latest;
+    }
+
+    private void RefreshEnabledMods() {
+        Mods = AllMods
+            .Where(mod => mod.IsEnabled)
+            .Select(mod => mod.Mod)
+            .ToList();
+    }
+
+    private static bool IsEnabledInList(FactorioModList modList, bool applyModList, string modName) {
+        return !applyModList || !modList.Mods.Any(item => item.Name == modName && !item.Enabled);
     }
 
     public void SortModsByLoadOrder() {

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
     <Description>FactorioParanoidal.FactorioMods contains C# classes equvalent for Factorio mod structure</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpCompress"/>
+  </ItemGroup>
 </Project>
