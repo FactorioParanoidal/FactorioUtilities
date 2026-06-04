@@ -46,32 +46,52 @@ public class FactorioModuleLoader : ILuaModuleLoader {
     public async ValueTask<int> ResolveRelativeModFilePathLua(
         LuaFunctionExecutionContext context,
         CancellationToken cancellationToken) {
-        var relativePath = string.Empty;
+        var moduleReference = ModFileReference.FromRequire(context.GetArgument<string>(0));
 
+        // Walk the call stack to find the file (and therefore the mod) that issued the require.
         var callStackFrames = context.State.GetCallStackFrames();
         for (var index = callStackFrames.Length - 1; index >= 0; index--) {
-            var callStackFrame = callStackFrames[index];
-            if (callStackFrame.Function is LuaClosure closure) {
-                var modFileReference = ModFileReference.FromRequire(closure.Name);
-                relativePath = Path.Combine(modFileReference.Folder, relativePath);
-                if (modFileReference.Mod is null) {
+            if (callStackFrames[index].Function is not LuaClosure closure) {
+                continue;
+            }
+
+            var currentFile = ModFileReference.FromRequire(closure.Name);
+            if (currentFile.Mod is null || !_mods.TryGetValue(currentFile.Mod, out var currentMod)) {
+                // Frame without a known owning mod (e.g. a standard-library frame); keep looking.
+                continue;
+            }
+
+            // Factorio resolves a bare require by trying, in order:
+            //   1. relative to the current mod's root (the common "folder.file" style)
+            //   2. relative to the requiring file's own directory (sibling files)
+            //   3. core/lualib (shared helpers such as require "util")
+            var candidates = new List<(IFactorioMod Mod, string Path)> {
+                (currentMod, Normalize(moduleReference.Path)),
+                (currentMod, Normalize(Path.Combine(currentFile.Folder, moduleReference.Path)))
+            };
+            if (_mods.TryGetValue("core", out var core)) {
+                candidates.Add((core, Normalize(Path.Combine("lualib", moduleReference.Path))));
+            }
+
+            foreach (var (mod, path) in candidates) {
+                if (!mod.FileExists(path)) {
                     continue;
                 }
 
-                var moduleName = context.GetArgument<string>(0);
-                var moduleReference = ModFileReference.FromRequire(moduleName);
-
-                var mod = _mods[modFileReference.Mod];
-                var path = Path.Combine(relativePath, moduleReference.Path);
-                if (!mod.FileExists(path)) {
-                    throw new FileNotFoundException($"Could not resolve relative module path: {path}");
-                }
-
                 var luaFileText = await mod.ReadFileTextAsync(path, cancellationToken);
-                return context.Return((LuaValue)(LuaFunction)context.State.Load(luaFileText, path));
+                // Name the chunk with the __mod__ prefix so requires it issues resolve against the right mod.
+                var virtualPath = $"__{mod.Info.Name}__/{path}";
+                return context.Return((LuaValue)(LuaFunction)context.State.Load(luaFileText, virtualPath));
             }
+
+            throw new FileNotFoundException(
+                $"Could not resolve relative module '{moduleReference.Path}' required from {closure.Name}");
         }
 
         return context.Return(LuaValue.Nil);
+    }
+
+    private static string Normalize(string path) {
+        return path.Replace('\\', '/');
     }
 }

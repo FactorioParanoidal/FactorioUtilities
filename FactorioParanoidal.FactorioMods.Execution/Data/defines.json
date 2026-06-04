@@ -1,0 +1,7807 @@
+{
+  "application_version": "2.0.77",
+  "defines": [
+    {
+      "name": "alert_type",
+      "order": 0,
+      "description": "",
+      "values": [
+        {
+          "name": "collector_path_blocked",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "custom",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "entity_destroyed",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "entity_under_attack",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "no_material_for_construction",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "no_platform_storage",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "no_roboport_storage",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "no_storage",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "not_enough_construction_robots",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "not_enough_repair_packs",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "pipeline_overextended",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "platform_tile_building_blocked",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "train_no_path",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "train_out_of_fuel",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "turret_fire",
+          "order": 14,
+          "description": ""
+        },
+        {
+          "name": "turret_out_of_ammo",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "unclaimed_cargo",
+          "order": 16,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "behavior_result",
+      "order": 1,
+      "description": "AI command exit status, see [LuaCommandable::set_command](runtime:LuaCommandable::set_command)",
+      "values": [
+        {
+          "name": "deleted",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "fail",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "in_progress",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "success",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "build_check_type",
+      "order": 2,
+      "description": "",
+      "values": [
+        {
+          "name": "blueprint_ghost",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "ghost_revive",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "manual",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "manual_ghost",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "script",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "script_ghost",
+          "order": 3,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "build_mode",
+      "order": 3,
+      "description": "",
+      "values": [
+        {
+          "name": "forced",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "normal",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "superforced",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "cargo_destination",
+      "order": 4,
+      "description": "",
+      "values": [
+        {
+          "name": "invalid",
+          "order": 0,
+          "description": "The default destination type of a cargo pod when created runtime. Setting its destination to any other type will instantly launch it."
+        },
+        {
+          "name": "orbit",
+          "order": 1,
+          "description": "Cargo pods with orbit destination are destroyed when ascent is completed."
+        },
+        {
+          "name": "space_platform",
+          "order": 4,
+          "description": "Only used for sending a space platform starter pack to a platform that is waiting for one. Regular deliveries to space platform hubs use [station](runtime:defines.cargo_destination.station) destination type instead."
+        },
+        {
+          "name": "station",
+          "order": 2,
+          "description": "Any cargo landing pad or space platform hub."
+        },
+        {
+          "name": "surface",
+          "order": 3,
+          "description": "Cargo pods will switch destination type from surface to station before starting descent if there is a station available and [CargoDestination::position](runtime:CargoDestination::position) has not been specified. Note, setting the destination to \"surface\" when the surface is the same as the one the pod is on forces it to find and set a landing position."
+        }
+      ]
+    },
+    {
+      "name": "chain_signal_state",
+      "order": 5,
+      "description": "State of a chain signal.",
+      "values": [
+        {
+          "name": "all_open",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "none",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "none_open",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "partially_open",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "chunk_generated_status",
+      "order": 6,
+      "description": "",
+      "values": [
+        {
+          "name": "basic_tiles",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "corrected_tiles",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "custom_tiles",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "entities",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "nothing",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "tiles",
+          "order": 4,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "command",
+      "order": 7,
+      "description": "Command given to units describing what they should do.",
+      "values": [
+        {
+          "name": "attack",
+          "order": 0,
+          "description": "Attack another entity."
+        },
+        {
+          "name": "attack_area",
+          "order": 4,
+          "description": "Go to a place and attack what you see."
+        },
+        {
+          "name": "build_base",
+          "order": 8,
+          "description": "Go to a position and build a base there."
+        },
+        {
+          "name": "compound",
+          "order": 2,
+          "description": "Chain commands together, see [defines.compound_command](runtime:defines.compound_command)."
+        },
+        {
+          "name": "flee",
+          "order": 6,
+          "description": "Flee from another entity."
+        },
+        {
+          "name": "go_to_location",
+          "order": 1,
+          "description": "Go to a specific position."
+        },
+        {
+          "name": "group",
+          "order": 3,
+          "description": "Do what your group wants you to do."
+        },
+        {
+          "name": "stop",
+          "order": 7,
+          "description": "Stop moving and stay where you are."
+        },
+        {
+          "name": "wander",
+          "order": 5,
+          "description": "Chill."
+        }
+      ]
+    },
+    {
+      "name": "compound_command",
+      "order": 8,
+      "description": "How commands are joined together in a compound command (see [defines.command.compound](runtime:defines.command.compound)).",
+      "values": [
+        {
+          "name": "logical_and",
+          "order": 0,
+          "description": "Fail on first failure. Only succeeds if all commands (executed one after another) succeed."
+        },
+        {
+          "name": "logical_or",
+          "order": 1,
+          "description": "Succeed on first success. Only fails if all commands (executed one after another) fail."
+        },
+        {
+          "name": "return_last",
+          "order": 2,
+          "description": "Execute all commands in sequence and fail or succeed depending on the return status of the last command."
+        }
+      ]
+    },
+    {
+      "name": "control_behavior",
+      "order": 9,
+      "description": "",
+      "subkeys": [
+        {
+          "name": "cargo_landing_pad",
+          "order": 7,
+          "description": "",
+          "subkeys": [
+            {
+              "name": "exclusive_mode",
+              "order": 0,
+              "description": "",
+              "values": [
+                {
+                  "name": "none",
+                  "order": 0,
+                  "description": ""
+                },
+                {
+                  "name": "send_contents",
+                  "order": 1,
+                  "description": ""
+                },
+                {
+                  "name": "set_requests",
+                  "order": 2,
+                  "description": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "inserter",
+          "order": 0,
+          "description": "",
+          "subkeys": [
+            {
+              "name": "hand_read_mode",
+              "order": 0,
+              "description": "",
+              "values": [
+                {
+                  "name": "hold",
+                  "order": 0,
+                  "description": ""
+                },
+                {
+                  "name": "pulse",
+                  "order": 1,
+                  "description": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "lamp",
+          "order": 2,
+          "description": "",
+          "subkeys": [
+            {
+              "name": "color_mode",
+              "order": 0,
+              "description": "",
+              "values": [
+                {
+                  "name": "color_mapping",
+                  "order": 0,
+                  "description": ""
+                },
+                {
+                  "name": "components",
+                  "order": 1,
+                  "description": ""
+                },
+                {
+                  "name": "packed_rgb",
+                  "order": 2,
+                  "description": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "logistic_container",
+          "order": 1,
+          "description": "",
+          "subkeys": [
+            {
+              "name": "exclusive_mode",
+              "order": 0,
+              "description": "",
+              "values": [
+                {
+                  "name": "none",
+                  "order": 2,
+                  "description": ""
+                },
+                {
+                  "name": "send_contents",
+                  "order": 0,
+                  "description": ""
+                },
+                {
+                  "name": "set_requests",
+                  "order": 1,
+                  "description": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "mining_drill",
+          "order": 3,
+          "description": "",
+          "subkeys": [
+            {
+              "name": "resource_read_mode",
+              "order": 0,
+              "description": "",
+              "values": [
+                {
+                  "name": "entire_patch",
+                  "order": 1,
+                  "description": ""
+                },
+                {
+                  "name": "this_miner",
+                  "order": 0,
+                  "description": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "roboport",
+          "order": 6,
+          "description": "",
+          "subkeys": [
+            {
+              "name": "read_items_mode",
+              "order": 0,
+              "description": "",
+              "values": [
+                {
+                  "name": "logistics",
+                  "order": 1,
+                  "description": ""
+                },
+                {
+                  "name": "missing_requests",
+                  "order": 2,
+                  "description": ""
+                },
+                {
+                  "name": "none",
+                  "order": 0,
+                  "description": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rocket_silo",
+          "order": 5,
+          "description": "",
+          "subkeys": [
+            {
+              "name": "read_mode",
+              "order": 0,
+              "description": "",
+              "values": [
+                {
+                  "name": "logistic_inventory",
+                  "order": 1,
+                  "description": ""
+                },
+                {
+                  "name": "none",
+                  "order": 0,
+                  "description": ""
+                },
+                {
+                  "name": "orbital_requests",
+                  "order": 2,
+                  "description": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "transport_belt",
+          "order": 4,
+          "description": "",
+          "subkeys": [
+            {
+              "name": "content_read_mode",
+              "order": 0,
+              "description": "",
+              "values": [
+                {
+                  "name": "entire_belt_hold",
+                  "order": 2,
+                  "description": ""
+                },
+                {
+                  "name": "hold",
+                  "order": 1,
+                  "description": ""
+                },
+                {
+                  "name": "pulse",
+                  "order": 0,
+                  "description": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "type",
+          "order": 8,
+          "description": "",
+          "values": [
+            {
+              "name": "accumulator",
+              "order": 12,
+              "description": "[LuaAccumulatorControlBehavior](runtime:LuaAccumulatorControlBehavior)"
+            },
+            {
+              "name": "agricultural_tower",
+              "order": 31,
+              "description": "[LuaAgriculturalTowerControlBehavior](runtime:LuaAgriculturalTowerControlBehavior)"
+            },
+            {
+              "name": "arithmetic_combinator",
+              "order": 9,
+              "description": "[LuaArithmeticCombinatorControlBehavior](runtime:LuaArithmeticCombinatorControlBehavior)"
+            },
+            {
+              "name": "artillery_turret",
+              "order": 25,
+              "description": "[LuaArtilleryTurretControlBehavior](runtime:LuaArtilleryTurretControlBehavior)"
+            },
+            {
+              "name": "assembling_machine",
+              "order": 18,
+              "description": "[LuaAssemblingMachineControlBehavior](runtime:LuaAssemblingMachineControlBehavior)"
+            },
+            {
+              "name": "asteroid_collector",
+              "order": 26,
+              "description": "[LuaAsteroidCollectorControlBehavior](runtime:LuaAsteroidCollectorControlBehavior)"
+            },
+            {
+              "name": "cargo_landing_pad",
+              "order": 30,
+              "description": "[LuaCargoLandingPadControlBehavior](runtime:LuaCargoLandingPadControlBehavior)"
+            },
+            {
+              "name": "constant_combinator",
+              "order": 10,
+              "description": "[LuaConstantCombinatorControlBehavior](runtime:LuaConstantCombinatorControlBehavior)"
+            },
+            {
+              "name": "container",
+              "order": 0,
+              "description": "[LuaContainerControlBehavior](runtime:LuaContainerControlBehavior)"
+            },
+            {
+              "name": "decider_combinator",
+              "order": 8,
+              "description": "[LuaDeciderCombinatorControlBehavior](runtime:LuaDeciderCombinatorControlBehavior)"
+            },
+            {
+              "name": "display_panel",
+              "order": 28,
+              "description": "[LuaDisplayPanelControlBehavior](runtime:LuaDisplayPanelControlBehavior)"
+            },
+            {
+              "name": "furnace",
+              "order": 32,
+              "description": "[LuaFurnaceControlBehavior](runtime:LuaFurnaceControlBehavior)"
+            },
+            {
+              "name": "generic_on_off",
+              "order": 1,
+              "description": "[LuaGenericOnOffControlBehavior](runtime:LuaGenericOnOffControlBehavior)"
+            },
+            {
+              "name": "inserter",
+              "order": 2,
+              "description": "[LuaInserterControlBehavior](runtime:LuaInserterControlBehavior)"
+            },
+            {
+              "name": "lamp",
+              "order": 3,
+              "description": "[LuaLampControlBehavior](runtime:LuaLampControlBehavior)"
+            },
+            {
+              "name": "loader",
+              "order": 29,
+              "description": "[LuaLoaderControlBehavior](runtime:LuaLoaderControlBehavior)"
+            },
+            {
+              "name": "logistic_container",
+              "order": 4,
+              "description": "[LuaLogisticContainerControlBehavior](runtime:LuaLogisticContainerControlBehavior)"
+            },
+            {
+              "name": "mining_drill",
+              "order": 16,
+              "description": "[LuaMiningDrillControlBehavior](runtime:LuaMiningDrillControlBehavior)"
+            },
+            {
+              "name": "programmable_speaker",
+              "order": 17,
+              "description": "[LuaProgrammableSpeakerControlBehavior](runtime:LuaProgrammableSpeakerControlBehavior)"
+            },
+            {
+              "name": "proxy_container",
+              "order": 33,
+              "description": "[LuaProxyContainerControlBehavior](runtime:LuaProxyContainerControlBehavior)"
+            },
+            {
+              "name": "pump",
+              "order": 19,
+              "description": "[LuaPumpControlBehavior](runtime:LuaPumpControlBehavior)"
+            },
+            {
+              "name": "radar",
+              "order": 27,
+              "description": "[LuaRadarControlBehavior](runtime:LuaRadarControlBehavior)"
+            },
+            {
+              "name": "rail_chain_signal",
+              "order": 14,
+              "description": "[LuaRailSignalBaseControlBehavior](runtime:LuaRailSignalBaseControlBehavior)"
+            },
+            {
+              "name": "rail_signal",
+              "order": 13,
+              "description": "[LuaRailSignalBaseControlBehavior](runtime:LuaRailSignalBaseControlBehavior)"
+            },
+            {
+              "name": "reactor",
+              "order": 23,
+              "description": "[LuaReactorControlBehavior](runtime:LuaReactorControlBehavior)"
+            },
+            {
+              "name": "roboport",
+              "order": 5,
+              "description": "[LuaRoboportControlBehavior](runtime:LuaRoboportControlBehavior)"
+            },
+            {
+              "name": "rocket_silo",
+              "order": 21,
+              "description": "[LuaRocketSiloControlBehavior](runtime:LuaRocketSiloControlBehavior)"
+            },
+            {
+              "name": "selector_combinator",
+              "order": 20,
+              "description": "[LuaSelectorCombinatorControlBehavior](runtime:LuaSelectorCombinatorControlBehavior)"
+            },
+            {
+              "name": "space_platform_hub",
+              "order": 24,
+              "description": "[LuaSpacePlatformHubControlBehavior](runtime:LuaSpacePlatformHubControlBehavior)"
+            },
+            {
+              "name": "splitter",
+              "order": 34,
+              "description": "[LuaSplitterControlBehavior](runtime:LuaSplitterControlBehavior)"
+            },
+            {
+              "name": "storage_tank",
+              "order": 6,
+              "description": "[LuaStorageTankControlBehavior](runtime:LuaStorageTankControlBehavior)"
+            },
+            {
+              "name": "train_stop",
+              "order": 7,
+              "description": "[LuaTrainStopControlBehavior](runtime:LuaTrainStopControlBehavior)"
+            },
+            {
+              "name": "transport_belt",
+              "order": 11,
+              "description": "[LuaTransportBeltControlBehavior](runtime:LuaTransportBeltControlBehavior)"
+            },
+            {
+              "name": "turret",
+              "order": 22,
+              "description": "[LuaTurretControlBehavior](runtime:LuaTurretControlBehavior)"
+            },
+            {
+              "name": "wall",
+              "order": 15,
+              "description": "[LuaWallControlBehavior](runtime:LuaWallControlBehavior)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "controllers",
+      "order": 10,
+      "description": "",
+      "values": [
+        {
+          "name": "character",
+          "order": 1,
+          "description": "The controller controls a character. This is the default controller in freeplay."
+        },
+        {
+          "name": "cutscene",
+          "order": 4,
+          "description": "The player can't interact with the world, and the camera pans around in a predefined manner."
+        },
+        {
+          "name": "editor",
+          "order": 3,
+          "description": "The Editor Controller near ultimate power to do almost anything in the game."
+        },
+        {
+          "name": "ghost",
+          "order": 0,
+          "description": "Can't interact with the world, can only observe. Used in the multiplayer waiting-to-respawn screen."
+        },
+        {
+          "name": "god",
+          "order": 2,
+          "description": "The controller isn't tied to a character. This is the default controller in sandbox."
+        },
+        {
+          "name": "remote",
+          "order": 6,
+          "description": "Can't move/change items but can build ghosts/change settings."
+        },
+        {
+          "name": "spectator",
+          "order": 5,
+          "description": "Can't change anything in the world but can view anything."
+        }
+      ]
+    },
+    {
+      "name": "deconstruction_item",
+      "order": 11,
+      "description": "",
+      "subkeys": [
+        {
+          "name": "entity_filter_mode",
+          "order": 0,
+          "description": "",
+          "values": [
+            {
+              "name": "blacklist",
+              "order": 1,
+              "description": ""
+            },
+            {
+              "name": "whitelist",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "tile_filter_mode",
+          "order": 1,
+          "description": "",
+          "values": [
+            {
+              "name": "blacklist",
+              "order": 1,
+              "description": ""
+            },
+            {
+              "name": "whitelist",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "tile_selection_mode",
+          "order": 2,
+          "description": "",
+          "values": [
+            {
+              "name": "always",
+              "order": 1,
+              "description": ""
+            },
+            {
+              "name": "never",
+              "order": 2,
+              "description": ""
+            },
+            {
+              "name": "normal",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "only",
+              "order": 3,
+              "description": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "default_icon_size",
+      "order": 12,
+      "description": ""
+    },
+    {
+      "name": "difficulty",
+      "order": 13,
+      "description": "",
+      "values": [
+        {
+          "name": "easy",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "hard",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "normal",
+          "order": 1,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "direction",
+      "order": 14,
+      "description": "",
+      "values": [
+        {
+          "name": "east",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "eastnortheast",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "eastsoutheast",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "north",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "northeast",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "northnortheast",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "northnorthwest",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "northwest",
+          "order": 14,
+          "description": ""
+        },
+        {
+          "name": "south",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "southeast",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "southsoutheast",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "southsouthwest",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "southwest",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "west",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "westnorthwest",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "westsouthwest",
+          "order": 11,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "disconnect_reason",
+      "order": 15,
+      "description": "",
+      "values": [
+        {
+          "name": "afk",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "banned",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "cannot_keep_up",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "desync_limit_reached",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "dropped",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "kicked",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "kicked_and_deleted",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "quit",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "reconnect",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "switching_servers",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "wrong_input",
+          "order": 3,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "distraction",
+      "order": 16,
+      "description": "",
+      "values": [
+        {
+          "name": "by_anything",
+          "order": 2,
+          "description": "Attack closer enemy entities, including entities \"built\" by player (belts, inserters, chests)."
+        },
+        {
+          "name": "by_damage",
+          "order": 3,
+          "description": "Attack when attacked."
+        },
+        {
+          "name": "by_enemy",
+          "order": 1,
+          "description": "Attack closer enemy entities with force."
+        },
+        {
+          "name": "none",
+          "order": 0,
+          "description": "Perform command even if someone attacks the unit."
+        }
+      ]
+    },
+    {
+      "name": "entity_status",
+      "order": 17,
+      "description": "",
+      "values": [
+        {
+          "name": "broken",
+          "order": 3,
+          "description": "Only used if set through [ContainerPrototype::default_status](prototype:ContainerPrototype::default_status)."
+        },
+        {
+          "name": "cant_divide_segments",
+          "order": 59,
+          "description": "Used by rail signals."
+        },
+        {
+          "name": "charging",
+          "order": 17,
+          "description": "Used by accumulators."
+        },
+        {
+          "name": "closed_by_circuit_network",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "computing_navigation",
+          "order": 63,
+          "description": "Used by asteroid collectors."
+        },
+        {
+          "name": "destination_stop_full",
+          "order": 48,
+          "description": "Used by trains."
+        },
+        {
+          "name": "disabled",
+          "order": 56,
+          "description": "Used by constant combinators: Combinator is turned off via switch in GUI."
+        },
+        {
+          "name": "disabled_by_control_behavior",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "disabled_by_script",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "discharging",
+          "order": 18,
+          "description": "Used by accumulators."
+        },
+        {
+          "name": "fluid_ingredient_shortage",
+          "order": 28,
+          "description": "Used by crafting machines."
+        },
+        {
+          "name": "frozen",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "full_burnt_result_output",
+          "order": 31,
+          "description": "Used by burner energy sources."
+        },
+        {
+          "name": "full_output",
+          "order": 29,
+          "description": "Used by crafting machines, boilers, burner energy sources, and reactors: Reactor/burner has full burnt result inventory, boiler has full output fluidbox."
+        },
+        {
+          "name": "fully_charged",
+          "order": 19,
+          "description": "Used by accumulators."
+        },
+        {
+          "name": "ghost",
+          "order": 2,
+          "description": "Used by ghosts."
+        },
+        {
+          "name": "item_ingredient_shortage",
+          "order": 32,
+          "description": "Used by crafting machines."
+        },
+        {
+          "name": "launching_rocket",
+          "order": 41,
+          "description": "Used by the rocket silo."
+        },
+        {
+          "name": "low_input_fluid",
+          "order": 27,
+          "description": "Used by boilers and fluid turrets: Boiler still has some fluid but is about to run out."
+        },
+        {
+          "name": "low_power",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "low_temperature",
+          "order": 55,
+          "description": "Used by heat energy sources."
+        },
+        {
+          "name": "marked_for_deconstruction",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "missing_required_fluid",
+          "order": 33,
+          "description": "Used by mining drills when the mining fluid is missing."
+        },
+        {
+          "name": "missing_science_packs",
+          "order": 34,
+          "description": "Used by labs."
+        },
+        {
+          "name": "networks_connected",
+          "order": 15,
+          "description": "Used by power switches."
+        },
+        {
+          "name": "networks_disconnected",
+          "order": 16,
+          "description": "Used by power switches."
+        },
+        {
+          "name": "no_ammo",
+          "order": 54,
+          "description": "Used by ammo turrets."
+        },
+        {
+          "name": "no_filter",
+          "order": 60,
+          "description": "Used by filter inserters."
+        },
+        {
+          "name": "no_fuel",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "no_ingredients",
+          "order": 22,
+          "description": "Used by furnaces."
+        },
+        {
+          "name": "no_input_fluid",
+          "order": 23,
+          "description": "Used by boilers, fluid turrets, and fluid energy sources: Boiler has no fluid to work with."
+        },
+        {
+          "name": "no_minable_resources",
+          "order": 25,
+          "description": "Used by mining drills."
+        },
+        {
+          "name": "no_modules_to_transmit",
+          "order": 50,
+          "description": "Used by beacons."
+        },
+        {
+          "name": "no_path",
+          "order": 49,
+          "description": "Used by trains and space platform hubs."
+        },
+        {
+          "name": "no_power",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "no_recipe",
+          "order": 21,
+          "description": "Used by assembling machines."
+        },
+        {
+          "name": "no_research_in_progress",
+          "order": 24,
+          "description": "Used by labs."
+        },
+        {
+          "name": "no_spot_seedable_by_inputs",
+          "order": 61,
+          "description": "Used by agricultural towers."
+        },
+        {
+          "name": "normal",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "not_connected_to_hub_or_pad",
+          "order": 26,
+          "description": "Used by cargo bays."
+        },
+        {
+          "name": "not_connected_to_rail",
+          "order": 58,
+          "description": "Used by rail signals."
+        },
+        {
+          "name": "not_enough_space_in_output",
+          "order": 30,
+          "description": "Used by agricultural towers."
+        },
+        {
+          "name": "not_enough_thrust",
+          "order": 47,
+          "description": "Used by space platform hubs."
+        },
+        {
+          "name": "not_plugged_in_electric_network",
+          "order": 14,
+          "description": "Used by generators and solar panels."
+        },
+        {
+          "name": "on_the_way",
+          "order": 43,
+          "description": "Used by space platform hubs."
+        },
+        {
+          "name": "opened_by_circuit_network",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "out_of_logistic_network",
+          "order": 20,
+          "description": "Used by logistic containers."
+        },
+        {
+          "name": "paused",
+          "order": 13,
+          "description": "Used by space platform hubs."
+        },
+        {
+          "name": "pipeline_overextended",
+          "order": 64,
+          "description": "Used by pipes, pipes to ground, and storage tanks."
+        },
+        {
+          "name": "preparing_rocket_for_launch",
+          "order": 38,
+          "description": "Used by the rocket silo."
+        },
+        {
+          "name": "recharging_after_power_outage",
+          "order": 51,
+          "description": "Used by roboports."
+        },
+        {
+          "name": "recipe_is_parameter",
+          "order": 66,
+          "description": "Used by assembling machines."
+        },
+        {
+          "name": "recipe_not_researched",
+          "order": 65,
+          "description": "Used by assembling machines."
+        },
+        {
+          "name": "thrust_not_required",
+          "order": 42,
+          "description": "Used by thrusters."
+        },
+        {
+          "name": "turned_off_during_daytime",
+          "order": 57,
+          "description": "Used by lamps."
+        },
+        {
+          "name": "waiting_at_stop",
+          "order": 45,
+          "description": "Used by trains."
+        },
+        {
+          "name": "waiting_for_more_items",
+          "order": 36,
+          "description": "Used by inserters when wait_for_full_hand is set."
+        },
+        {
+          "name": "waiting_for_plants_to_grow",
+          "order": 62,
+          "description": "Used by agricultural towers."
+        },
+        {
+          "name": "waiting_for_rockets_to_arrive",
+          "order": 46,
+          "description": "Used by space platform hubs."
+        },
+        {
+          "name": "waiting_for_source_items",
+          "order": 35,
+          "description": "Used by inserters."
+        },
+        {
+          "name": "waiting_for_space_in_destination",
+          "order": 37,
+          "description": "Used by inserters, mining drills, and crafting machines using vector_to_place_result."
+        },
+        {
+          "name": "waiting_for_space_in_platform_hub",
+          "order": 40,
+          "description": "Used by the rocket silo."
+        },
+        {
+          "name": "waiting_for_target_to_be_built",
+          "order": 52,
+          "description": "Used by inserters targeting entity ghosts."
+        },
+        {
+          "name": "waiting_for_train",
+          "order": 53,
+          "description": "Used by inserters targeting rails."
+        },
+        {
+          "name": "waiting_in_orbit",
+          "order": 44,
+          "description": "Used by space platform hubs."
+        },
+        {
+          "name": "waiting_to_launch_rocket",
+          "order": 39,
+          "description": "Used by the rocket silo."
+        },
+        {
+          "name": "working",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "entity_status_diode",
+      "order": 18,
+      "description": "",
+      "values": [
+        {
+          "name": "green",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "red",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "yellow",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "events",
+      "order": 19,
+      "description": "See the [events page](runtime:events) for more info on what events contain and when they get raised.",
+      "values": [
+        {
+          "name": "on_achievement_gained",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "on_ai_command_completed",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "on_area_cloned",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "on_biter_base_built",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "on_brush_cloned",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "on_build_base_arrived",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "on_built_entity",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "on_cancelled_deconstruction",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "on_cancelled_upgrade",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "on_cargo_pod_delivered_cargo",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "on_cargo_pod_finished_ascending",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "on_cargo_pod_finished_descending",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "on_cargo_pod_started_ascending",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "on_character_corpse_expired",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "on_chart_tag_added",
+          "order": 14,
+          "description": ""
+        },
+        {
+          "name": "on_chart_tag_modified",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "on_chart_tag_removed",
+          "order": 16,
+          "description": ""
+        },
+        {
+          "name": "on_chunk_charted",
+          "order": 17,
+          "description": ""
+        },
+        {
+          "name": "on_chunk_deleted",
+          "order": 18,
+          "description": ""
+        },
+        {
+          "name": "on_chunk_generated",
+          "order": 19,
+          "description": ""
+        },
+        {
+          "name": "on_combat_robot_expired",
+          "order": 20,
+          "description": ""
+        },
+        {
+          "name": "on_console_chat",
+          "order": 21,
+          "description": ""
+        },
+        {
+          "name": "on_console_command",
+          "order": 22,
+          "description": ""
+        },
+        {
+          "name": "on_cutscene_cancelled",
+          "order": 23,
+          "description": ""
+        },
+        {
+          "name": "on_cutscene_finished",
+          "order": 24,
+          "description": ""
+        },
+        {
+          "name": "on_cutscene_started",
+          "order": 25,
+          "description": ""
+        },
+        {
+          "name": "on_cutscene_waypoint_reached",
+          "order": 26,
+          "description": ""
+        },
+        {
+          "name": "on_entity_cloned",
+          "order": 27,
+          "description": ""
+        },
+        {
+          "name": "on_entity_color_changed",
+          "order": 28,
+          "description": ""
+        },
+        {
+          "name": "on_entity_damaged",
+          "order": 29,
+          "description": ""
+        },
+        {
+          "name": "on_entity_died",
+          "order": 30,
+          "description": ""
+        },
+        {
+          "name": "on_entity_logistic_slot_changed",
+          "order": 31,
+          "description": ""
+        },
+        {
+          "name": "on_entity_renamed",
+          "order": 32,
+          "description": ""
+        },
+        {
+          "name": "on_entity_settings_pasted",
+          "order": 33,
+          "description": ""
+        },
+        {
+          "name": "on_entity_spawned",
+          "order": 34,
+          "description": ""
+        },
+        {
+          "name": "on_equipment_inserted",
+          "order": 35,
+          "description": ""
+        },
+        {
+          "name": "on_equipment_removed",
+          "order": 36,
+          "description": ""
+        },
+        {
+          "name": "on_force_cease_fire_changed",
+          "order": 37,
+          "description": ""
+        },
+        {
+          "name": "on_force_created",
+          "order": 38,
+          "description": ""
+        },
+        {
+          "name": "on_force_friends_changed",
+          "order": 39,
+          "description": ""
+        },
+        {
+          "name": "on_force_reset",
+          "order": 40,
+          "description": ""
+        },
+        {
+          "name": "on_forces_merged",
+          "order": 41,
+          "description": ""
+        },
+        {
+          "name": "on_forces_merging",
+          "order": 42,
+          "description": ""
+        },
+        {
+          "name": "on_game_created_from_scenario",
+          "order": 43,
+          "description": ""
+        },
+        {
+          "name": "on_gui_checked_state_changed",
+          "order": 44,
+          "description": ""
+        },
+        {
+          "name": "on_gui_click",
+          "order": 45,
+          "description": ""
+        },
+        {
+          "name": "on_gui_closed",
+          "order": 46,
+          "description": ""
+        },
+        {
+          "name": "on_gui_confirmed",
+          "order": 47,
+          "description": ""
+        },
+        {
+          "name": "on_gui_elem_changed",
+          "order": 48,
+          "description": ""
+        },
+        {
+          "name": "on_gui_hover",
+          "order": 49,
+          "description": ""
+        },
+        {
+          "name": "on_gui_leave",
+          "order": 50,
+          "description": ""
+        },
+        {
+          "name": "on_gui_location_changed",
+          "order": 51,
+          "description": ""
+        },
+        {
+          "name": "on_gui_opened",
+          "order": 52,
+          "description": ""
+        },
+        {
+          "name": "on_gui_selected_tab_changed",
+          "order": 53,
+          "description": ""
+        },
+        {
+          "name": "on_gui_selection_state_changed",
+          "order": 54,
+          "description": ""
+        },
+        {
+          "name": "on_gui_switch_state_changed",
+          "order": 55,
+          "description": ""
+        },
+        {
+          "name": "on_gui_text_changed",
+          "order": 56,
+          "description": ""
+        },
+        {
+          "name": "on_gui_value_changed",
+          "order": 57,
+          "description": ""
+        },
+        {
+          "name": "on_land_mine_armed",
+          "order": 58,
+          "description": ""
+        },
+        {
+          "name": "on_lua_shortcut",
+          "order": 59,
+          "description": ""
+        },
+        {
+          "name": "on_marked_for_deconstruction",
+          "order": 60,
+          "description": ""
+        },
+        {
+          "name": "on_marked_for_upgrade",
+          "order": 61,
+          "description": ""
+        },
+        {
+          "name": "on_market_item_purchased",
+          "order": 62,
+          "description": ""
+        },
+        {
+          "name": "on_mod_item_opened",
+          "order": 63,
+          "description": ""
+        },
+        {
+          "name": "on_multiplayer_init",
+          "order": 64,
+          "description": ""
+        },
+        {
+          "name": "on_object_destroyed",
+          "order": 65,
+          "description": ""
+        },
+        {
+          "name": "on_permission_group_added",
+          "order": 66,
+          "description": ""
+        },
+        {
+          "name": "on_permission_group_deleted",
+          "order": 67,
+          "description": ""
+        },
+        {
+          "name": "on_permission_group_edited",
+          "order": 68,
+          "description": ""
+        },
+        {
+          "name": "on_permission_string_imported",
+          "order": 69,
+          "description": ""
+        },
+        {
+          "name": "on_picked_up_item",
+          "order": 70,
+          "description": ""
+        },
+        {
+          "name": "on_player_alt_reverse_selected_area",
+          "order": 71,
+          "description": ""
+        },
+        {
+          "name": "on_player_alt_selected_area",
+          "order": 72,
+          "description": ""
+        },
+        {
+          "name": "on_player_ammo_inventory_changed",
+          "order": 73,
+          "description": ""
+        },
+        {
+          "name": "on_player_armor_inventory_changed",
+          "order": 74,
+          "description": ""
+        },
+        {
+          "name": "on_player_banned",
+          "order": 75,
+          "description": ""
+        },
+        {
+          "name": "on_player_built_tile",
+          "order": 76,
+          "description": ""
+        },
+        {
+          "name": "on_player_cancelled_crafting",
+          "order": 77,
+          "description": ""
+        },
+        {
+          "name": "on_player_changed_force",
+          "order": 78,
+          "description": ""
+        },
+        {
+          "name": "on_player_changed_position",
+          "order": 79,
+          "description": ""
+        },
+        {
+          "name": "on_player_changed_surface",
+          "order": 80,
+          "description": ""
+        },
+        {
+          "name": "on_player_cheat_mode_disabled",
+          "order": 81,
+          "description": ""
+        },
+        {
+          "name": "on_player_cheat_mode_enabled",
+          "order": 82,
+          "description": ""
+        },
+        {
+          "name": "on_player_clicked_gps_tag",
+          "order": 83,
+          "description": ""
+        },
+        {
+          "name": "on_player_configured_blueprint",
+          "order": 84,
+          "description": ""
+        },
+        {
+          "name": "on_player_controller_changed",
+          "order": 85,
+          "description": ""
+        },
+        {
+          "name": "on_player_crafted_item",
+          "order": 86,
+          "description": ""
+        },
+        {
+          "name": "on_player_created",
+          "order": 87,
+          "description": ""
+        },
+        {
+          "name": "on_player_cursor_stack_changed",
+          "order": 88,
+          "description": ""
+        },
+        {
+          "name": "on_player_deconstructed_area",
+          "order": 89,
+          "description": ""
+        },
+        {
+          "name": "on_player_demoted",
+          "order": 90,
+          "description": ""
+        },
+        {
+          "name": "on_player_died",
+          "order": 91,
+          "description": ""
+        },
+        {
+          "name": "on_player_display_density_scale_changed",
+          "order": 92,
+          "description": ""
+        },
+        {
+          "name": "on_player_display_resolution_changed",
+          "order": 93,
+          "description": ""
+        },
+        {
+          "name": "on_player_display_scale_changed",
+          "order": 94,
+          "description": ""
+        },
+        {
+          "name": "on_player_driving_changed_state",
+          "order": 95,
+          "description": ""
+        },
+        {
+          "name": "on_player_dropped_item",
+          "order": 96,
+          "description": ""
+        },
+        {
+          "name": "on_player_dropped_item_into_entity",
+          "order": 97,
+          "description": ""
+        },
+        {
+          "name": "on_player_fast_transferred",
+          "order": 98,
+          "description": ""
+        },
+        {
+          "name": "on_player_flipped_entity",
+          "order": 99,
+          "description": ""
+        },
+        {
+          "name": "on_player_flushed_fluid",
+          "order": 100,
+          "description": ""
+        },
+        {
+          "name": "on_player_gun_inventory_changed",
+          "order": 101,
+          "description": ""
+        },
+        {
+          "name": "on_player_input_method_changed",
+          "order": 102,
+          "description": ""
+        },
+        {
+          "name": "on_player_joined_game",
+          "order": 103,
+          "description": ""
+        },
+        {
+          "name": "on_player_kicked",
+          "order": 104,
+          "description": ""
+        },
+        {
+          "name": "on_player_left_game",
+          "order": 105,
+          "description": ""
+        },
+        {
+          "name": "on_player_locale_changed",
+          "order": 106,
+          "description": ""
+        },
+        {
+          "name": "on_player_main_inventory_changed",
+          "order": 107,
+          "description": ""
+        },
+        {
+          "name": "on_player_mined_entity",
+          "order": 108,
+          "description": ""
+        },
+        {
+          "name": "on_player_mined_item",
+          "order": 109,
+          "description": ""
+        },
+        {
+          "name": "on_player_mined_tile",
+          "order": 110,
+          "description": ""
+        },
+        {
+          "name": "on_player_muted",
+          "order": 111,
+          "description": ""
+        },
+        {
+          "name": "on_player_pipette",
+          "order": 112,
+          "description": ""
+        },
+        {
+          "name": "on_player_placed_equipment",
+          "order": 113,
+          "description": ""
+        },
+        {
+          "name": "on_player_promoted",
+          "order": 114,
+          "description": ""
+        },
+        {
+          "name": "on_player_removed",
+          "order": 115,
+          "description": ""
+        },
+        {
+          "name": "on_player_removed_equipment",
+          "order": 116,
+          "description": ""
+        },
+        {
+          "name": "on_player_repaired_entity",
+          "order": 117,
+          "description": ""
+        },
+        {
+          "name": "on_player_respawned",
+          "order": 118,
+          "description": ""
+        },
+        {
+          "name": "on_player_reverse_selected_area",
+          "order": 119,
+          "description": ""
+        },
+        {
+          "name": "on_player_rotated_entity",
+          "order": 120,
+          "description": ""
+        },
+        {
+          "name": "on_player_selected_area",
+          "order": 121,
+          "description": ""
+        },
+        {
+          "name": "on_player_set_quick_bar_slot",
+          "order": 122,
+          "description": ""
+        },
+        {
+          "name": "on_player_setup_blueprint",
+          "order": 123,
+          "description": ""
+        },
+        {
+          "name": "on_player_toggled_alt_mode",
+          "order": 124,
+          "description": ""
+        },
+        {
+          "name": "on_player_toggled_map_editor",
+          "order": 125,
+          "description": ""
+        },
+        {
+          "name": "on_player_trash_inventory_changed",
+          "order": 126,
+          "description": ""
+        },
+        {
+          "name": "on_player_unbanned",
+          "order": 127,
+          "description": ""
+        },
+        {
+          "name": "on_player_unmuted",
+          "order": 128,
+          "description": ""
+        },
+        {
+          "name": "on_player_used_capsule",
+          "order": 129,
+          "description": ""
+        },
+        {
+          "name": "on_player_used_spidertron_remote",
+          "order": 130,
+          "description": ""
+        },
+        {
+          "name": "on_post_entity_died",
+          "order": 131,
+          "description": ""
+        },
+        {
+          "name": "on_post_segmented_unit_died",
+          "order": 132,
+          "description": ""
+        },
+        {
+          "name": "on_pre_build",
+          "order": 133,
+          "description": ""
+        },
+        {
+          "name": "on_pre_chunk_deleted",
+          "order": 134,
+          "description": ""
+        },
+        {
+          "name": "on_pre_entity_settings_pasted",
+          "order": 135,
+          "description": ""
+        },
+        {
+          "name": "on_pre_ghost_deconstructed",
+          "order": 136,
+          "description": ""
+        },
+        {
+          "name": "on_pre_ghost_upgraded",
+          "order": 137,
+          "description": ""
+        },
+        {
+          "name": "on_pre_permission_group_deleted",
+          "order": 138,
+          "description": ""
+        },
+        {
+          "name": "on_pre_permission_string_imported",
+          "order": 139,
+          "description": ""
+        },
+        {
+          "name": "on_pre_player_crafted_item",
+          "order": 140,
+          "description": ""
+        },
+        {
+          "name": "on_pre_player_died",
+          "order": 141,
+          "description": ""
+        },
+        {
+          "name": "on_pre_player_left_game",
+          "order": 142,
+          "description": ""
+        },
+        {
+          "name": "on_pre_player_mined_item",
+          "order": 143,
+          "description": ""
+        },
+        {
+          "name": "on_pre_player_removed",
+          "order": 144,
+          "description": ""
+        },
+        {
+          "name": "on_pre_player_toggled_map_editor",
+          "order": 145,
+          "description": ""
+        },
+        {
+          "name": "on_pre_robot_exploded_cliff",
+          "order": 146,
+          "description": ""
+        },
+        {
+          "name": "on_pre_scenario_finished",
+          "order": 147,
+          "description": ""
+        },
+        {
+          "name": "on_pre_script_inventory_resized",
+          "order": 148,
+          "description": ""
+        },
+        {
+          "name": "on_pre_surface_cleared",
+          "order": 149,
+          "description": ""
+        },
+        {
+          "name": "on_pre_surface_deleted",
+          "order": 150,
+          "description": ""
+        },
+        {
+          "name": "on_redo_applied",
+          "order": 151,
+          "description": ""
+        },
+        {
+          "name": "on_research_cancelled",
+          "order": 152,
+          "description": ""
+        },
+        {
+          "name": "on_research_finished",
+          "order": 153,
+          "description": ""
+        },
+        {
+          "name": "on_research_moved",
+          "order": 154,
+          "description": ""
+        },
+        {
+          "name": "on_research_queued",
+          "order": 155,
+          "description": ""
+        },
+        {
+          "name": "on_research_reversed",
+          "order": 156,
+          "description": ""
+        },
+        {
+          "name": "on_research_started",
+          "order": 157,
+          "description": ""
+        },
+        {
+          "name": "on_resource_depleted",
+          "order": 158,
+          "description": ""
+        },
+        {
+          "name": "on_robot_built_entity",
+          "order": 159,
+          "description": ""
+        },
+        {
+          "name": "on_robot_built_tile",
+          "order": 160,
+          "description": ""
+        },
+        {
+          "name": "on_robot_exploded_cliff",
+          "order": 161,
+          "description": ""
+        },
+        {
+          "name": "on_robot_mined",
+          "order": 162,
+          "description": ""
+        },
+        {
+          "name": "on_robot_mined_entity",
+          "order": 163,
+          "description": ""
+        },
+        {
+          "name": "on_robot_mined_tile",
+          "order": 164,
+          "description": ""
+        },
+        {
+          "name": "on_robot_pre_mined",
+          "order": 165,
+          "description": ""
+        },
+        {
+          "name": "on_rocket_launch_ordered",
+          "order": 166,
+          "description": ""
+        },
+        {
+          "name": "on_rocket_launched",
+          "order": 167,
+          "description": ""
+        },
+        {
+          "name": "on_runtime_mod_setting_changed",
+          "order": 168,
+          "description": ""
+        },
+        {
+          "name": "on_script_inventory_resized",
+          "order": 169,
+          "description": ""
+        },
+        {
+          "name": "on_script_path_request_finished",
+          "order": 170,
+          "description": ""
+        },
+        {
+          "name": "on_script_trigger_effect",
+          "order": 171,
+          "description": ""
+        },
+        {
+          "name": "on_sector_scanned",
+          "order": 172,
+          "description": ""
+        },
+        {
+          "name": "on_segment_entity_created",
+          "order": 173,
+          "description": ""
+        },
+        {
+          "name": "on_segmented_unit_created",
+          "order": 174,
+          "description": ""
+        },
+        {
+          "name": "on_segmented_unit_damaged",
+          "order": 175,
+          "description": ""
+        },
+        {
+          "name": "on_segmented_unit_died",
+          "order": 176,
+          "description": ""
+        },
+        {
+          "name": "on_selected_entity_changed",
+          "order": 177,
+          "description": ""
+        },
+        {
+          "name": "on_singleplayer_init",
+          "order": 178,
+          "description": ""
+        },
+        {
+          "name": "on_space_platform_built_entity",
+          "order": 179,
+          "description": ""
+        },
+        {
+          "name": "on_space_platform_built_tile",
+          "order": 180,
+          "description": ""
+        },
+        {
+          "name": "on_space_platform_changed_state",
+          "order": 181,
+          "description": ""
+        },
+        {
+          "name": "on_space_platform_mined_entity",
+          "order": 182,
+          "description": ""
+        },
+        {
+          "name": "on_space_platform_mined_item",
+          "order": 183,
+          "description": ""
+        },
+        {
+          "name": "on_space_platform_mined_tile",
+          "order": 184,
+          "description": ""
+        },
+        {
+          "name": "on_space_platform_pre_mined",
+          "order": 185,
+          "description": ""
+        },
+        {
+          "name": "on_spider_command_completed",
+          "order": 186,
+          "description": ""
+        },
+        {
+          "name": "on_string_translated",
+          "order": 187,
+          "description": ""
+        },
+        {
+          "name": "on_surface_cleared",
+          "order": 188,
+          "description": ""
+        },
+        {
+          "name": "on_surface_created",
+          "order": 189,
+          "description": ""
+        },
+        {
+          "name": "on_surface_deleted",
+          "order": 190,
+          "description": ""
+        },
+        {
+          "name": "on_surface_imported",
+          "order": 191,
+          "description": ""
+        },
+        {
+          "name": "on_surface_renamed",
+          "order": 192,
+          "description": ""
+        },
+        {
+          "name": "on_technology_effects_reset",
+          "order": 193,
+          "description": ""
+        },
+        {
+          "name": "on_territory_created",
+          "order": 194,
+          "description": ""
+        },
+        {
+          "name": "on_territory_destroyed",
+          "order": 195,
+          "description": ""
+        },
+        {
+          "name": "on_tick",
+          "order": 196,
+          "description": ""
+        },
+        {
+          "name": "on_tower_mined_plant",
+          "order": 197,
+          "description": ""
+        },
+        {
+          "name": "on_tower_planted_seed",
+          "order": 198,
+          "description": ""
+        },
+        {
+          "name": "on_tower_pre_mined_plant",
+          "order": 199,
+          "description": ""
+        },
+        {
+          "name": "on_train_changed_state",
+          "order": 200,
+          "description": ""
+        },
+        {
+          "name": "on_train_created",
+          "order": 201,
+          "description": ""
+        },
+        {
+          "name": "on_train_schedule_changed",
+          "order": 202,
+          "description": ""
+        },
+        {
+          "name": "on_trigger_created_entity",
+          "order": 203,
+          "description": ""
+        },
+        {
+          "name": "on_trigger_fired_artillery",
+          "order": 204,
+          "description": ""
+        },
+        {
+          "name": "on_udp_packet_received",
+          "order": 205,
+          "description": ""
+        },
+        {
+          "name": "on_undo_applied",
+          "order": 206,
+          "description": ""
+        },
+        {
+          "name": "on_unit_added_to_group",
+          "order": 207,
+          "description": ""
+        },
+        {
+          "name": "on_unit_group_created",
+          "order": 208,
+          "description": ""
+        },
+        {
+          "name": "on_unit_group_finished_gathering",
+          "order": 209,
+          "description": ""
+        },
+        {
+          "name": "on_unit_removed_from_group",
+          "order": 210,
+          "description": ""
+        },
+        {
+          "name": "on_worker_robot_expired",
+          "order": 211,
+          "description": ""
+        },
+        {
+          "name": "script_raised_built",
+          "order": 212,
+          "description": ""
+        },
+        {
+          "name": "script_raised_destroy",
+          "order": 213,
+          "description": ""
+        },
+        {
+          "name": "script_raised_destroy_segmented_unit",
+          "order": 214,
+          "description": ""
+        },
+        {
+          "name": "script_raised_revive",
+          "order": 215,
+          "description": ""
+        },
+        {
+          "name": "script_raised_set_tiles",
+          "order": 216,
+          "description": ""
+        },
+        {
+          "name": "script_raised_teleported",
+          "order": 217,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "flow_precision_index",
+      "order": 20,
+      "description": "",
+      "values": [
+        {
+          "name": "fifty_hours",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "five_seconds",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "one_hour",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "one_minute",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "one_thousand_hours",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "ten_hours",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "ten_minutes",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "two_hundred_fifty_hours",
+          "order": 6,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "game_controller_interaction",
+      "order": 21,
+      "description": "",
+      "values": [
+        {
+          "name": "always",
+          "order": 0,
+          "description": "Game controller will always hover this element regardless of type or state."
+        },
+        {
+          "name": "never",
+          "order": 1,
+          "description": "Never hover this element with a game controller."
+        },
+        {
+          "name": "normal",
+          "order": 2,
+          "description": "Hover according to the element type and implementation."
+        }
+      ]
+    },
+    {
+      "name": "group_state",
+      "order": 22,
+      "description": "",
+      "values": [
+        {
+          "name": "attacking_distraction",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "attacking_target",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "finished",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "gathering",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "moving",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "pathfinding",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "wander_in_group",
+          "order": 6,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "gui_type",
+      "order": 23,
+      "description": "",
+      "values": [
+        {
+          "name": "achievement",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "blueprint_library",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "bonus",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "controller",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "custom",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "entity",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "equipment",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "global_electric_network",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "item",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "logistic",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "none",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "opened_entity_grid",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "other_player",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "permissions",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "player_management",
+          "order": 14,
+          "description": ""
+        },
+        {
+          "name": "production",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "script_inventory",
+          "order": 16,
+          "description": ""
+        },
+        {
+          "name": "server_management",
+          "order": 17,
+          "description": ""
+        },
+        {
+          "name": "tile",
+          "order": 18,
+          "description": ""
+        },
+        {
+          "name": "trains",
+          "order": 19,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "input_action",
+      "order": 24,
+      "description": "",
+      "values": [
+        {
+          "name": "activate_interrupt",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "activate_paste",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "add_decider_combinator_condition",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "add_decider_combinator_output",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "add_logistic_section",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "add_permission_group",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "add_pin",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "add_train_interrupt",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "add_train_station",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "adjust_blueprint_snapping",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "admin_action",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "alt_reverse_select_area",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "alt_select_area",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "alt_select_blueprint_entities",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "alternative_copy",
+          "order": 14,
+          "description": ""
+        },
+        {
+          "name": "begin_mining",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "begin_mining_terrain",
+          "order": 16,
+          "description": ""
+        },
+        {
+          "name": "build",
+          "order": 17,
+          "description": ""
+        },
+        {
+          "name": "build_rail",
+          "order": 18,
+          "description": ""
+        },
+        {
+          "name": "build_terrain",
+          "order": 19,
+          "description": ""
+        },
+        {
+          "name": "cancel_craft",
+          "order": 20,
+          "description": ""
+        },
+        {
+          "name": "cancel_deconstruct",
+          "order": 21,
+          "description": ""
+        },
+        {
+          "name": "cancel_delete_space_platform",
+          "order": 22,
+          "description": ""
+        },
+        {
+          "name": "cancel_new_blueprint",
+          "order": 23,
+          "description": ""
+        },
+        {
+          "name": "cancel_research",
+          "order": 24,
+          "description": ""
+        },
+        {
+          "name": "cancel_upgrade",
+          "order": 25,
+          "description": ""
+        },
+        {
+          "name": "change_active_character_tab",
+          "order": 26,
+          "description": ""
+        },
+        {
+          "name": "change_active_item_group_for_crafting",
+          "order": 27,
+          "description": ""
+        },
+        {
+          "name": "change_active_item_group_for_filters",
+          "order": 28,
+          "description": ""
+        },
+        {
+          "name": "change_active_quick_bar",
+          "order": 29,
+          "description": ""
+        },
+        {
+          "name": "change_arithmetic_combinator_parameters",
+          "order": 30,
+          "description": ""
+        },
+        {
+          "name": "change_entity_label",
+          "order": 31,
+          "description": ""
+        },
+        {
+          "name": "change_heading_riding_state",
+          "order": 32,
+          "description": ""
+        },
+        {
+          "name": "change_item_label",
+          "order": 33,
+          "description": ""
+        },
+        {
+          "name": "change_logistic_point_group",
+          "order": 34,
+          "description": ""
+        },
+        {
+          "name": "change_multiplayer_config",
+          "order": 35,
+          "description": ""
+        },
+        {
+          "name": "change_picking_state",
+          "order": 36,
+          "description": ""
+        },
+        {
+          "name": "change_programmable_speaker_alert_parameters",
+          "order": 37,
+          "description": ""
+        },
+        {
+          "name": "change_programmable_speaker_circuit_parameters",
+          "order": 38,
+          "description": ""
+        },
+        {
+          "name": "change_programmable_speaker_parameters",
+          "order": 39,
+          "description": ""
+        },
+        {
+          "name": "change_riding_state",
+          "order": 40,
+          "description": ""
+        },
+        {
+          "name": "change_selector_combinator_parameters",
+          "order": 41,
+          "description": ""
+        },
+        {
+          "name": "change_shooting_state",
+          "order": 42,
+          "description": ""
+        },
+        {
+          "name": "change_train_name",
+          "order": 43,
+          "description": ""
+        },
+        {
+          "name": "change_train_stop_station",
+          "order": 44,
+          "description": ""
+        },
+        {
+          "name": "change_train_wait_condition",
+          "order": 45,
+          "description": ""
+        },
+        {
+          "name": "change_train_wait_condition_data",
+          "order": 46,
+          "description": ""
+        },
+        {
+          "name": "cheat",
+          "order": 47,
+          "description": ""
+        },
+        {
+          "name": "clear_cursor",
+          "order": 48,
+          "description": ""
+        },
+        {
+          "name": "connect_rolling_stock",
+          "order": 49,
+          "description": ""
+        },
+        {
+          "name": "copy",
+          "order": 50,
+          "description": ""
+        },
+        {
+          "name": "copy_entity_settings",
+          "order": 51,
+          "description": ""
+        },
+        {
+          "name": "copy_large_opened_blueprint",
+          "order": 52,
+          "description": ""
+        },
+        {
+          "name": "copy_large_opened_item",
+          "order": 53,
+          "description": ""
+        },
+        {
+          "name": "copy_opened_blueprint",
+          "order": 54,
+          "description": ""
+        },
+        {
+          "name": "copy_opened_item",
+          "order": 55,
+          "description": ""
+        },
+        {
+          "name": "craft",
+          "order": 56,
+          "description": ""
+        },
+        {
+          "name": "create_space_platform",
+          "order": 57,
+          "description": ""
+        },
+        {
+          "name": "cursor_split",
+          "order": 58,
+          "description": ""
+        },
+        {
+          "name": "cursor_transfer",
+          "order": 59,
+          "description": ""
+        },
+        {
+          "name": "custom_input",
+          "order": 60,
+          "description": ""
+        },
+        {
+          "name": "cycle_blueprint_book_backwards",
+          "order": 61,
+          "description": ""
+        },
+        {
+          "name": "cycle_blueprint_book_forwards",
+          "order": 62,
+          "description": ""
+        },
+        {
+          "name": "cycle_quality_down",
+          "order": 63,
+          "description": ""
+        },
+        {
+          "name": "cycle_quality_up",
+          "order": 64,
+          "description": ""
+        },
+        {
+          "name": "deconstruct",
+          "order": 65,
+          "description": ""
+        },
+        {
+          "name": "delete_blueprint_library",
+          "order": 66,
+          "description": ""
+        },
+        {
+          "name": "delete_blueprint_record",
+          "order": 67,
+          "description": ""
+        },
+        {
+          "name": "delete_custom_tag",
+          "order": 68,
+          "description": ""
+        },
+        {
+          "name": "delete_logistic_group",
+          "order": 69,
+          "description": ""
+        },
+        {
+          "name": "delete_permission_group",
+          "order": 70,
+          "description": ""
+        },
+        {
+          "name": "delete_space_platform",
+          "order": 71,
+          "description": ""
+        },
+        {
+          "name": "destroy_item",
+          "order": 72,
+          "description": ""
+        },
+        {
+          "name": "destroy_opened_item",
+          "order": 73,
+          "description": ""
+        },
+        {
+          "name": "disconnect_rolling_stock",
+          "order": 74,
+          "description": ""
+        },
+        {
+          "name": "drag_decider_combinator_condition",
+          "order": 75,
+          "description": ""
+        },
+        {
+          "name": "drag_decider_combinator_output",
+          "order": 76,
+          "description": ""
+        },
+        {
+          "name": "drag_train_schedule",
+          "order": 77,
+          "description": ""
+        },
+        {
+          "name": "drag_train_schedule_interrupt",
+          "order": 78,
+          "description": ""
+        },
+        {
+          "name": "drag_train_wait_condition",
+          "order": 79,
+          "description": ""
+        },
+        {
+          "name": "drop_blueprint_record",
+          "order": 80,
+          "description": ""
+        },
+        {
+          "name": "drop_item",
+          "order": 81,
+          "description": ""
+        },
+        {
+          "name": "edit_blueprint_tool_preview",
+          "order": 82,
+          "description": ""
+        },
+        {
+          "name": "edit_custom_tag",
+          "order": 83,
+          "description": ""
+        },
+        {
+          "name": "edit_display_panel",
+          "order": 84,
+          "description": ""
+        },
+        {
+          "name": "edit_display_panel_always_show",
+          "order": 85,
+          "description": ""
+        },
+        {
+          "name": "edit_display_panel_icon",
+          "order": 86,
+          "description": ""
+        },
+        {
+          "name": "edit_display_panel_parameters",
+          "order": 87,
+          "description": ""
+        },
+        {
+          "name": "edit_display_panel_show_in_chart",
+          "order": 88,
+          "description": ""
+        },
+        {
+          "name": "edit_display_panel_single_entry",
+          "order": 89,
+          "description": ""
+        },
+        {
+          "name": "edit_interrupt",
+          "order": 90,
+          "description": ""
+        },
+        {
+          "name": "edit_permission_group",
+          "order": 91,
+          "description": ""
+        },
+        {
+          "name": "edit_pin",
+          "order": 92,
+          "description": ""
+        },
+        {
+          "name": "export_blueprint",
+          "order": 93,
+          "description": ""
+        },
+        {
+          "name": "fast_entity_split",
+          "order": 94,
+          "description": ""
+        },
+        {
+          "name": "fast_entity_transfer",
+          "order": 95,
+          "description": ""
+        },
+        {
+          "name": "flip_entity",
+          "order": 96,
+          "description": ""
+        },
+        {
+          "name": "flush_opened_entity_fluid",
+          "order": 97,
+          "description": ""
+        },
+        {
+          "name": "flush_opened_entity_specific_fluid",
+          "order": 98,
+          "description": ""
+        },
+        {
+          "name": "go_to_train_station",
+          "order": 99,
+          "description": ""
+        },
+        {
+          "name": "grab_blueprint_record",
+          "order": 100,
+          "description": ""
+        },
+        {
+          "name": "gui_checked_state_changed",
+          "order": 101,
+          "description": ""
+        },
+        {
+          "name": "gui_click",
+          "order": 102,
+          "description": ""
+        },
+        {
+          "name": "gui_confirmed",
+          "order": 103,
+          "description": ""
+        },
+        {
+          "name": "gui_elem_changed",
+          "order": 104,
+          "description": ""
+        },
+        {
+          "name": "gui_hover",
+          "order": 105,
+          "description": ""
+        },
+        {
+          "name": "gui_leave",
+          "order": 106,
+          "description": ""
+        },
+        {
+          "name": "gui_location_changed",
+          "order": 107,
+          "description": ""
+        },
+        {
+          "name": "gui_selected_tab_changed",
+          "order": 108,
+          "description": ""
+        },
+        {
+          "name": "gui_selection_state_changed",
+          "order": 109,
+          "description": ""
+        },
+        {
+          "name": "gui_switch_state_changed",
+          "order": 110,
+          "description": ""
+        },
+        {
+          "name": "gui_text_changed",
+          "order": 111,
+          "description": ""
+        },
+        {
+          "name": "gui_value_changed",
+          "order": 112,
+          "description": ""
+        },
+        {
+          "name": "import_blueprint",
+          "order": 113,
+          "description": ""
+        },
+        {
+          "name": "import_blueprint_string",
+          "order": 114,
+          "description": ""
+        },
+        {
+          "name": "import_blueprints_filtered",
+          "order": 115,
+          "description": ""
+        },
+        {
+          "name": "import_permissions_string",
+          "order": 116,
+          "description": ""
+        },
+        {
+          "name": "instantly_create_space_platform",
+          "order": 117,
+          "description": ""
+        },
+        {
+          "name": "inventory_split",
+          "order": 118,
+          "description": ""
+        },
+        {
+          "name": "inventory_transfer",
+          "order": 119,
+          "description": ""
+        },
+        {
+          "name": "land_at_planet",
+          "order": 120,
+          "description": ""
+        },
+        {
+          "name": "launch_rocket",
+          "order": 121,
+          "description": ""
+        },
+        {
+          "name": "lua_shortcut",
+          "order": 122,
+          "description": ""
+        },
+        {
+          "name": "map_editor_action",
+          "order": 123,
+          "description": ""
+        },
+        {
+          "name": "market_offer",
+          "order": 124,
+          "description": ""
+        },
+        {
+          "name": "mod_settings_changed",
+          "order": 125,
+          "description": ""
+        },
+        {
+          "name": "modify_decider_combinator_condition",
+          "order": 126,
+          "description": ""
+        },
+        {
+          "name": "modify_decider_combinator_output",
+          "order": 127,
+          "description": ""
+        },
+        {
+          "name": "move_pin",
+          "order": 128,
+          "description": ""
+        },
+        {
+          "name": "move_research",
+          "order": 129,
+          "description": ""
+        },
+        {
+          "name": "open_achievements_gui",
+          "order": 130,
+          "description": ""
+        },
+        {
+          "name": "open_blueprint_library_gui",
+          "order": 131,
+          "description": ""
+        },
+        {
+          "name": "open_blueprint_record",
+          "order": 132,
+          "description": ""
+        },
+        {
+          "name": "open_bonus_gui",
+          "order": 133,
+          "description": ""
+        },
+        {
+          "name": "open_character_gui",
+          "order": 134,
+          "description": ""
+        },
+        {
+          "name": "open_current_vehicle_gui",
+          "order": 135,
+          "description": ""
+        },
+        {
+          "name": "open_equipment",
+          "order": 136,
+          "description": ""
+        },
+        {
+          "name": "open_global_electric_network_gui",
+          "order": 137,
+          "description": ""
+        },
+        {
+          "name": "open_gui",
+          "order": 138,
+          "description": ""
+        },
+        {
+          "name": "open_item",
+          "order": 139,
+          "description": ""
+        },
+        {
+          "name": "open_logistics_gui",
+          "order": 140,
+          "description": ""
+        },
+        {
+          "name": "open_mod_item",
+          "order": 141,
+          "description": ""
+        },
+        {
+          "name": "open_new_platform_button_from_rocket_silo",
+          "order": 142,
+          "description": ""
+        },
+        {
+          "name": "open_opened_entity_grid",
+          "order": 143,
+          "description": ""
+        },
+        {
+          "name": "open_parent_of_opened_item",
+          "order": 144,
+          "description": ""
+        },
+        {
+          "name": "open_production_gui",
+          "order": 145,
+          "description": ""
+        },
+        {
+          "name": "open_train_gui",
+          "order": 146,
+          "description": ""
+        },
+        {
+          "name": "open_train_station_gui",
+          "order": 147,
+          "description": ""
+        },
+        {
+          "name": "open_trains_gui",
+          "order": 148,
+          "description": ""
+        },
+        {
+          "name": "parametrise_blueprint",
+          "order": 149,
+          "description": ""
+        },
+        {
+          "name": "paste_entity_settings",
+          "order": 150,
+          "description": ""
+        },
+        {
+          "name": "pin_alert_group",
+          "order": 151,
+          "description": ""
+        },
+        {
+          "name": "pin_custom_alert",
+          "order": 152,
+          "description": ""
+        },
+        {
+          "name": "pin_search_result",
+          "order": 153,
+          "description": ""
+        },
+        {
+          "name": "pipette",
+          "order": 154,
+          "description": ""
+        },
+        {
+          "name": "place_equipment",
+          "order": 155,
+          "description": ""
+        },
+        {
+          "name": "quick_bar_pick_slot",
+          "order": 156,
+          "description": ""
+        },
+        {
+          "name": "quick_bar_set_selected_page",
+          "order": 157,
+          "description": ""
+        },
+        {
+          "name": "quick_bar_set_slot",
+          "order": 158,
+          "description": ""
+        },
+        {
+          "name": "reassign_blueprint",
+          "order": 159,
+          "description": ""
+        },
+        {
+          "name": "redo",
+          "order": 160,
+          "description": ""
+        },
+        {
+          "name": "remote_view_entity",
+          "order": 161,
+          "description": ""
+        },
+        {
+          "name": "remote_view_surface",
+          "order": 162,
+          "description": ""
+        },
+        {
+          "name": "remove_cables",
+          "order": 163,
+          "description": ""
+        },
+        {
+          "name": "remove_decider_combinator_condition",
+          "order": 164,
+          "description": ""
+        },
+        {
+          "name": "remove_decider_combinator_output",
+          "order": 165,
+          "description": ""
+        },
+        {
+          "name": "remove_logistic_section",
+          "order": 166,
+          "description": ""
+        },
+        {
+          "name": "remove_pin",
+          "order": 167,
+          "description": ""
+        },
+        {
+          "name": "remove_train_interrupt",
+          "order": 168,
+          "description": ""
+        },
+        {
+          "name": "remove_train_station",
+          "order": 169,
+          "description": ""
+        },
+        {
+          "name": "rename_interrupt",
+          "order": 170,
+          "description": ""
+        },
+        {
+          "name": "rename_space_platform",
+          "order": 171,
+          "description": ""
+        },
+        {
+          "name": "reorder_logistic_section",
+          "order": 172,
+          "description": ""
+        },
+        {
+          "name": "request_missing_construction_materials",
+          "order": 173,
+          "description": ""
+        },
+        {
+          "name": "reset_assembling_machine",
+          "order": 174,
+          "description": ""
+        },
+        {
+          "name": "reverse_select_area",
+          "order": 175,
+          "description": ""
+        },
+        {
+          "name": "rotate_entity",
+          "order": 176,
+          "description": ""
+        },
+        {
+          "name": "select_area",
+          "order": 177,
+          "description": ""
+        },
+        {
+          "name": "select_asteroid_chunk_slot",
+          "order": 178,
+          "description": ""
+        },
+        {
+          "name": "select_blueprint_entities",
+          "order": 179,
+          "description": ""
+        },
+        {
+          "name": "select_entity_filter_slot",
+          "order": 180,
+          "description": ""
+        },
+        {
+          "name": "select_entity_slot",
+          "order": 181,
+          "description": ""
+        },
+        {
+          "name": "select_item_filter",
+          "order": 182,
+          "description": ""
+        },
+        {
+          "name": "select_mapper_slot_from",
+          "order": 183,
+          "description": ""
+        },
+        {
+          "name": "select_mapper_slot_to",
+          "order": 184,
+          "description": ""
+        },
+        {
+          "name": "select_next_valid_gun",
+          "order": 185,
+          "description": ""
+        },
+        {
+          "name": "select_tile_slot",
+          "order": 186,
+          "description": ""
+        },
+        {
+          "name": "send_spidertron",
+          "order": 187,
+          "description": ""
+        },
+        {
+          "name": "send_stack_to_trash",
+          "order": 188,
+          "description": ""
+        },
+        {
+          "name": "send_stacks_to_trash",
+          "order": 189,
+          "description": ""
+        },
+        {
+          "name": "send_train_to_pin_target",
+          "order": 190,
+          "description": ""
+        },
+        {
+          "name": "set_behavior_mode",
+          "order": 191,
+          "description": ""
+        },
+        {
+          "name": "set_car_weapons_control",
+          "order": 192,
+          "description": ""
+        },
+        {
+          "name": "set_cheat_mode_quality",
+          "order": 193,
+          "description": ""
+        },
+        {
+          "name": "set_circuit_condition",
+          "order": 194,
+          "description": ""
+        },
+        {
+          "name": "set_circuit_mode_of_operation",
+          "order": 195,
+          "description": ""
+        },
+        {
+          "name": "set_combinator_description",
+          "order": 196,
+          "description": ""
+        },
+        {
+          "name": "set_copy_color_from_train_stop",
+          "order": 197,
+          "description": ""
+        },
+        {
+          "name": "set_deconstruction_item_tile_selection_mode",
+          "order": 198,
+          "description": ""
+        },
+        {
+          "name": "set_deconstruction_item_trees_and_rocks_only",
+          "order": 199,
+          "description": ""
+        },
+        {
+          "name": "set_entity_color",
+          "order": 200,
+          "description": ""
+        },
+        {
+          "name": "set_entity_energy_property",
+          "order": 201,
+          "description": ""
+        },
+        {
+          "name": "set_filter",
+          "order": 202,
+          "description": ""
+        },
+        {
+          "name": "set_ghost_cursor",
+          "order": 203,
+          "description": ""
+        },
+        {
+          "name": "set_heat_interface_mode",
+          "order": 204,
+          "description": ""
+        },
+        {
+          "name": "set_heat_interface_temperature",
+          "order": 205,
+          "description": ""
+        },
+        {
+          "name": "set_infinity_container_filter_item",
+          "order": 206,
+          "description": ""
+        },
+        {
+          "name": "set_infinity_container_remove_unfiltered_items",
+          "order": 207,
+          "description": ""
+        },
+        {
+          "name": "set_infinity_pipe_filter",
+          "order": 208,
+          "description": ""
+        },
+        {
+          "name": "set_inserter_max_stack_size",
+          "order": 209,
+          "description": ""
+        },
+        {
+          "name": "set_inventory_bar",
+          "order": 210,
+          "description": ""
+        },
+        {
+          "name": "set_lamp_always_on",
+          "order": 211,
+          "description": ""
+        },
+        {
+          "name": "set_linked_container_link_i_d",
+          "order": 212,
+          "description": ""
+        },
+        {
+          "name": "set_loader_belt_stack_size_override",
+          "order": 213,
+          "description": ""
+        },
+        {
+          "name": "set_logistic_filter_item",
+          "order": 214,
+          "description": ""
+        },
+        {
+          "name": "set_logistic_network_name",
+          "order": 215,
+          "description": ""
+        },
+        {
+          "name": "set_logistic_section_active",
+          "order": 216,
+          "description": ""
+        },
+        {
+          "name": "set_player_color",
+          "order": 217,
+          "description": ""
+        },
+        {
+          "name": "set_pump_fluid_filter",
+          "order": 218,
+          "description": ""
+        },
+        {
+          "name": "set_request_from_buffers",
+          "order": 219,
+          "description": ""
+        },
+        {
+          "name": "set_research_finished_stops_game",
+          "order": 220,
+          "description": ""
+        },
+        {
+          "name": "set_rocket_silo_send_to_orbit_automated_mode",
+          "order": 221,
+          "description": ""
+        },
+        {
+          "name": "set_schedule_record_allow_unloading",
+          "order": 222,
+          "description": ""
+        },
+        {
+          "name": "set_signal",
+          "order": 223,
+          "description": ""
+        },
+        {
+          "name": "set_splitter_priority",
+          "order": 224,
+          "description": ""
+        },
+        {
+          "name": "set_spoil_priority",
+          "order": 225,
+          "description": ""
+        },
+        {
+          "name": "set_train_stop_priority",
+          "order": 226,
+          "description": ""
+        },
+        {
+          "name": "set_train_stopped",
+          "order": 227,
+          "description": ""
+        },
+        {
+          "name": "set_trains_limit",
+          "order": 228,
+          "description": ""
+        },
+        {
+          "name": "set_turret_ignore_unlisted",
+          "order": 229,
+          "description": ""
+        },
+        {
+          "name": "set_use_inserter_filters",
+          "order": 230,
+          "description": ""
+        },
+        {
+          "name": "set_vehicle_automatic_targeting_parameters",
+          "order": 231,
+          "description": ""
+        },
+        {
+          "name": "setup_assembling_machine",
+          "order": 232,
+          "description": ""
+        },
+        {
+          "name": "setup_blueprint",
+          "order": 233,
+          "description": ""
+        },
+        {
+          "name": "setup_single_blueprint_record",
+          "order": 234,
+          "description": ""
+        },
+        {
+          "name": "spawn_item",
+          "order": 235,
+          "description": ""
+        },
+        {
+          "name": "spectator_change_surface",
+          "order": 236,
+          "description": ""
+        },
+        {
+          "name": "stack_split",
+          "order": 237,
+          "description": ""
+        },
+        {
+          "name": "stack_transfer",
+          "order": 238,
+          "description": ""
+        },
+        {
+          "name": "start_repair",
+          "order": 239,
+          "description": ""
+        },
+        {
+          "name": "start_research",
+          "order": 240,
+          "description": ""
+        },
+        {
+          "name": "start_walking",
+          "order": 241,
+          "description": ""
+        },
+        {
+          "name": "stop_drag_build",
+          "order": 242,
+          "description": ""
+        },
+        {
+          "name": "swap_asteroid_chunk_slots",
+          "order": 243,
+          "description": ""
+        },
+        {
+          "name": "swap_entity_filter_slots",
+          "order": 244,
+          "description": ""
+        },
+        {
+          "name": "swap_entity_slots",
+          "order": 245,
+          "description": ""
+        },
+        {
+          "name": "swap_infinity_container_filter_items",
+          "order": 246,
+          "description": ""
+        },
+        {
+          "name": "swap_item_filters",
+          "order": 247,
+          "description": ""
+        },
+        {
+          "name": "swap_logistic_filter_items",
+          "order": 248,
+          "description": ""
+        },
+        {
+          "name": "swap_mappers",
+          "order": 249,
+          "description": ""
+        },
+        {
+          "name": "swap_tile_slots",
+          "order": 250,
+          "description": ""
+        },
+        {
+          "name": "switch_connect_to_logistic_network",
+          "order": 251,
+          "description": ""
+        },
+        {
+          "name": "switch_constant_combinator_state",
+          "order": 252,
+          "description": ""
+        },
+        {
+          "name": "switch_inserter_filter_mode_state",
+          "order": 253,
+          "description": ""
+        },
+        {
+          "name": "switch_loader_filter_mode",
+          "order": 254,
+          "description": ""
+        },
+        {
+          "name": "switch_mining_drill_filter_mode_state",
+          "order": 255,
+          "description": ""
+        },
+        {
+          "name": "switch_power_switch_state",
+          "order": 256,
+          "description": ""
+        },
+        {
+          "name": "take_equipment",
+          "order": 257,
+          "description": ""
+        },
+        {
+          "name": "toggle_artillery_auto_targeting",
+          "order": 258,
+          "description": ""
+        },
+        {
+          "name": "toggle_deconstruction_item_entity_filter_mode",
+          "order": 259,
+          "description": ""
+        },
+        {
+          "name": "toggle_deconstruction_item_tile_filter_mode",
+          "order": 260,
+          "description": ""
+        },
+        {
+          "name": "toggle_driving",
+          "order": 261,
+          "description": ""
+        },
+        {
+          "name": "toggle_enable_vehicle_logistics_while_moving",
+          "order": 262,
+          "description": ""
+        },
+        {
+          "name": "toggle_entity_logistic_requests",
+          "order": 263,
+          "description": ""
+        },
+        {
+          "name": "toggle_equipment_movement_bonus",
+          "order": 264,
+          "description": ""
+        },
+        {
+          "name": "toggle_map_editor",
+          "order": 265,
+          "description": ""
+        },
+        {
+          "name": "toggle_personal_logistic_requests",
+          "order": 266,
+          "description": ""
+        },
+        {
+          "name": "toggle_personal_roboport",
+          "order": 267,
+          "description": ""
+        },
+        {
+          "name": "toggle_selected_entity",
+          "order": 268,
+          "description": ""
+        },
+        {
+          "name": "toggle_show_entity_info",
+          "order": 269,
+          "description": ""
+        },
+        {
+          "name": "translate_string",
+          "order": 270,
+          "description": ""
+        },
+        {
+          "name": "trash_not_requested_items",
+          "order": 271,
+          "description": ""
+        },
+        {
+          "name": "undo",
+          "order": 272,
+          "description": ""
+        },
+        {
+          "name": "upgrade",
+          "order": 273,
+          "description": ""
+        },
+        {
+          "name": "upgrade_opened_blueprint_by_item",
+          "order": 274,
+          "description": ""
+        },
+        {
+          "name": "upgrade_opened_blueprint_by_record",
+          "order": 275,
+          "description": ""
+        },
+        {
+          "name": "use_item",
+          "order": 276,
+          "description": ""
+        },
+        {
+          "name": "wire_dragging",
+          "order": 277,
+          "description": ""
+        },
+        {
+          "name": "write_to_console",
+          "order": 278,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "input_method",
+      "order": 25,
+      "description": "",
+      "values": [
+        {
+          "name": "game_controller",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "keyboard_and_mouse",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "inventory",
+      "order": 26,
+      "description": "",
+      "values": [
+        {
+          "name": "agricultural_tower_input",
+          "order": 56,
+          "description": ""
+        },
+        {
+          "name": "agricultural_tower_output",
+          "order": 57,
+          "description": ""
+        },
+        {
+          "name": "artillery_turret_ammo",
+          "order": 46,
+          "description": ""
+        },
+        {
+          "name": "artillery_wagon_ammo",
+          "order": 47,
+          "description": ""
+        },
+        {
+          "name": "assembling_machine_dump",
+          "order": 26,
+          "description": "Used for ejected items, or items held by inserters that can't be inserted due the recipe being changed with the circuit network."
+        },
+        {
+          "name": "assembling_machine_input",
+          "order": 23,
+          "description": "Deprecated, replaced by `\"crafter_input\"`."
+        },
+        {
+          "name": "assembling_machine_modules",
+          "order": 25,
+          "description": "Deprecated, replaced by `\"crafter_modules\"`."
+        },
+        {
+          "name": "assembling_machine_output",
+          "order": 24,
+          "description": "Deprecated, replaced by `\"crafter_output\"`."
+        },
+        {
+          "name": "assembling_machine_trash",
+          "order": 27,
+          "description": "Deprecated, replaced by `\"crafter_trash\"`."
+        },
+        {
+          "name": "asteroid_collector_arm",
+          "order": 64,
+          "description": ""
+        },
+        {
+          "name": "asteroid_collector_output",
+          "order": 63,
+          "description": ""
+        },
+        {
+          "name": "beacon_modules",
+          "order": 44,
+          "description": ""
+        },
+        {
+          "name": "burnt_result",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "car_ammo",
+          "order": 40,
+          "description": ""
+        },
+        {
+          "name": "car_trash",
+          "order": 41,
+          "description": ""
+        },
+        {
+          "name": "car_trunk",
+          "order": 39,
+          "description": ""
+        },
+        {
+          "name": "cargo_landing_pad_main",
+          "order": 53,
+          "description": ""
+        },
+        {
+          "name": "cargo_landing_pad_trash",
+          "order": 54,
+          "description": ""
+        },
+        {
+          "name": "cargo_unit",
+          "order": 38,
+          "description": "Inventory of cargo pod."
+        },
+        {
+          "name": "cargo_wagon",
+          "order": 42,
+          "description": ""
+        },
+        {
+          "name": "character_ammo",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "character_armor",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "character_corpse",
+          "order": 45,
+          "description": ""
+        },
+        {
+          "name": "character_guns",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "character_main",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "character_trash",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "character_vehicle",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "chest",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "crafter_input",
+          "order": 59,
+          "description": ""
+        },
+        {
+          "name": "crafter_modules",
+          "order": 61,
+          "description": ""
+        },
+        {
+          "name": "crafter_output",
+          "order": 60,
+          "description": ""
+        },
+        {
+          "name": "crafter_trash",
+          "order": 62,
+          "description": "Used for spoil result items that do not fit into the recipe slots, and for items that are ejected when changing the recipe via remote view."
+        },
+        {
+          "name": "editor_ammo",
+          "order": 17,
+          "description": ""
+        },
+        {
+          "name": "editor_armor",
+          "order": 18,
+          "description": ""
+        },
+        {
+          "name": "editor_guns",
+          "order": 16,
+          "description": ""
+        },
+        {
+          "name": "editor_main",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "fuel",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "furnace_modules",
+          "order": 6,
+          "description": "Deprecated, replaced by `\"crafter_modules\"`."
+        },
+        {
+          "name": "furnace_result",
+          "order": 5,
+          "description": "Deprecated, replaced by `\"crafter_output\"`."
+        },
+        {
+          "name": "furnace_source",
+          "order": 4,
+          "description": "Deprecated, replaced by `\"crafter_input\"`."
+        },
+        {
+          "name": "furnace_trash",
+          "order": 7,
+          "description": "Deprecated, replaced by `\"crafter_trash\"`."
+        },
+        {
+          "name": "god_main",
+          "order": 14,
+          "description": ""
+        },
+        {
+          "name": "hub_main",
+          "order": 51,
+          "description": ""
+        },
+        {
+          "name": "hub_trash",
+          "order": 52,
+          "description": ""
+        },
+        {
+          "name": "item_main",
+          "order": 32,
+          "description": ""
+        },
+        {
+          "name": "lab_input",
+          "order": 28,
+          "description": ""
+        },
+        {
+          "name": "lab_modules",
+          "order": 29,
+          "description": ""
+        },
+        {
+          "name": "lab_trash",
+          "order": 30,
+          "description": ""
+        },
+        {
+          "name": "linked_container_main",
+          "order": 58,
+          "description": ""
+        },
+        {
+          "name": "logistic_container_trash",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "mining_drill_modules",
+          "order": 31,
+          "description": ""
+        },
+        {
+          "name": "proxy_main",
+          "order": 55,
+          "description": ""
+        },
+        {
+          "name": "roboport_material",
+          "order": 20,
+          "description": ""
+        },
+        {
+          "name": "roboport_robot",
+          "order": 19,
+          "description": ""
+        },
+        {
+          "name": "robot_cargo",
+          "order": 21,
+          "description": ""
+        },
+        {
+          "name": "robot_repair",
+          "order": 22,
+          "description": ""
+        },
+        {
+          "name": "rocket_silo_input",
+          "order": 35,
+          "description": "Deprecated, replaced by `\"crafter_input\"`."
+        },
+        {
+          "name": "rocket_silo_modules",
+          "order": 37,
+          "description": "Deprecated, replaced by `\"crafter_modules\"`."
+        },
+        {
+          "name": "rocket_silo_output",
+          "order": 36,
+          "description": "Deprecated, replaced by `\"crafter_output\"`."
+        },
+        {
+          "name": "rocket_silo_rocket",
+          "order": 33,
+          "description": ""
+        },
+        {
+          "name": "rocket_silo_trash",
+          "order": 34,
+          "description": ""
+        },
+        {
+          "name": "spider_ammo",
+          "order": 49,
+          "description": ""
+        },
+        {
+          "name": "spider_trash",
+          "order": 50,
+          "description": ""
+        },
+        {
+          "name": "spider_trunk",
+          "order": 48,
+          "description": ""
+        },
+        {
+          "name": "turret_ammo",
+          "order": 43,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "logistic_group_type",
+      "order": 27,
+      "description": "",
+      "values": [
+        {
+          "name": "roboport",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "with_trash",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "logistic_member_index",
+      "order": 28,
+      "description": "",
+      "values": [
+        {
+          "name": "car_provider",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "car_requester",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "cargo_landing_pad_provider",
+          "order": 19,
+          "description": ""
+        },
+        {
+          "name": "cargo_landing_pad_requester",
+          "order": 18,
+          "description": ""
+        },
+        {
+          "name": "cargo_landing_pad_trash_provider",
+          "order": 20,
+          "description": ""
+        },
+        {
+          "name": "character_provider",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "character_requester",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "character_storage",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "generic_on_off_behavior",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "logistic_container",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "logistic_container_trash_provider",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "roboport_provider",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "roboport_requester",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "rocket_silo_provider",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "rocket_silo_requester",
+          "order": 14,
+          "description": ""
+        },
+        {
+          "name": "rocket_silo_trash_provider",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "space_platform_hub_provider",
+          "order": 17,
+          "description": ""
+        },
+        {
+          "name": "space_platform_hub_requester",
+          "order": 16,
+          "description": ""
+        },
+        {
+          "name": "spidertron_provider",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "spidertron_requester",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "vehicle_storage",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "logistic_mode",
+      "order": 29,
+      "description": "",
+      "values": [
+        {
+          "name": "active_provider",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "buffer",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "none",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "passive_provider",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "requester",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "storage",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "logistic_section_type",
+      "order": 30,
+      "description": "",
+      "values": [
+        {
+          "name": "circuit_controlled",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "manual",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "request_missing_materials_controlled",
+          "order": 3,
+          "description": "Used by space platform hubs."
+        },
+        {
+          "name": "transitional_request_controlled",
+          "order": 2,
+          "description": "Used by rocket silos."
+        }
+      ]
+    },
+    {
+      "name": "mouse_button_type",
+      "order": 31,
+      "description": "",
+      "values": [
+        {
+          "name": "left",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "middle",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "none",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "right",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "moving_state",
+      "order": 32,
+      "description": "",
+      "values": [
+        {
+          "name": "adaptive",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "moving",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "stale",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "stuck",
+          "order": 3,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "print_skip",
+      "order": 33,
+      "description": "",
+      "values": [
+        {
+          "name": "if_redundant",
+          "order": 1,
+          "description": "Print will be skipped if same text was recently printed (within last 60 ticks). Used by most game messages."
+        },
+        {
+          "name": "if_visible",
+          "order": 2,
+          "description": "Print will be skipped if same text is still visible (printed within last 1152 ticks). Used by some notifications."
+        },
+        {
+          "name": "never",
+          "order": 0,
+          "description": "Print will not be skipped."
+        }
+      ]
+    },
+    {
+      "name": "print_sound",
+      "order": 34,
+      "description": "",
+      "values": [
+        {
+          "name": "always",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "never",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "use_player_settings",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "prototypes",
+      "order": 35,
+      "description": "This define describes all top-level prototypes and their associated subtypes. It is organized as a lookup table, meaning the values of all the defines is `0`. As an example, `defines.prototypes['entity']` looks like `{furnace=0, inserter=0, container=0, ...}`.",
+      "subkeys": [
+        {
+          "name": "achievement",
+          "order": 0,
+          "description": "",
+          "values": [
+            {
+              "name": "achievement",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "build-entity-achievement",
+              "order": 1,
+              "description": ""
+            },
+            {
+              "name": "change-surface-achievement",
+              "order": 2,
+              "description": ""
+            },
+            {
+              "name": "combat-robot-count-achievement",
+              "order": 3,
+              "description": ""
+            },
+            {
+              "name": "complete-objective-achievement",
+              "order": 4,
+              "description": ""
+            },
+            {
+              "name": "construct-with-robots-achievement",
+              "order": 5,
+              "description": ""
+            },
+            {
+              "name": "create-platform-achievement",
+              "order": 6,
+              "description": ""
+            },
+            {
+              "name": "deconstruct-with-robots-achievement",
+              "order": 7,
+              "description": ""
+            },
+            {
+              "name": "deliver-by-robots-achievement",
+              "order": 8,
+              "description": ""
+            },
+            {
+              "name": "deplete-resource-achievement",
+              "order": 9,
+              "description": ""
+            },
+            {
+              "name": "destroy-cliff-achievement",
+              "order": 10,
+              "description": ""
+            },
+            {
+              "name": "dont-build-entity-achievement",
+              "order": 11,
+              "description": ""
+            },
+            {
+              "name": "dont-craft-manually-achievement",
+              "order": 12,
+              "description": ""
+            },
+            {
+              "name": "dont-kill-manually-achievement",
+              "order": 13,
+              "description": ""
+            },
+            {
+              "name": "dont-research-before-researching-achievement",
+              "order": 14,
+              "description": ""
+            },
+            {
+              "name": "dont-use-entity-in-energy-production-achievement",
+              "order": 15,
+              "description": ""
+            },
+            {
+              "name": "equip-armor-achievement",
+              "order": 16,
+              "description": ""
+            },
+            {
+              "name": "group-attack-achievement",
+              "order": 17,
+              "description": ""
+            },
+            {
+              "name": "kill-achievement",
+              "order": 18,
+              "description": ""
+            },
+            {
+              "name": "module-transfer-achievement",
+              "order": 19,
+              "description": ""
+            },
+            {
+              "name": "place-equipment-achievement",
+              "order": 20,
+              "description": ""
+            },
+            {
+              "name": "player-damaged-achievement",
+              "order": 21,
+              "description": ""
+            },
+            {
+              "name": "produce-achievement",
+              "order": 22,
+              "description": ""
+            },
+            {
+              "name": "produce-per-hour-achievement",
+              "order": 23,
+              "description": ""
+            },
+            {
+              "name": "research-achievement",
+              "order": 24,
+              "description": ""
+            },
+            {
+              "name": "research-with-science-pack-achievement",
+              "order": 25,
+              "description": ""
+            },
+            {
+              "name": "shoot-achievement",
+              "order": 26,
+              "description": ""
+            },
+            {
+              "name": "space-connection-distance-traveled-achievement",
+              "order": 27,
+              "description": ""
+            },
+            {
+              "name": "train-path-achievement",
+              "order": 28,
+              "description": ""
+            },
+            {
+              "name": "use-entity-in-energy-production-achievement",
+              "order": 29,
+              "description": ""
+            },
+            {
+              "name": "use-item-achievement",
+              "order": 30,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "active-trigger",
+          "order": 1,
+          "description": "",
+          "values": [
+            {
+              "name": "chain-active-trigger",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "delayed-active-trigger",
+              "order": 1,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "airborne-pollutant",
+          "order": 2,
+          "description": "",
+          "values": [
+            {
+              "name": "airborne-pollutant",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "ambient-sound",
+          "order": 3,
+          "description": "",
+          "values": [
+            {
+              "name": "ambient-sound",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "ammo-category",
+          "order": 4,
+          "description": "",
+          "values": [
+            {
+              "name": "ammo-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "animation",
+          "order": 5,
+          "description": "",
+          "values": [
+            {
+              "name": "animation",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "asteroid-chunk",
+          "order": 6,
+          "description": "",
+          "values": [
+            {
+              "name": "asteroid-chunk",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "autoplace-control",
+          "order": 7,
+          "description": "",
+          "values": [
+            {
+              "name": "autoplace-control",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "burner-usage",
+          "order": 8,
+          "description": "",
+          "values": [
+            {
+              "name": "burner-usage",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "collision-layer",
+          "order": 9,
+          "description": "",
+          "values": [
+            {
+              "name": "collision-layer",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "custom-event",
+          "order": 10,
+          "description": "",
+          "values": [
+            {
+              "name": "custom-event",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "custom-input",
+          "order": 11,
+          "description": "",
+          "values": [
+            {
+              "name": "custom-input",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "damage-type",
+          "order": 12,
+          "description": "",
+          "values": [
+            {
+              "name": "damage-type",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "decorative",
+          "order": 13,
+          "description": "",
+          "values": [
+            {
+              "name": "optimized-decorative",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "deliver-category",
+          "order": 14,
+          "description": "",
+          "values": [
+            {
+              "name": "deliver-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "deliver-impact-combination",
+          "order": 15,
+          "description": "",
+          "values": [
+            {
+              "name": "deliver-impact-combination",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "editor-controller",
+          "order": 16,
+          "description": "",
+          "values": [
+            {
+              "name": "editor-controller",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "entity",
+          "order": 17,
+          "description": "",
+          "values": [
+            {
+              "name": "accumulator",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "agricultural-tower",
+              "order": 1,
+              "description": ""
+            },
+            {
+              "name": "ammo-turret",
+              "order": 2,
+              "description": ""
+            },
+            {
+              "name": "arithmetic-combinator",
+              "order": 3,
+              "description": ""
+            },
+            {
+              "name": "arrow",
+              "order": 4,
+              "description": ""
+            },
+            {
+              "name": "artillery-flare",
+              "order": 5,
+              "description": ""
+            },
+            {
+              "name": "artillery-projectile",
+              "order": 6,
+              "description": ""
+            },
+            {
+              "name": "artillery-turret",
+              "order": 7,
+              "description": ""
+            },
+            {
+              "name": "artillery-wagon",
+              "order": 8,
+              "description": ""
+            },
+            {
+              "name": "assembling-machine",
+              "order": 9,
+              "description": ""
+            },
+            {
+              "name": "asteroid",
+              "order": 10,
+              "description": ""
+            },
+            {
+              "name": "asteroid-collector",
+              "order": 11,
+              "description": ""
+            },
+            {
+              "name": "beacon",
+              "order": 12,
+              "description": ""
+            },
+            {
+              "name": "beam",
+              "order": 13,
+              "description": ""
+            },
+            {
+              "name": "boiler",
+              "order": 14,
+              "description": ""
+            },
+            {
+              "name": "burner-generator",
+              "order": 15,
+              "description": ""
+            },
+            {
+              "name": "capture-robot",
+              "order": 16,
+              "description": ""
+            },
+            {
+              "name": "car",
+              "order": 17,
+              "description": ""
+            },
+            {
+              "name": "cargo-bay",
+              "order": 18,
+              "description": ""
+            },
+            {
+              "name": "cargo-landing-pad",
+              "order": 19,
+              "description": ""
+            },
+            {
+              "name": "cargo-pod",
+              "order": 20,
+              "description": ""
+            },
+            {
+              "name": "cargo-wagon",
+              "order": 21,
+              "description": ""
+            },
+            {
+              "name": "character",
+              "order": 22,
+              "description": ""
+            },
+            {
+              "name": "character-corpse",
+              "order": 23,
+              "description": ""
+            },
+            {
+              "name": "cliff",
+              "order": 24,
+              "description": ""
+            },
+            {
+              "name": "combat-robot",
+              "order": 25,
+              "description": ""
+            },
+            {
+              "name": "constant-combinator",
+              "order": 26,
+              "description": ""
+            },
+            {
+              "name": "construction-robot",
+              "order": 27,
+              "description": ""
+            },
+            {
+              "name": "container",
+              "order": 28,
+              "description": ""
+            },
+            {
+              "name": "corpse",
+              "order": 29,
+              "description": ""
+            },
+            {
+              "name": "curved-rail-a",
+              "order": 30,
+              "description": ""
+            },
+            {
+              "name": "curved-rail-b",
+              "order": 31,
+              "description": ""
+            },
+            {
+              "name": "decider-combinator",
+              "order": 32,
+              "description": ""
+            },
+            {
+              "name": "deconstructible-tile-proxy",
+              "order": 33,
+              "description": ""
+            },
+            {
+              "name": "display-panel",
+              "order": 34,
+              "description": ""
+            },
+            {
+              "name": "electric-energy-interface",
+              "order": 35,
+              "description": ""
+            },
+            {
+              "name": "electric-pole",
+              "order": 36,
+              "description": ""
+            },
+            {
+              "name": "electric-turret",
+              "order": 37,
+              "description": ""
+            },
+            {
+              "name": "elevated-curved-rail-a",
+              "order": 38,
+              "description": ""
+            },
+            {
+              "name": "elevated-curved-rail-b",
+              "order": 39,
+              "description": ""
+            },
+            {
+              "name": "elevated-half-diagonal-rail",
+              "order": 40,
+              "description": ""
+            },
+            {
+              "name": "elevated-straight-rail",
+              "order": 41,
+              "description": ""
+            },
+            {
+              "name": "entity-ghost",
+              "order": 42,
+              "description": ""
+            },
+            {
+              "name": "explosion",
+              "order": 43,
+              "description": ""
+            },
+            {
+              "name": "fire",
+              "order": 44,
+              "description": ""
+            },
+            {
+              "name": "fish",
+              "order": 45,
+              "description": ""
+            },
+            {
+              "name": "fluid-turret",
+              "order": 46,
+              "description": ""
+            },
+            {
+              "name": "fluid-wagon",
+              "order": 47,
+              "description": ""
+            },
+            {
+              "name": "furnace",
+              "order": 48,
+              "description": ""
+            },
+            {
+              "name": "fusion-generator",
+              "order": 49,
+              "description": ""
+            },
+            {
+              "name": "fusion-reactor",
+              "order": 50,
+              "description": ""
+            },
+            {
+              "name": "gate",
+              "order": 51,
+              "description": ""
+            },
+            {
+              "name": "generator",
+              "order": 52,
+              "description": ""
+            },
+            {
+              "name": "half-diagonal-rail",
+              "order": 53,
+              "description": ""
+            },
+            {
+              "name": "heat-interface",
+              "order": 54,
+              "description": ""
+            },
+            {
+              "name": "heat-pipe",
+              "order": 55,
+              "description": ""
+            },
+            {
+              "name": "highlight-box",
+              "order": 56,
+              "description": ""
+            },
+            {
+              "name": "infinity-cargo-wagon",
+              "order": 57,
+              "description": ""
+            },
+            {
+              "name": "infinity-container",
+              "order": 58,
+              "description": ""
+            },
+            {
+              "name": "infinity-pipe",
+              "order": 59,
+              "description": ""
+            },
+            {
+              "name": "inserter",
+              "order": 60,
+              "description": ""
+            },
+            {
+              "name": "item-entity",
+              "order": 61,
+              "description": ""
+            },
+            {
+              "name": "item-request-proxy",
+              "order": 62,
+              "description": ""
+            },
+            {
+              "name": "lab",
+              "order": 63,
+              "description": ""
+            },
+            {
+              "name": "lamp",
+              "order": 64,
+              "description": ""
+            },
+            {
+              "name": "land-mine",
+              "order": 65,
+              "description": ""
+            },
+            {
+              "name": "lane-splitter",
+              "order": 66,
+              "description": ""
+            },
+            {
+              "name": "legacy-curved-rail",
+              "order": 67,
+              "description": ""
+            },
+            {
+              "name": "legacy-straight-rail",
+              "order": 68,
+              "description": ""
+            },
+            {
+              "name": "lightning",
+              "order": 69,
+              "description": ""
+            },
+            {
+              "name": "lightning-attractor",
+              "order": 70,
+              "description": ""
+            },
+            {
+              "name": "linked-belt",
+              "order": 71,
+              "description": ""
+            },
+            {
+              "name": "linked-container",
+              "order": 72,
+              "description": ""
+            },
+            {
+              "name": "loader",
+              "order": 73,
+              "description": ""
+            },
+            {
+              "name": "loader-1x1",
+              "order": 74,
+              "description": ""
+            },
+            {
+              "name": "locomotive",
+              "order": 75,
+              "description": ""
+            },
+            {
+              "name": "logistic-container",
+              "order": 76,
+              "description": ""
+            },
+            {
+              "name": "logistic-robot",
+              "order": 77,
+              "description": ""
+            },
+            {
+              "name": "market",
+              "order": 78,
+              "description": ""
+            },
+            {
+              "name": "mining-drill",
+              "order": 79,
+              "description": ""
+            },
+            {
+              "name": "offshore-pump",
+              "order": 80,
+              "description": ""
+            },
+            {
+              "name": "particle-source",
+              "order": 81,
+              "description": ""
+            },
+            {
+              "name": "pipe",
+              "order": 82,
+              "description": ""
+            },
+            {
+              "name": "pipe-to-ground",
+              "order": 83,
+              "description": ""
+            },
+            {
+              "name": "plant",
+              "order": 84,
+              "description": ""
+            },
+            {
+              "name": "player-port",
+              "order": 85,
+              "description": ""
+            },
+            {
+              "name": "power-switch",
+              "order": 86,
+              "description": ""
+            },
+            {
+              "name": "programmable-speaker",
+              "order": 87,
+              "description": ""
+            },
+            {
+              "name": "projectile",
+              "order": 88,
+              "description": ""
+            },
+            {
+              "name": "proxy-container",
+              "order": 89,
+              "description": ""
+            },
+            {
+              "name": "pump",
+              "order": 90,
+              "description": ""
+            },
+            {
+              "name": "radar",
+              "order": 91,
+              "description": ""
+            },
+            {
+              "name": "rail-chain-signal",
+              "order": 92,
+              "description": ""
+            },
+            {
+              "name": "rail-ramp",
+              "order": 93,
+              "description": ""
+            },
+            {
+              "name": "rail-remnants",
+              "order": 94,
+              "description": ""
+            },
+            {
+              "name": "rail-signal",
+              "order": 95,
+              "description": ""
+            },
+            {
+              "name": "rail-support",
+              "order": 96,
+              "description": ""
+            },
+            {
+              "name": "reactor",
+              "order": 97,
+              "description": ""
+            },
+            {
+              "name": "resource",
+              "order": 98,
+              "description": ""
+            },
+            {
+              "name": "roboport",
+              "order": 99,
+              "description": ""
+            },
+            {
+              "name": "rocket-silo",
+              "order": 100,
+              "description": ""
+            },
+            {
+              "name": "rocket-silo-rocket",
+              "order": 101,
+              "description": ""
+            },
+            {
+              "name": "rocket-silo-rocket-shadow",
+              "order": 102,
+              "description": ""
+            },
+            {
+              "name": "segment",
+              "order": 103,
+              "description": ""
+            },
+            {
+              "name": "segmented-unit",
+              "order": 104,
+              "description": ""
+            },
+            {
+              "name": "selector-combinator",
+              "order": 105,
+              "description": ""
+            },
+            {
+              "name": "simple-entity",
+              "order": 106,
+              "description": ""
+            },
+            {
+              "name": "simple-entity-with-force",
+              "order": 107,
+              "description": ""
+            },
+            {
+              "name": "simple-entity-with-owner",
+              "order": 108,
+              "description": ""
+            },
+            {
+              "name": "smoke-with-trigger",
+              "order": 109,
+              "description": ""
+            },
+            {
+              "name": "solar-panel",
+              "order": 110,
+              "description": ""
+            },
+            {
+              "name": "space-platform-hub",
+              "order": 111,
+              "description": ""
+            },
+            {
+              "name": "speech-bubble",
+              "order": 112,
+              "description": ""
+            },
+            {
+              "name": "spider-leg",
+              "order": 113,
+              "description": ""
+            },
+            {
+              "name": "spider-unit",
+              "order": 114,
+              "description": ""
+            },
+            {
+              "name": "spider-vehicle",
+              "order": 115,
+              "description": ""
+            },
+            {
+              "name": "splitter",
+              "order": 116,
+              "description": ""
+            },
+            {
+              "name": "sticker",
+              "order": 117,
+              "description": ""
+            },
+            {
+              "name": "storage-tank",
+              "order": 118,
+              "description": ""
+            },
+            {
+              "name": "straight-rail",
+              "order": 119,
+              "description": ""
+            },
+            {
+              "name": "stream",
+              "order": 120,
+              "description": ""
+            },
+            {
+              "name": "temporary-container",
+              "order": 121,
+              "description": ""
+            },
+            {
+              "name": "thruster",
+              "order": 122,
+              "description": ""
+            },
+            {
+              "name": "tile-ghost",
+              "order": 123,
+              "description": ""
+            },
+            {
+              "name": "train-stop",
+              "order": 124,
+              "description": ""
+            },
+            {
+              "name": "transport-belt",
+              "order": 125,
+              "description": ""
+            },
+            {
+              "name": "tree",
+              "order": 126,
+              "description": ""
+            },
+            {
+              "name": "turret",
+              "order": 127,
+              "description": ""
+            },
+            {
+              "name": "underground-belt",
+              "order": 128,
+              "description": ""
+            },
+            {
+              "name": "unit",
+              "order": 129,
+              "description": ""
+            },
+            {
+              "name": "unit-spawner",
+              "order": 130,
+              "description": ""
+            },
+            {
+              "name": "valve",
+              "order": 131,
+              "description": ""
+            },
+            {
+              "name": "wall",
+              "order": 132,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "equipment",
+          "order": 18,
+          "description": "",
+          "values": [
+            {
+              "name": "active-defense-equipment",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "battery-equipment",
+              "order": 1,
+              "description": ""
+            },
+            {
+              "name": "belt-immunity-equipment",
+              "order": 2,
+              "description": ""
+            },
+            {
+              "name": "energy-shield-equipment",
+              "order": 3,
+              "description": ""
+            },
+            {
+              "name": "equipment-ghost",
+              "order": 4,
+              "description": ""
+            },
+            {
+              "name": "generator-equipment",
+              "order": 5,
+              "description": ""
+            },
+            {
+              "name": "inventory-bonus-equipment",
+              "order": 6,
+              "description": ""
+            },
+            {
+              "name": "movement-bonus-equipment",
+              "order": 7,
+              "description": ""
+            },
+            {
+              "name": "night-vision-equipment",
+              "order": 8,
+              "description": ""
+            },
+            {
+              "name": "roboport-equipment",
+              "order": 9,
+              "description": ""
+            },
+            {
+              "name": "solar-panel-equipment",
+              "order": 10,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "equipment-category",
+          "order": 19,
+          "description": "",
+          "values": [
+            {
+              "name": "equipment-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "equipment-grid",
+          "order": 20,
+          "description": "",
+          "values": [
+            {
+              "name": "equipment-grid",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "fluid",
+          "order": 21,
+          "description": "",
+          "values": [
+            {
+              "name": "fluid",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "font",
+          "order": 22,
+          "description": "",
+          "values": [
+            {
+              "name": "font",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "fuel-category",
+          "order": 23,
+          "description": "",
+          "values": [
+            {
+              "name": "fuel-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "god-controller",
+          "order": 24,
+          "description": "",
+          "values": [
+            {
+              "name": "god-controller",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "gui-style",
+          "order": 25,
+          "description": "",
+          "values": [
+            {
+              "name": "gui-style",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "impact-category",
+          "order": 26,
+          "description": "",
+          "values": [
+            {
+              "name": "impact-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "item",
+          "order": 27,
+          "description": "",
+          "values": [
+            {
+              "name": "ammo",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "armor",
+              "order": 1,
+              "description": ""
+            },
+            {
+              "name": "blueprint",
+              "order": 2,
+              "description": ""
+            },
+            {
+              "name": "blueprint-book",
+              "order": 3,
+              "description": ""
+            },
+            {
+              "name": "capsule",
+              "order": 4,
+              "description": ""
+            },
+            {
+              "name": "copy-paste-tool",
+              "order": 5,
+              "description": ""
+            },
+            {
+              "name": "deconstruction-item",
+              "order": 6,
+              "description": ""
+            },
+            {
+              "name": "gun",
+              "order": 7,
+              "description": ""
+            },
+            {
+              "name": "item",
+              "order": 8,
+              "description": ""
+            },
+            {
+              "name": "item-with-entity-data",
+              "order": 9,
+              "description": ""
+            },
+            {
+              "name": "item-with-inventory",
+              "order": 10,
+              "description": ""
+            },
+            {
+              "name": "item-with-label",
+              "order": 11,
+              "description": ""
+            },
+            {
+              "name": "item-with-tags",
+              "order": 12,
+              "description": ""
+            },
+            {
+              "name": "module",
+              "order": 13,
+              "description": ""
+            },
+            {
+              "name": "rail-planner",
+              "order": 14,
+              "description": ""
+            },
+            {
+              "name": "repair-tool",
+              "order": 15,
+              "description": ""
+            },
+            {
+              "name": "selection-tool",
+              "order": 16,
+              "description": ""
+            },
+            {
+              "name": "space-platform-starter-pack",
+              "order": 17,
+              "description": ""
+            },
+            {
+              "name": "spidertron-remote",
+              "order": 18,
+              "description": ""
+            },
+            {
+              "name": "tool",
+              "order": 19,
+              "description": ""
+            },
+            {
+              "name": "upgrade-item",
+              "order": 20,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "item-group",
+          "order": 28,
+          "description": "",
+          "values": [
+            {
+              "name": "item-group",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "item-subgroup",
+          "order": 29,
+          "description": "",
+          "values": [
+            {
+              "name": "item-subgroup",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "map-gen-presets",
+          "order": 30,
+          "description": "",
+          "values": [
+            {
+              "name": "map-gen-presets",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "map-settings",
+          "order": 31,
+          "description": "",
+          "values": [
+            {
+              "name": "map-settings",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "mod-data",
+          "order": 32,
+          "description": "",
+          "values": [
+            {
+              "name": "mod-data",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "module-category",
+          "order": 33,
+          "description": "",
+          "values": [
+            {
+              "name": "module-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "mouse-cursor",
+          "order": 34,
+          "description": "",
+          "values": [
+            {
+              "name": "mouse-cursor",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "noise-expression",
+          "order": 35,
+          "description": "",
+          "values": [
+            {
+              "name": "noise-expression",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "noise-function",
+          "order": 36,
+          "description": "",
+          "values": [
+            {
+              "name": "noise-function",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "particle",
+          "order": 37,
+          "description": "",
+          "values": [
+            {
+              "name": "optimized-particle",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "procession",
+          "order": 38,
+          "description": "",
+          "values": [
+            {
+              "name": "procession",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "procession-layer-inheritance-group",
+          "order": 39,
+          "description": "",
+          "values": [
+            {
+              "name": "procession-layer-inheritance-group",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "quality",
+          "order": 40,
+          "description": "",
+          "values": [
+            {
+              "name": "quality",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "recipe",
+          "order": 41,
+          "description": "",
+          "values": [
+            {
+              "name": "recipe",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "recipe-category",
+          "order": 42,
+          "description": "",
+          "values": [
+            {
+              "name": "recipe-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "remote-controller",
+          "order": 43,
+          "description": "",
+          "values": [
+            {
+              "name": "remote-controller",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "resource-category",
+          "order": 44,
+          "description": "",
+          "values": [
+            {
+              "name": "resource-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "shortcut",
+          "order": 45,
+          "description": "",
+          "values": [
+            {
+              "name": "shortcut",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "sound",
+          "order": 46,
+          "description": "",
+          "values": [
+            {
+              "name": "sound",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "space-connection",
+          "order": 47,
+          "description": "",
+          "values": [
+            {
+              "name": "space-connection",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "space-location",
+          "order": 48,
+          "description": "",
+          "values": [
+            {
+              "name": "planet",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "space-location",
+              "order": 1,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "spectator-controller",
+          "order": 49,
+          "description": "",
+          "values": [
+            {
+              "name": "spectator-controller",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "sprite",
+          "order": 50,
+          "description": "",
+          "values": [
+            {
+              "name": "sprite",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "surface",
+          "order": 51,
+          "description": "",
+          "values": [
+            {
+              "name": "surface",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "surface-property",
+          "order": 52,
+          "description": "",
+          "values": [
+            {
+              "name": "surface-property",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "technology",
+          "order": 53,
+          "description": "",
+          "values": [
+            {
+              "name": "technology",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "tile",
+          "order": 54,
+          "description": "",
+          "values": [
+            {
+              "name": "tile",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "tile-effect",
+          "order": 55,
+          "description": "",
+          "values": [
+            {
+              "name": "tile-effect",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "tips-and-tricks-item",
+          "order": 56,
+          "description": "",
+          "values": [
+            {
+              "name": "tips-and-tricks-item",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "tips-and-tricks-item-category",
+          "order": 57,
+          "description": "",
+          "values": [
+            {
+              "name": "tips-and-tricks-item-category",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "trigger-target-type",
+          "order": 58,
+          "description": "",
+          "values": [
+            {
+              "name": "trigger-target-type",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "trivial-smoke",
+          "order": 59,
+          "description": "",
+          "values": [
+            {
+              "name": "trivial-smoke",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "tutorial",
+          "order": 60,
+          "description": "",
+          "values": [
+            {
+              "name": "tutorial",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "utility-constants",
+          "order": 61,
+          "description": "",
+          "values": [
+            {
+              "name": "utility-constants",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "utility-sounds",
+          "order": 62,
+          "description": "",
+          "values": [
+            {
+              "name": "utility-sounds",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "utility-sprites",
+          "order": 63,
+          "description": "",
+          "values": [
+            {
+              "name": "utility-sprites",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "virtual-signal",
+          "order": 64,
+          "description": "",
+          "values": [
+            {
+              "name": "virtual-signal",
+              "order": 0,
+              "description": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rail_connection_direction",
+      "order": 36,
+      "description": "",
+      "values": [
+        {
+          "name": "left",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "none",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "right",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "straight",
+          "order": 1,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "rail_direction",
+      "order": 37,
+      "description": "",
+      "values": [
+        {
+          "name": "back",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "front",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "rail_layer",
+      "order": 38,
+      "description": "",
+      "values": [
+        {
+          "name": "elevated",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "ground",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "relative_gui_position",
+      "order": 39,
+      "description": "",
+      "values": [
+        {
+          "name": "bottom",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "left",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "right",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "top",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "relative_gui_type",
+      "order": 40,
+      "description": "",
+      "values": [
+        {
+          "name": "accumulator_gui",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "achievement_gui",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "additional_entity_info_gui",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "admin_gui",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "agriculture_tower_gui",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "arithmetic_combinator_gui",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "armor_gui",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "assembling_machine_gui",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "assembling_machine_select_recipe_gui",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "asteroid_collector_gui",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "beacon_gui",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "blueprint_book_gui",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "blueprint_library_gui",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "blueprint_setup_gui",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "bonus_gui",
+          "order": 14,
+          "description": ""
+        },
+        {
+          "name": "burner_equipment_gui",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "car_gui",
+          "order": 16,
+          "description": ""
+        },
+        {
+          "name": "cargo_landing_pad_gui",
+          "order": 17,
+          "description": ""
+        },
+        {
+          "name": "constant_combinator_gui",
+          "order": 18,
+          "description": ""
+        },
+        {
+          "name": "container_gui",
+          "order": 19,
+          "description": ""
+        },
+        {
+          "name": "controller_gui",
+          "order": 20,
+          "description": ""
+        },
+        {
+          "name": "decider_combinator_gui",
+          "order": 21,
+          "description": ""
+        },
+        {
+          "name": "deconstruction_item_gui",
+          "order": 22,
+          "description": ""
+        },
+        {
+          "name": "display_panel_gui",
+          "order": 23,
+          "description": ""
+        },
+        {
+          "name": "electric_energy_interface_gui",
+          "order": 24,
+          "description": ""
+        },
+        {
+          "name": "electric_network_gui",
+          "order": 25,
+          "description": ""
+        },
+        {
+          "name": "entity_variations_gui",
+          "order": 26,
+          "description": ""
+        },
+        {
+          "name": "entity_with_energy_source_gui",
+          "order": 27,
+          "description": ""
+        },
+        {
+          "name": "equipment_grid_gui",
+          "order": 28,
+          "description": ""
+        },
+        {
+          "name": "furnace_gui",
+          "order": 29,
+          "description": ""
+        },
+        {
+          "name": "generic_on_off_entity_gui",
+          "order": 30,
+          "description": ""
+        },
+        {
+          "name": "ghost_picker_gui",
+          "order": 31,
+          "description": ""
+        },
+        {
+          "name": "global_electric_network_gui",
+          "order": 32,
+          "description": ""
+        },
+        {
+          "name": "heat_interface_gui",
+          "order": 33,
+          "description": ""
+        },
+        {
+          "name": "infinity_pipe_gui",
+          "order": 34,
+          "description": ""
+        },
+        {
+          "name": "inserter_gui",
+          "order": 35,
+          "description": ""
+        },
+        {
+          "name": "item_with_inventory_gui",
+          "order": 36,
+          "description": ""
+        },
+        {
+          "name": "lab_gui",
+          "order": 37,
+          "description": ""
+        },
+        {
+          "name": "lamp_gui",
+          "order": 38,
+          "description": ""
+        },
+        {
+          "name": "linked_container_gui",
+          "order": 39,
+          "description": ""
+        },
+        {
+          "name": "loader_gui",
+          "order": 40,
+          "description": ""
+        },
+        {
+          "name": "logistic_gui",
+          "order": 41,
+          "description": ""
+        },
+        {
+          "name": "market_gui",
+          "order": 42,
+          "description": ""
+        },
+        {
+          "name": "mining_drill_gui",
+          "order": 43,
+          "description": ""
+        },
+        {
+          "name": "other_player_gui",
+          "order": 44,
+          "description": ""
+        },
+        {
+          "name": "permissions_gui",
+          "order": 45,
+          "description": ""
+        },
+        {
+          "name": "pick_stop_gui",
+          "order": 46,
+          "description": ""
+        },
+        {
+          "name": "pipe_gui",
+          "order": 47,
+          "description": ""
+        },
+        {
+          "name": "power_switch_gui",
+          "order": 48,
+          "description": ""
+        },
+        {
+          "name": "production_gui",
+          "order": 49,
+          "description": ""
+        },
+        {
+          "name": "programmable_speaker_gui",
+          "order": 50,
+          "description": ""
+        },
+        {
+          "name": "proxy_container_gui",
+          "order": 51,
+          "description": ""
+        },
+        {
+          "name": "pump_gui",
+          "order": 52,
+          "description": ""
+        },
+        {
+          "name": "rail_signal_base_gui",
+          "order": 53,
+          "description": ""
+        },
+        {
+          "name": "reactor_gui",
+          "order": 54,
+          "description": ""
+        },
+        {
+          "name": "resource_entity_gui",
+          "order": 55,
+          "description": ""
+        },
+        {
+          "name": "roboport_gui",
+          "order": 56,
+          "description": ""
+        },
+        {
+          "name": "rocket_silo_gui",
+          "order": 57,
+          "description": ""
+        },
+        {
+          "name": "script_inventory_gui",
+          "order": 58,
+          "description": ""
+        },
+        {
+          "name": "selector_combinator_gui",
+          "order": 59,
+          "description": ""
+        },
+        {
+          "name": "server_config_gui",
+          "order": 60,
+          "description": ""
+        },
+        {
+          "name": "space_platform_hub_gui",
+          "order": 61,
+          "description": ""
+        },
+        {
+          "name": "spider_vehicle_gui",
+          "order": 62,
+          "description": ""
+        },
+        {
+          "name": "splitter_gui",
+          "order": 63,
+          "description": ""
+        },
+        {
+          "name": "standalone_character_gui",
+          "order": 64,
+          "description": ""
+        },
+        {
+          "name": "storage_tank_gui",
+          "order": 65,
+          "description": ""
+        },
+        {
+          "name": "tile_variations_gui",
+          "order": 66,
+          "description": ""
+        },
+        {
+          "name": "tips_and_tricks_gui",
+          "order": 67,
+          "description": ""
+        },
+        {
+          "name": "train_gui",
+          "order": 68,
+          "description": ""
+        },
+        {
+          "name": "train_stop_gui",
+          "order": 69,
+          "description": ""
+        },
+        {
+          "name": "trains_gui",
+          "order": 70,
+          "description": ""
+        },
+        {
+          "name": "transport_belt_gui",
+          "order": 71,
+          "description": ""
+        },
+        {
+          "name": "turret_gui",
+          "order": 72,
+          "description": ""
+        },
+        {
+          "name": "upgrade_item_gui",
+          "order": 73,
+          "description": ""
+        },
+        {
+          "name": "wall_gui",
+          "order": 74,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "render_mode",
+      "order": 41,
+      "description": "",
+      "values": [
+        {
+          "name": "chart",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "chart_zoomed_in",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "game",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "rich_text_setting",
+      "order": 42,
+      "description": "",
+      "values": [
+        {
+          "name": "disabled",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "enabled",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "highlight",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "riding",
+      "order": 43,
+      "description": "",
+      "subkeys": [
+        {
+          "name": "acceleration",
+          "order": 0,
+          "description": "",
+          "values": [
+            {
+              "name": "accelerating",
+              "order": 1,
+              "description": ""
+            },
+            {
+              "name": "braking",
+              "order": 2,
+              "description": ""
+            },
+            {
+              "name": "nothing",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "reversing",
+              "order": 3,
+              "description": ""
+            }
+          ]
+        },
+        {
+          "name": "direction",
+          "order": 1,
+          "description": "",
+          "values": [
+            {
+              "name": "left",
+              "order": 0,
+              "description": ""
+            },
+            {
+              "name": "right",
+              "order": 2,
+              "description": ""
+            },
+            {
+              "name": "straight",
+              "order": 1,
+              "description": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "robot_order_type",
+      "order": 44,
+      "description": "",
+      "values": [
+        {
+          "name": "construct",
+          "order": 0,
+          "description": "Construct a ghost."
+        },
+        {
+          "name": "deconstruct",
+          "order": 4,
+          "description": "Deconstruct an entity."
+        },
+        {
+          "name": "deliver",
+          "order": 2,
+          "description": "Deliver an item."
+        },
+        {
+          "name": "deliver_items",
+          "order": 5,
+          "description": "Deliver specific items to an entity (item request proxy)."
+        },
+        {
+          "name": "explode_cliff",
+          "order": 7,
+          "description": "Explode a cliff."
+        },
+        {
+          "name": "pickup",
+          "order": 1,
+          "description": "Pickup an item."
+        },
+        {
+          "name": "pickup_items",
+          "order": 8,
+          "description": "Pickup items from an entity (item request proxy)."
+        },
+        {
+          "name": "repair",
+          "order": 3,
+          "description": "Repair an entity."
+        },
+        {
+          "name": "upgrade",
+          "order": 6,
+          "description": "Upgrade an entity."
+        }
+      ]
+    },
+    {
+      "name": "rocket_silo_status",
+      "order": 45,
+      "description": "The various parts of the launch sequence of the rocket silo.",
+      "values": [
+        {
+          "name": "arms_advance",
+          "order": 6,
+          "description": "The next state is `rocket_ready` or if the rocket is destroyed in this state then the next state will be `lights_blinking_close`. The rocket is getting prepared for launch."
+        },
+        {
+          "name": "arms_retract",
+          "order": 10,
+          "description": "The next state is `rocket_flying` or if the rocket is destroyed in this state then the next state will be `lights_blinking_close`. The rocket is getting launched."
+        },
+        {
+          "name": "building_rocket",
+          "order": 0,
+          "description": "The rocket silo is crafting rocket parts. When there are enough rocket parts, the silo will switch into the `create_rocket` state."
+        },
+        {
+          "name": "create_rocket",
+          "order": 1,
+          "description": "The next state is `lights_blinking_open`. The rocket silo rocket entity gets created."
+        },
+        {
+          "name": "doors_closing",
+          "order": 13,
+          "description": "The next state is `building_rocket`."
+        },
+        {
+          "name": "doors_opened",
+          "order": 4,
+          "description": "The next state is `rocket_rising` or if the rocket is destroyed in this state then the next state will be `lights_blinking_close`. The rocket is getting prepared for launch."
+        },
+        {
+          "name": "doors_opening",
+          "order": 3,
+          "description": "The next state is `doors_opened`. The rocket is getting prepared for launch."
+        },
+        {
+          "name": "engine_starting",
+          "order": 9,
+          "description": "The next state is `arms_retract` or if the rocket is destroyed in this state then the next state will be `lights_blinking_close`. The rocket is getting launched."
+        },
+        {
+          "name": "launch_started",
+          "order": 14,
+          "description": "The next state is `engine_starting` or if the rocket is destroyed in this state then the next state will be `lights_blinking_close`. The rocket is getting launched."
+        },
+        {
+          "name": "launch_starting",
+          "order": 8,
+          "description": "The next state is `launch_started`."
+        },
+        {
+          "name": "lights_blinking_close",
+          "order": 12,
+          "description": "The next state is `doors_closing`."
+        },
+        {
+          "name": "lights_blinking_open",
+          "order": 2,
+          "description": "The next state is `doors_opening`. The rocket is getting prepared for launch."
+        },
+        {
+          "name": "rocket_flying",
+          "order": 11,
+          "description": "The next state is `lights_blinking_close`. The rocket is getting launched."
+        },
+        {
+          "name": "rocket_ready",
+          "order": 7,
+          "description": "The rocket launch can be started by the player. When the launch is started, the silo switches into the `launch_starting` state."
+        },
+        {
+          "name": "rocket_rising",
+          "order": 5,
+          "description": "The next state is `arms_advance` or if the rocket is destroyed in this state then the next state will be `lights_blinking_close`. The rocket is getting prepared for launch."
+        }
+      ]
+    },
+    {
+      "name": "segmented_unit_activity_mode",
+      "order": 46,
+      "description": "",
+      "values": [
+        {
+          "name": "asleep",
+          "order": 0,
+          "description": "The segmented unit is completely asleep, only performing the bare minimum checks to wake up if needed."
+        },
+        {
+          "name": "full",
+          "order": 2,
+          "description": "The segmented unit is fully active and simulated as if it is being observed by a player."
+        },
+        {
+          "name": "minimal",
+          "order": 1,
+          "description": "The segmented unit is minimally active, reducing unnecessary entity movement and trigger effects while continuing to patrol around its territory."
+        }
+      ]
+    },
+    {
+      "name": "segmented_unit_ai_state",
+      "order": 47,
+      "description": "",
+      "values": [
+        {
+          "name": "attacking",
+          "order": 2,
+          "description": "The segmented unit is attacking an entity that is trespassing on its territory, but the segmented unit is not using its full strength."
+        },
+        {
+          "name": "enraged_at_nothing",
+          "order": 4,
+          "description": "The segmented unit is angry because it was attacked but it does not have a valid attack target, so it is wandering around trying to find a valid attack target."
+        },
+        {
+          "name": "enraged_at_target",
+          "order": 3,
+          "description": "The segmented unit is angry because it was attacked and is aggressively attacking an entity with its full strength."
+        },
+        {
+          "name": "investigating",
+          "order": 1,
+          "description": "The segmented unit is investigating a location where it detected a disturbance."
+        },
+        {
+          "name": "patrolling",
+          "order": 0,
+          "description": "The segmented unit is navigating its territory's patrol path. If the unit is not assigned to a territory, then it is patrolling around the position it was created."
+        }
+      ]
+    },
+    {
+      "name": "segmented_unit_created_cause",
+      "order": 48,
+      "description": "",
+      "values": [
+        {
+          "name": "map_generated",
+          "order": 0,
+          "description": "The segmented unit was spawned naturally by the map generator."
+        },
+        {
+          "name": "script_cloned",
+          "order": 2,
+          "description": "The segmented unit was cloned from an existing segmented unit via script."
+        },
+        {
+          "name": "script_created",
+          "order": 1,
+          "description": "The segmented unit was created manually via script."
+        }
+      ]
+    },
+    {
+      "name": "selection_mode",
+      "order": 49,
+      "description": "",
+      "values": [
+        {
+          "name": "alt_reverse_select",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "alt_select",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "reverse_select",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "select",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "shooting",
+      "order": 50,
+      "description": "",
+      "values": [
+        {
+          "name": "not_shooting",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "shooting_enemies",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "shooting_selected",
+          "order": 2,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "signal_state",
+      "order": 51,
+      "description": "State of an ordinary rail signal.",
+      "values": [
+        {
+          "name": "closed",
+          "order": 1,
+          "description": "Red."
+        },
+        {
+          "name": "open",
+          "order": 0,
+          "description": "Green."
+        },
+        {
+          "name": "reserved",
+          "order": 2,
+          "description": "Orange."
+        },
+        {
+          "name": "reserved_by_circuit_network",
+          "order": 3,
+          "description": "Red - From circuit network."
+        }
+      ]
+    },
+    {
+      "name": "space_platform_state",
+      "order": 52,
+      "description": "",
+      "values": [
+        {
+          "name": "no_path",
+          "order": 6,
+          "description": "Doesn't have anywhere to go."
+        },
+        {
+          "name": "no_schedule",
+          "order": 5,
+          "description": "Doesn't have any stations in schedule."
+        },
+        {
+          "name": "on_the_path",
+          "order": 3,
+          "description": "Following the path."
+        },
+        {
+          "name": "paused",
+          "order": 8,
+          "description": "Paused."
+        },
+        {
+          "name": "starter_pack_on_the_way",
+          "order": 2,
+          "description": "Starter pack is on the way."
+        },
+        {
+          "name": "starter_pack_requested",
+          "order": 1,
+          "description": "Starter pack was requested from the logistics system."
+        },
+        {
+          "name": "waiting_at_station",
+          "order": 7,
+          "description": "Waiting at a station."
+        },
+        {
+          "name": "waiting_for_departure",
+          "order": 4,
+          "description": "Platform is ready to leave this planet and does not accept deliveries."
+        },
+        {
+          "name": "waiting_for_starter_pack",
+          "order": 0,
+          "description": "Waiting for a starter pack."
+        }
+      ]
+    },
+    {
+      "name": "target_type",
+      "order": 53,
+      "description": "",
+      "values": [
+        {
+          "name": "cargo_hatch",
+          "order": 18,
+          "description": ""
+        },
+        {
+          "name": "commandable",
+          "order": 15,
+          "description": ""
+        },
+        {
+          "name": "custom_chart_tag",
+          "order": 16,
+          "description": ""
+        },
+        {
+          "name": "entity",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "equipment",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "equipment_grid",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "gui_element",
+          "order": 17,
+          "description": ""
+        },
+        {
+          "name": "item",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "logistic_cell",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "logistic_network",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "logistic_section",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "permission_group",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "planet",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "player",
+          "order": 9,
+          "description": ""
+        },
+        {
+          "name": "rail_path",
+          "order": 10,
+          "description": ""
+        },
+        {
+          "name": "render_object",
+          "order": 11,
+          "description": ""
+        },
+        {
+          "name": "schedule",
+          "order": 19,
+          "description": ""
+        },
+        {
+          "name": "segmented_unit",
+          "order": 21,
+          "description": ""
+        },
+        {
+          "name": "space_platform",
+          "order": 12,
+          "description": ""
+        },
+        {
+          "name": "surface",
+          "order": 13,
+          "description": ""
+        },
+        {
+          "name": "territory",
+          "order": 20,
+          "description": ""
+        },
+        {
+          "name": "train",
+          "order": 14,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "territory_created_cause",
+      "order": 54,
+      "description": "",
+      "values": [
+        {
+          "name": "map_generated",
+          "order": 0,
+          "description": "The territory was spawned naturally by the map generator."
+        },
+        {
+          "name": "script_created",
+          "order": 1,
+          "description": "The territory was created manually via script."
+        }
+      ]
+    },
+    {
+      "name": "train_state",
+      "order": 55,
+      "description": "",
+      "values": [
+        {
+          "name": "arrive_signal",
+          "order": 3,
+          "description": "Braking before a rail signal."
+        },
+        {
+          "name": "arrive_station",
+          "order": 5,
+          "description": "Braking before a station."
+        },
+        {
+          "name": "destination_full",
+          "order": 9,
+          "description": "Same as no_path but all candidate train stops are full"
+        },
+        {
+          "name": "manual_control",
+          "order": 7,
+          "description": "Can move if user explicitly sits in and rides the train."
+        },
+        {
+          "name": "manual_control_stop",
+          "order": 6,
+          "description": "Switched to manual control and has to stop."
+        },
+        {
+          "name": "no_path",
+          "order": 2,
+          "description": "Has no path and is stopped."
+        },
+        {
+          "name": "no_schedule",
+          "order": 1,
+          "description": "Doesn't have anywhere to go."
+        },
+        {
+          "name": "on_the_path",
+          "order": 0,
+          "description": "Normal state -- following the path."
+        },
+        {
+          "name": "wait_signal",
+          "order": 4,
+          "description": "Waiting at a signal."
+        },
+        {
+          "name": "wait_station",
+          "order": 8,
+          "description": "Waiting at a station."
+        }
+      ]
+    },
+    {
+      "name": "transport_line",
+      "order": 56,
+      "description": "",
+      "values": [
+        {
+          "name": "left_line",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "left_split_line",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "left_underground_line",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "right_line",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "right_split_line",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "right_underground_line",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "secondary_left_line",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "secondary_left_split_line",
+          "order": 8,
+          "description": ""
+        },
+        {
+          "name": "secondary_right_line",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "secondary_right_split_line",
+          "order": 9,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "wire_connector_id",
+      "order": 57,
+      "description": "",
+      "values": [
+        {
+          "name": "circuit_green",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "circuit_red",
+          "order": 0,
+          "description": ""
+        },
+        {
+          "name": "combinator_input_green",
+          "order": 3,
+          "description": ""
+        },
+        {
+          "name": "combinator_input_red",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "combinator_output_green",
+          "order": 5,
+          "description": ""
+        },
+        {
+          "name": "combinator_output_red",
+          "order": 4,
+          "description": ""
+        },
+        {
+          "name": "pole_copper",
+          "order": 6,
+          "description": ""
+        },
+        {
+          "name": "power_switch_left_copper",
+          "order": 7,
+          "description": ""
+        },
+        {
+          "name": "power_switch_right_copper",
+          "order": 8,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "wire_origin",
+      "order": 58,
+      "description": "",
+      "values": [
+        {
+          "name": "player",
+          "order": 0,
+          "description": "These wires can be modified by players, scripts, and the game. They are visible to the player if the entity's `draw_circuit_wires` prototype property is set to `true` and both ends of it are on the same surface."
+        },
+        {
+          "name": "radars",
+          "order": 2,
+          "description": "These wires can only be modified by the game. They are not visible to the player, irrespective of the `draw_circuit_wires` prototype property."
+        },
+        {
+          "name": "script",
+          "order": 1,
+          "description": "These wires can be modified by scripts and the game. They are not visible to the player, irrespective of the `draw_circuit_wires` prototype property."
+        }
+      ]
+    },
+    {
+      "name": "wire_type",
+      "order": 59,
+      "description": "",
+      "values": [
+        {
+          "name": "copper",
+          "order": 2,
+          "description": ""
+        },
+        {
+          "name": "green",
+          "order": 1,
+          "description": ""
+        },
+        {
+          "name": "red",
+          "order": 0,
+          "description": ""
+        }
+      ]
+    }
+  ]
+}

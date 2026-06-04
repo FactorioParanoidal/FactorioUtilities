@@ -55,6 +55,10 @@ public class FactorioLuaEngine : IDisposable {
 
         _state.Environment["data"] = dataTable;
 
+        // 'defines' is an engine-injected global table available in every stage (data, settings, ...).
+        // Mods read and extend it (e.g. defines.direction, defines.inventory), so it must exist up front.
+        _state.Environment["defines"] = DefinesFactory.Create();
+
         // Setup 'mods' table (mod-name -> version)
         var modsTable = new LuaTable();
         foreach (var mod in _mods) {

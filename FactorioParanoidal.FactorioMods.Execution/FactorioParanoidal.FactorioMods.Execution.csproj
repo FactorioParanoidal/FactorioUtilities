@@ -21,4 +21,8 @@
     <AdditionalFiles Include="Data\prototype-api.json" Link="prototype-api.json"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Data\defines.json"/>
+  </ItemGroup>
+
 </Project>
