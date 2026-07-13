@@ -33,12 +33,8 @@ public static class DataRawProxy {
                 if (context.ArgumentCount < 2) return context.Return(LuaValue.Nil);
                 if (!context.GetArgument(1).TryRead<string>(out var name)) return context.Return(LuaValue.Nil);
 
-                var prototype = registry.GetPrototype(type, name);
-                if (prototype is ILuaUserData userData) {
-                    return context.Return(LuaValue.FromUserData(userData));
-                }
-
-                return context.Return(LuaValue.Nil);
+                var raw = registry.GetRawTable(type, name);
+                return context.Return(raw is not null ? raw : LuaValue.Nil);
             });
 
         mt["__newindex"] =
@@ -48,17 +44,13 @@ public static class DataRawProxy {
 
                 var valueArg = context.GetArgument(2);
                 if (valueArg.TryRead<LuaTable>(out var protoTable)) {
-                    // Register and create the C# object
                     registry.ConvertAndRegister(type, name, protoTable);
                 }
+                else if (valueArg == LuaValue.Nil) {
+                    registry.RemovePrototype(type, name);
+                }
                 else {
-                    // If they set to nil, we might want to remove it
-                    if (valueArg == LuaValue.Nil) {
-                        registry.RemovePrototype(type, name);
-                    }
-                    else {
-                        throw new Exception($"Expected table or nil for data.raw['{type}']['{name}']");
-                    }
+                    throw new Exception($"Expected table or nil for data.raw['{type}']['{name}']");
                 }
 
                 return context.Return();

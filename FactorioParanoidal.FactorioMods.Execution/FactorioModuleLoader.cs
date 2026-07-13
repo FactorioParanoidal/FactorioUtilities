@@ -26,8 +26,7 @@ public class FactorioModuleLoader : ILuaModuleLoader {
 
         var (mod, subPath) = resolved.Value;
         var content = await mod.ReadFileTextAsync(subPath, cancellationToken);
-        var virtualPath = $"__{mod.Info.Name}__/{subPath}";
-        return new LuaModule(virtualPath, content);
+        return new LuaModule(moduleName, content);
     }
 
     private (IFactorioMod Mod, string SubPath)? Resolve(string moduleName) {
@@ -48,40 +47,36 @@ public class FactorioModuleLoader : ILuaModuleLoader {
         CancellationToken cancellationToken) {
         var moduleReference = ModFileReference.FromRequire(context.GetArgument<string>(0));
 
-        // Walk the call stack to find the file (and therefore the mod) that issued the require.
+        // Find the innermost call-stack frame that belongs to a known mod — that is the file
+        // that issued the require (walking from top of stack, i.e. the most recent frame first).
         var callStackFrames = context.State.GetCallStackFrames();
         for (var index = callStackFrames.Length - 1; index >= 0; index--) {
-            if (callStackFrames[index].Function is not LuaClosure closure) {
-                continue;
-            }
+            if (callStackFrames[index].Function is not LuaClosure closure) continue;
 
             var currentFile = ModFileReference.FromRequire(closure.Name);
-            if (currentFile.Mod is null || !_mods.TryGetValue(currentFile.Mod, out var currentMod)) {
-                // Frame without a known owning mod (e.g. a standard-library frame); keep looking.
-                continue;
+            if (currentFile.Mod is null || !_mods.TryGetValue(currentFile.Mod, out var currentMod)) continue;
+
+            // Resolution order (mirrors Factorio):
+            //   1. mod-root relative  e.g. require("folder.file") → folder/file.lua
+            //   2. same-directory relative  e.g. require("sibling") from a/b.lua → a/sibling.lua
+            //   3. core/lualib  e.g. require("util") → core/lualib/util.lua
+            string[] paths = [
+                Normalize(moduleReference.Path),
+                Normalize(Path.Combine(currentFile.Folder, moduleReference.Path))
+            ];
+            foreach (var path in paths) {
+                if (!currentMod.FileExists(path)) continue;
+                var text = await currentMod.ReadFileTextAsync(path, cancellationToken);
+                return context.Return(
+                    (LuaValue)(LuaFunction)context.State.Load(text, $"__{currentMod.Info.Name}__/{path}"));
             }
 
-            // Factorio resolves a bare require by trying, in order:
-            //   1. relative to the current mod's root (the common "folder.file" style)
-            //   2. relative to the requiring file's own directory (sibling files)
-            //   3. core/lualib (shared helpers such as require "util")
-            var candidates = new List<(IFactorioMod Mod, string Path)> {
-                (currentMod, Normalize(moduleReference.Path)),
-                (currentMod, Normalize(Path.Combine(currentFile.Folder, moduleReference.Path)))
-            };
             if (_mods.TryGetValue("core", out var core)) {
-                candidates.Add((core, Normalize(Path.Combine("lualib", moduleReference.Path))));
-            }
-
-            foreach (var (mod, path) in candidates) {
-                if (!mod.FileExists(path)) {
-                    continue;
+                var libPath = Normalize(Path.Combine("lualib", moduleReference.Path));
+                if (core.FileExists(libPath)) {
+                    var text = await core.ReadFileTextAsync(libPath, cancellationToken);
+                    return context.Return((LuaValue)(LuaFunction)context.State.Load(text, $"__core__/{libPath}"));
                 }
-
-                var luaFileText = await mod.ReadFileTextAsync(path, cancellationToken);
-                // Name the chunk with the __mod__ prefix so requires it issues resolve against the right mod.
-                var virtualPath = $"__{mod.Info.Name}__/{path}";
-                return context.Return((LuaValue)(LuaFunction)context.State.Load(luaFileText, virtualPath));
             }
 
             throw new FileNotFoundException(

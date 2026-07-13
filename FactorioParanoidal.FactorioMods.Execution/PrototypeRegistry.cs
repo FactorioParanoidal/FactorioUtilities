@@ -8,38 +8,47 @@ namespace FactorioParanoidal.FactorioMods.Execution;
 public class PrototypeRegistry {
     private static readonly Dictionary<string, Type> TypeCache = new(StringComparer.OrdinalIgnoreCase);
 
-    // type -> name -> prototype
-    private readonly Dictionary<string, IReadOnlyDictionary<string, PrototypeBase>> _prototypes = new();
-    public IReadOnlyDictionary<string, IReadOnlyDictionary<string, PrototypeBase>> Prototypes => _prototypes;
+    // type -> name -> (prototype, raw table)
+    private readonly Dictionary<string, Dictionary<string, (PrototypeBase Prototype, LuaTable Raw)>>
+        _prototypes = new();
+
+    public IReadOnlyDictionary<string, IReadOnlyDictionary<string, PrototypeBase>> Prototypes =>
+        _prototypes.ToDictionary(
+            kvp => kvp.Key,
+            kvp => (IReadOnlyDictionary<string, PrototypeBase>)kvp.Value.ToDictionary(e => e.Key,
+                e => e.Value.Prototype));
 
     public void ConvertAndRegister(string type, string name, LuaTable prototypeTable) {
         var obj = CreatePrototypeInstance(type);
         obj.Type = type;
         obj.Name = name;
-
         LuaValueUtility.PopulateObjectFromTable(obj, prototypeTable);
 
         if (!_prototypes.TryGetValue(type, out var typeDict)) {
-            var newDict = new Dictionary<string, PrototypeBase>();
-            _prototypes[type] = newDict;
-            typeDict = newDict;
+            typeDict = new Dictionary<string, (PrototypeBase, LuaTable)>();
+            _prototypes[type] = typeDict;
         }
 
-        ((Dictionary<string, PrototypeBase>)typeDict)[name] = obj;
+        typeDict[name] = (obj, prototypeTable);
     }
 
     public PrototypeBase? GetPrototype(string type, string name) {
-        if (_prototypes.TryGetValue(type, out var typeDict) && typeDict.TryGetValue(name, out var prototype)) {
-            return prototype;
-        }
-
+        if (_prototypes.TryGetValue(type, out var typeDict) && typeDict.TryGetValue(name, out var entry))
+            return entry.Prototype;
         return null;
     }
 
+    public LuaTable? GetRawTable(string type, string name) {
+        if (_prototypes.TryGetValue(type, out var typeDict) && typeDict.TryGetValue(name, out var entry))
+            return entry.Raw;
+        return null;
+    }
+
+    public bool HasType(string type) => _prototypes.ContainsKey(type);
+
     public void RemovePrototype(string type, string name) {
-        if (_prototypes.TryGetValue(type, out var typeDict)) {
-            ((Dictionary<string, PrototypeBase>)typeDict).Remove(name);
-        }
+        if (_prototypes.TryGetValue(type, out var typeDict))
+            typeDict.Remove(name);
     }
 
     public void Extend(LuaTable table) {

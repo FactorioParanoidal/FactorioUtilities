@@ -32,10 +32,40 @@ public class FactorioLuaEngine : IDisposable {
 
     private void SetupEnvironment() {
         // Setup 'package.searchers' for resolving relative mod file requires
-        var packageSearchers = _state.Environment[(LuaValue)"package"]
-            .Read<LuaTable>()[(LuaValue)"searchers"]
-            .Read<LuaTable>();
+        var packageTable = _state.Environment[(LuaValue)"package"].Read<LuaTable>();
+        var packageSearchers = packageTable[(LuaValue)"searchers"].Read<LuaTable>();
         packageSearchers[3] = new LuaFunction("resolve_relative_mod_file_path", _loader.ResolveRelativeModFilePathLua);
+
+        // Replace require with a sentinel-aware version.
+        // LuaCSharp runs the loader with 0 args so `...` inside a module chunk is nil, not the
+        // module name. flib's data-util.lua does `if ... ~= "__flib__.data-util" then return
+        // require("__flib__.data-util") end` — without a sentinel this recurses infinitely.
+        // Standard Lua 5.4 sets package.loaded[name] = true before running the loader.
+        _state.Environment["require"] = new LuaFunction("require", async (context, ct) => {
+            var name = context.GetArgument<string>(0);
+            var loaded = _state.LoadedModules;
+
+            if (loaded.TryGetValue(name, out var cached) && cached != LuaValue.Nil)
+                return context.Return(cached);
+
+            // Sentinel: breaks re-entrant require() for the same module
+            loaded[name] = new LuaValue(true);
+
+            LuaFunction loader;
+            if (_loader.Exists(name)) {
+                var module = await _loader.LoadAsync(name, ct);
+                loader = context.State.Load(module.ReadText(), module.Name);
+            }
+            else {
+                loader = await FindLoaderViaSearchers(context.State, name, ct);
+            }
+
+            await context.State.RunAsync(loader, 0, context.ReturnFrameBase, ct);
+            var result = context.State.Stack[context.ReturnFrameBase];
+            loaded[name] = result != LuaValue.Nil ? result : new LuaValue(true);
+
+            return context.Return(loaded[name]);
+        });
 
         // Setup 'data' table
         var dataTable = new LuaTable();
@@ -98,6 +128,29 @@ public class FactorioLuaEngine : IDisposable {
         _state.Environment["serpent"] = CreateSerpentMock();
     }
 
+    // Mirrors ModuleLibrary.FindLoader (internal) — iterates package.searchers
+    private static async ValueTask<LuaFunction> FindLoaderViaSearchers(LuaState state, string name,
+        CancellationToken ct) {
+        var searchers = state.Environment[(LuaValue)"package"].Read<LuaTable>()[(LuaValue)"searchers"].Read<LuaTable>();
+        for (var i = 0; i < searchers.GetArraySpan().Length; i++) {
+            var searcher = searchers.GetArraySpan()[i];
+            if (searcher.Type == LuaValueType.Nil) continue;
+            var top = state.Stack.Count;
+            state.Stack.Push(searcher);
+            state.Stack.Push(name);
+            var count = await state.CallAsync(top, top, ct);
+            if (count > 0 && state.Stack[top].Type == LuaValueType.Function) {
+                var fn = state.Stack[top].Read<LuaFunction>();
+                state.Stack.PopUntil(top);
+                return fn;
+            }
+
+            state.Stack.PopUntil(top);
+        }
+
+        throw new FileNotFoundException($"Module '{name}' not found");
+    }
+
     private LuaTable CreateSerpentMock() {
         var serpent = new LuaTable();
         serpent["dump"] =
@@ -126,19 +179,24 @@ public class FactorioLuaEngine : IDisposable {
         }
     }
 
-    public async Task RunAllStages() {
+    public async Task RunAllStages(Action<string, string, Exception>? onError = null) {
+        async Task Run(IFactorioMod mod, string file) {
+            try { await ExecuteModDataPhase(mod, file); }
+            catch (Exception ex) when (onError != null) { onError(mod.Info.Name, file, ex); }
+        }
+
         // 1. Settings
-        foreach (var mod in _mods) await ExecuteModDataPhase(mod, "settings.lua");
-        foreach (var mod in _mods) await ExecuteModDataPhase(mod, "settings-updates.lua");
-        foreach (var mod in _mods) await ExecuteModDataPhase(mod, "settings-final-fixes.lua");
+        foreach (var mod in _mods) await Run(mod, "settings.lua");
+        foreach (var mod in _mods) await Run(mod, "settings-updates.lua");
+        foreach (var mod in _mods) await Run(mod, "settings-final-fixes.lua");
 
         // 2. Data
-        foreach (var mod in _mods) await ExecuteModDataPhase(mod, "data.lua");
+        foreach (var mod in _mods) await Run(mod, "data.lua");
 
         // 3. Data Updates
-        foreach (var mod in _mods) await ExecuteModDataPhase(mod, "data-updates.lua");
+        foreach (var mod in _mods) await Run(mod, "data-updates.lua");
 
         // 4. Data Final Fixes
-        foreach (var mod in _mods) await ExecuteModDataPhase(mod, "data-final-fixes.lua");
+        foreach (var mod in _mods) await Run(mod, "data-final-fixes.lua");
     }
 }

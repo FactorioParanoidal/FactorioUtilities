@@ -3,6 +3,10 @@ using System.Text.Json;
 namespace FactorioParanoidal.FactorioMods.Mods;
 
 public class FolderFactorioMod : IFactorioMod {
+    // Lazily built set of all subpaths (relative, forward-slash, lower-case) to avoid repeated File.Exists calls
+    // during data-stage require resolution. Built on first FileExists call.
+    private HashSet<string>? _fileIndex;
+
     public FolderFactorioMod(FactorioModInfo info, string directory) {
         Info = info;
         Directory = directory;
@@ -13,12 +17,25 @@ public class FolderFactorioMod : IFactorioMod {
     public FactorioModInfo Info { get; }
 
     public bool FileExists(string subPath) {
-        return File.Exists(Path.Combine(Directory, subPath));
+        var index = _fileIndex ??= BuildIndex();
+        return index.Contains(Normalize(subPath));
     }
 
     public Task<string> ReadFileTextAsync(string subPath, CancellationToken cancellationToken = default) {
         return File.ReadAllTextAsync(Path.Combine(Directory, subPath), cancellationToken);
     }
+
+    private HashSet<string> BuildIndex() {
+        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var file in System.IO.Directory.EnumerateFiles(Directory, "*", SearchOption.AllDirectories)) {
+            var rel = Path.GetRelativePath(Directory, file).Replace('\\', '/');
+            set.Add(rel);
+        }
+
+        return set;
+    }
+
+    private static string Normalize(string path) => path.Replace('\\', '/');
 
     public static async Task<FolderFactorioMod> LoadFromDirectory(string modDirectory) {
         try {
