@@ -3,30 +3,39 @@ using FactorioParanoidal.FactorioMods.Execution.Proxies;
 using FactorioParanoidal.FactorioMods.Mods;
 using Lua;
 using Lua.Standard;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FactorioParanoidal.FactorioMods.Execution;
 
 public class FactorioLuaEngine : IDisposable {
     private readonly FactorioModuleLoader _loader;
+    private readonly ILogger<FactorioLuaEngine> _logger;
     private readonly ImmutableArray<IFactorioMod> _mods;
     private readonly PrototypeRegistry _registry;
     private readonly LuaState _state;
 
-    public FactorioLuaEngine(IEnumerable<IFactorioMod> mods) {
+    public FactorioLuaEngine(IEnumerable<IFactorioMod> mods, ILoggerFactory? loggerFactory = null) {
+        loggerFactory ??= NullLoggerFactory.Instance;
+        _logger = loggerFactory.CreateLogger<FactorioLuaEngine>();
         _mods = [..mods];
-        _loader = new FactorioModuleLoader(_mods);
+        _loader = new FactorioModuleLoader(_mods, loggerFactory.CreateLogger<FactorioModuleLoader>());
         _registry = new PrototypeRegistry();
+
+        _logger.LogDebug("Initializing Factorio Lua engine with {ModCount} mods", _mods.Length);
 
         _state = LuaState.Create();
         _state.OpenStandardLibraries();
         _state.ModuleLoader = _loader;
 
         SetupEnvironment();
+        _logger.LogDebug("Factorio Lua engine initialized");
     }
 
     public PrototypeRegistry Registry => _registry;
 
     public void Dispose() {
+        _logger.LogDebug("Disposing Factorio Lua engine");
         _state.Dispose();
     }
 
@@ -47,6 +56,8 @@ public class FactorioLuaEngine : IDisposable {
 
             if (loaded.TryGetValue(name, out var cached) && cached != LuaValue.Nil)
                 return context.Return(cached);
+
+            _logger.LogDebug("Requiring Lua module {ModuleName}", name);
 
             // Sentinel: breaks re-entrant require() for the same module
             loaded[name] = new LuaValue(true);
@@ -108,7 +119,7 @@ public class FactorioLuaEngine : IDisposable {
         _state.Environment["log"] =
             new LuaFunction(async (context, _) => {
                 if (context.ArgumentCount > 0) {
-                    Console.WriteLine($"[Lua Log] {context.GetArgument(0)}");
+                    _logger.LogInformation("Lua: {Message}", context.GetArgument(0));
                 }
 
                 return context.Return();
@@ -172,7 +183,13 @@ public class FactorioLuaEngine : IDisposable {
     }
 
     public async Task ExecuteModDataPhase(IFactorioMod mod, string fileName) {
+        await ExecuteModDataPhaseCore(mod, fileName);
+        _registry.RefreshPrototypes();
+    }
+
+    private async Task ExecuteModDataPhaseCore(IFactorioMod mod, string fileName) {
         if (mod.FileExists(fileName)) {
+            _logger.LogDebug("Executing {ModName}/{FileName}", mod.Info.Name, fileName);
             var content = await mod.ReadFileTextAsync(fileName);
             var virtualPath = $"__{mod.Info.Name}__/{fileName}";
             await _state.DoStringAsync(content, virtualPath);
@@ -181,22 +198,26 @@ public class FactorioLuaEngine : IDisposable {
 
     public async Task RunAllStages(Action<string, string, Exception>? onError = null) {
         async Task Run(IFactorioMod mod, string file) {
-            try { await ExecuteModDataPhase(mod, file); }
-            catch (Exception ex) when (onError != null) { onError(mod.Info.Name, file, ex); }
+            try { await ExecuteModDataPhaseCore(mod, file); }
+            catch (Exception ex) {
+                _logger.LogError(ex, "Failed to execute {ModName}/{FileName}", mod.Info.Name, file);
+                if (onError == null) throw;
+                onError(mod.Info.Name, file, ex);
+            }
         }
 
-        // 1. Settings
-        foreach (var mod in _mods) await Run(mod, "settings.lua");
-        foreach (var mod in _mods) await Run(mod, "settings-updates.lua");
-        foreach (var mod in _mods) await Run(mod, "settings-final-fixes.lua");
+        async Task RunStage(string stage, string file) {
+            _logger.LogDebug("Starting Factorio {Stage} stage", stage);
+            foreach (var mod in _mods) await Run(mod, file);
+            _registry.RefreshPrototypes();
+            _logger.LogDebug("Completed Factorio {Stage} stage", stage);
+        }
 
-        // 2. Data
-        foreach (var mod in _mods) await Run(mod, "data.lua");
-
-        // 3. Data Updates
-        foreach (var mod in _mods) await Run(mod, "data-updates.lua");
-
-        // 4. Data Final Fixes
-        foreach (var mod in _mods) await Run(mod, "data-final-fixes.lua");
+        await RunStage("settings", "settings.lua");
+        await RunStage("settings updates", "settings-updates.lua");
+        await RunStage("settings final fixes", "settings-final-fixes.lua");
+        await RunStage("data", "data.lua");
+        await RunStage("data updates", "data-updates.lua");
+        await RunStage("data final fixes", "data-final-fixes.lua");
     }
 }

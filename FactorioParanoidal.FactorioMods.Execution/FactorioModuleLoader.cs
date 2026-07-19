@@ -2,13 +2,17 @@ using FactorioParanoidal.FactorioMods.Execution.Models;
 using FactorioParanoidal.FactorioMods.Mods;
 using Lua;
 using Lua.Runtime;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FactorioParanoidal.FactorioMods.Execution;
 
 public class FactorioModuleLoader : ILuaModuleLoader {
+    private readonly ILogger<FactorioModuleLoader> _logger;
     private readonly Dictionary<string, IFactorioMod> _mods;
 
-    public FactorioModuleLoader(IEnumerable<IFactorioMod> mods) {
+    public FactorioModuleLoader(IEnumerable<IFactorioMod> mods, ILogger<FactorioModuleLoader>? logger = null) {
+        _logger = logger ?? NullLogger<FactorioModuleLoader>.Instance;
         _mods = mods.ToDictionary(m => m.Info.Name);
     }
 
@@ -20,11 +24,13 @@ public class FactorioModuleLoader : ILuaModuleLoader {
     public async ValueTask<LuaModule> LoadAsync(string moduleName, CancellationToken cancellationToken = default) {
         var resolved = Resolve(moduleName);
         if (resolved == null) {
-            Console.WriteLine($"[ModuleLoader] Failed to resolve: {moduleName}");
+            _logger.LogDebug("Failed to resolve Lua module {ModuleName}", moduleName);
             throw new FileNotFoundException($"Could not resolve Lua module: {moduleName}");
         }
 
         var (mod, subPath) = resolved.Value;
+        _logger.LogDebug("Loading Lua module {ModuleName} from {ModName}/{Path}", moduleName, mod.Info.Name,
+            subPath);
         var content = await mod.ReadFileTextAsync(subPath, cancellationToken);
         return new LuaModule(moduleName, content);
     }
@@ -66,6 +72,8 @@ public class FactorioModuleLoader : ILuaModuleLoader {
             ];
             foreach (var path in paths) {
                 if (!currentMod.FileExists(path)) continue;
+                _logger.LogDebug("Resolved relative Lua module {ModuleName} to {ModName}/{Path}",
+                    moduleReference.Path, currentMod.Info.Name, path);
                 var text = await currentMod.ReadFileTextAsync(path, cancellationToken);
                 return context.Return(
                     (LuaValue)(LuaFunction)context.State.Load(text, $"__{currentMod.Info.Name}__/{path}"));
@@ -74,6 +82,8 @@ public class FactorioModuleLoader : ILuaModuleLoader {
             if (_mods.TryGetValue("core", out var core)) {
                 var libPath = Normalize(Path.Combine("lualib", moduleReference.Path));
                 if (core.FileExists(libPath)) {
+                    _logger.LogDebug("Resolved Lua module {ModuleName} to core/{Path}", moduleReference.Path,
+                        libPath);
                     var text = await core.ReadFileTextAsync(libPath, cancellationToken);
                     return context.Return((LuaValue)(LuaFunction)context.State.Load(text, $"__core__/{libPath}"));
                 }

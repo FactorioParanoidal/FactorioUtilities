@@ -44,6 +44,19 @@ public class PrototypeRegistry {
         return null;
     }
 
+    public void RefreshPrototypes() {
+        foreach (var typeDict in _prototypes.Values) {
+            foreach (var name in typeDict.Keys.ToArray()) {
+                var entry = typeDict[name];
+                var prototype = CreatePrototypeInstance(entry.Prototype.Type);
+                prototype.Type = entry.Prototype.Type;
+                prototype.Name = entry.Prototype.Name;
+                LuaValueUtility.PopulateObjectFromTable(prototype, entry.Raw);
+                typeDict[name] = (prototype, entry.Raw);
+            }
+        }
+    }
+
     public bool HasType(string type) => _prototypes.ContainsKey(type);
 
     public void RemovePrototype(string type, string name) {

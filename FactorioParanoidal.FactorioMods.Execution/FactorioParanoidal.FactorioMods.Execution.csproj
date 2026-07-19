@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="LuaCSharp" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
   </ItemGroup>
 
   <ItemGroup>

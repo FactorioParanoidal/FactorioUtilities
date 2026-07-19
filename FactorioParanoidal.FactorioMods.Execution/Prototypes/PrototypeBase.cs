@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using FactorioParanoidal.FactorioMods.Execution.Proxies;
+using FactorioParanoidal.FactorioMods.Execution.SourceGenerator;
 using Lua;
 using Lua.Runtime;
 
@@ -41,7 +42,7 @@ public abstract partial class PrototypeBase : ILuaUserData {
     [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
 
     // We use object to store generic dynamic values coming from Lua that don't map to typed properties
-    public Dictionary<string, object> ExtraFields { get; set; } = new();
+    [LuaExtraFields] public Dictionary<string, object> ExtraFields { get; set; } = new();
 
     LuaTable? ILuaUserData.Metatable {
         get {
