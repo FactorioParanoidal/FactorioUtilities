@@ -15,6 +15,7 @@
     <Project Path="FactorioParanoidal.FactorioMods.Tests/FactorioParanoidal.FactorioMods.Tests.csproj" />
       <Project Path="FactorioParanoidal.ModSettingsDat.Tests/FactorioParanoidal.ModSettingsDat.Tests.csproj"/>
   </Folder>
+    <Project Path="FactorioParanoidal.FactorioApi/FactorioParanoidal.FactorioApi.csproj"/>
     <Project
         Path="FactorioParanoidal.FactorioMods.Execution.SourceGenerator/FactorioParanoidal.FactorioMods.Execution.SourceGenerator.csproj"/>
   <Project Path="FactorioParanoidal.FactorioMods.Execution/FactorioParanoidal.FactorioMods.Execution.csproj" />
