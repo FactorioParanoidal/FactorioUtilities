@@ -12,6 +12,10 @@ public sealed class ModPortal(
     public Task<Mod> GetModAsync(string name, bool full = false, CancellationToken cancellationToken = default) =>
         infoProvider.GetModAsync(name, full, cancellationToken);
 
+    public Task<Stream> DownloadAsync(string modName, Version version,
+        CancellationToken cancellationToken = default) =>
+        downloadProvider.DownloadAsync(modName, version, cancellationToken);
+
     public Task<Stream> DownloadAsync(string modName, ModRelease release,
         CancellationToken cancellationToken = default) =>
         downloadProvider.DownloadAsync(modName, release, cancellationToken);

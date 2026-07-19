@@ -6,13 +6,20 @@ namespace FactorioParanoidal.FactorioApi.Re146;
 public sealed class Re146ModDownloadProvider(HttpClient client) : IModDownloadProvider {
     private static readonly Uri BaseAddress = new("https://mods-storage.re146.dev/");
 
-    public async Task<Stream> DownloadAsync(string modName, ModRelease release,
+    public Task<Stream> DownloadAsync(string modName, ModRelease release,
         CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrWhiteSpace(modName);
         ArgumentNullException.ThrowIfNull(release);
+        return DownloadAsync(modName, new Version(release.Version), cancellationToken);
+    }
+
+    public async Task<Stream> DownloadAsync(string modName, Version version,
+        CancellationToken cancellationToken = default) {
+        ArgumentException.ThrowIfNullOrWhiteSpace(modName);
+        ArgumentNullException.ThrowIfNull(version);
 
         var uri = new Uri(BaseAddress,
-            $"{Uri.EscapeDataString(modName)}/{Uri.EscapeDataString(release.Version)}.zip");
+            $"{Uri.EscapeDataString(modName)}/{Uri.EscapeDataString(version.ToString())}.zip");
         var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         if (!response.IsSuccessStatusCode) {
             var statusCode = response.StatusCode;

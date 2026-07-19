@@ -15,7 +15,8 @@ public static class ServiceCollectionExtensions {
             sp.GetRequiredService<IHttpClientFactory>().CreateClient("FactorioModPortal")));
         services.AddTransient<IModDownloadProvider>(sp => new ModPortalDownloadProvider(
             sp.GetRequiredService<IHttpClientFactory>().CreateClient("FactorioModPortal"),
-            sp.GetRequiredService<ModPortalOptions>()));
+            sp.GetRequiredService<ModPortalOptions>(),
+            sp.GetRequiredService<IModInfoProvider>()));
         services.AddTransient<IFactorioApi, ModPortal.ModPortal>();
         var builder = services.AddHttpClient("FactorioModPortal", (sp, client) => {
             var options = sp.GetRequiredService<FactorioApiOptions>();

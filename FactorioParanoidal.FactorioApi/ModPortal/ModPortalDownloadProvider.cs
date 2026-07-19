@@ -2,7 +2,22 @@ using FactorioParanoidal.FactorioApi.Models.Data;
 
 namespace FactorioParanoidal.FactorioApi.ModPortal;
 
-public sealed class ModPortalDownloadProvider(HttpClient client, ModPortalOptions options) : IModDownloadProvider {
+public sealed class ModPortalDownloadProvider(
+    HttpClient client,
+    ModPortalOptions options,
+    IModInfoProvider infoProvider) : IModDownloadProvider {
+    public async Task<Stream> DownloadAsync(string modName, Version version,
+        CancellationToken cancellationToken = default) {
+        ArgumentException.ThrowIfNullOrWhiteSpace(modName);
+        ArgumentNullException.ThrowIfNull(version);
+
+        var mod = await infoProvider.GetModAsync(modName, cancellationToken: cancellationToken);
+        var release = mod.Releases?.FirstOrDefault(candidate =>
+                          Version.TryParse(candidate.Version, out var releaseVersion) && releaseVersion == version)
+                      ?? throw new InvalidOperationException($"Release {modName} {version} was not found.");
+        return await DownloadAsync(modName, release, cancellationToken);
+    }
+
     public async Task<Stream> DownloadAsync(string modName, ModRelease release,
         CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrWhiteSpace(modName);
