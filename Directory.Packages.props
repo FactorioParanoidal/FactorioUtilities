@@ -4,20 +4,20 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="AwesomeAssertions" Version="9.4.0"/>
+    <PackageVersion Include="AwesomeAssertions" Version="9.5.0"/>
     <PackageVersion Include="NLua" Version="1.7.2"/>
-    <PackageVersion Include="LuaCSharp" Version="0.5.3"/>
-    <PackageVersion Include="SharpCompress" Version="0.46.3"/>
-    <PackageVersion Include="System.Text.Json" Version="10.0.5"/>
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.201"/>
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.0.5"/>
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.5"/>
+    <PackageVersion Include="LuaCSharp" Version="0.5.5"/>
+    <PackageVersion Include="SharpCompress" Version="0.50.0"/>
+    <PackageVersion Include="System.Text.Json" Version="10.0.10"/>
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.301"/>
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0"/>
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.10"/>
     <!--Tests-->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0"/>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1"/>
     <PackageVersion Include="xunit" Version="2.9.3"/>
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5"/>
-    <PackageVersion Include="coverlet.collector" Version="8.0.0"/>
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0"/>
-    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4"/>
+    <PackageVersion Include="coverlet.collector" Version="10.0.1"/>
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0"/>
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.6.0"/>
   </ItemGroup>
 </Project>
