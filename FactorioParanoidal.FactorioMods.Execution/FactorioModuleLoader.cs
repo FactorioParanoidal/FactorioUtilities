@@ -35,6 +35,22 @@ public class FactorioModuleLoader : ILuaModuleLoader {
         return new LuaModule(moduleName, content);
     }
 
+    public string GetCacheKey(LuaState state, string moduleName) {
+        if (ModFileReference.FromRequire(moduleName).Mod is not null) return moduleName;
+
+        var callStackFrames = state.GetCallStackFrames();
+        for (var index = callStackFrames.Length - 1; index >= 0; index--) {
+            if (callStackFrames[index].Function is not LuaClosure closure) continue;
+
+            var currentFile = ModFileReference.FromRequire(closure.Name);
+            if (currentFile.Mod is not null && _mods.ContainsKey(currentFile.Mod)) {
+                return $"__{currentFile.Mod}__:{moduleName}";
+            }
+        }
+
+        return moduleName;
+    }
+
     private (IFactorioMod Mod, string SubPath)? Resolve(string moduleName) {
         var modFileReference = ModFileReference.FromRequire(moduleName);
         if (modFileReference.Mod is not null && _mods.TryGetValue(modFileReference.Mod, out var mod)) {

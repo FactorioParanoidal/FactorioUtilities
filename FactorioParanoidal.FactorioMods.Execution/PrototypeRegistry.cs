@@ -88,7 +88,8 @@ public class PrototypeRegistry {
         // Search in the prototypes namespace
         var prototypeType = Assembly.GetExecutingAssembly().GetTypes()
             .FirstOrDefault(t => t.Namespace == "FactorioParanoidal.FactorioMods.Execution.Prototypes" &&
-                                 t.Name.Equals(className, StringComparison.OrdinalIgnoreCase));
+                                 t.Name.Equals(className, StringComparison.OrdinalIgnoreCase) &&
+                                 !t.IsAbstract);
 
         if (prototypeType != null) {
             TypeCache[type] = prototypeType;

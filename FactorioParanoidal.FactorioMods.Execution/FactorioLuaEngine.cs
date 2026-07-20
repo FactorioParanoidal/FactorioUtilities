@@ -53,14 +53,15 @@ public class FactorioLuaEngine : IDisposable {
         _state.Environment["require"] = new LuaFunction("require", async (context, ct) => {
             var name = context.GetArgument<string>(0);
             var loaded = _state.LoadedModules;
+            var cacheKey = _loader.GetCacheKey(context.State, name);
 
-            if (loaded.TryGetValue(name, out var cached) && cached != LuaValue.Nil)
+            if (loaded.TryGetValue(cacheKey, out var cached) && cached != LuaValue.Nil)
                 return context.Return(cached);
 
             _logger.LogDebug("Requiring Lua module {ModuleName}", name);
 
             // Sentinel: breaks re-entrant require() for the same module
-            loaded[name] = new LuaValue(true);
+            loaded[cacheKey] = new LuaValue(true);
 
             LuaFunction loader;
             if (_loader.Exists(name)) {
@@ -71,11 +72,14 @@ public class FactorioLuaEngine : IDisposable {
                 loader = await FindLoaderViaSearchers(context.State, name, ct);
             }
 
-            await context.State.RunAsync(loader, 0, context.ReturnFrameBase, ct);
-            var result = context.State.Stack[context.ReturnFrameBase];
-            loaded[name] = result != LuaValue.Nil ? result : new LuaValue(true);
+            // The loader is executed as a regular Lua call. Its return values are
+            // written to the call frame, not necessarily to ReturnFrameBase.
+            var returnBase = context.State.Stack.Count;
+            await context.State.RunAsync(loader, 0, returnBase, ct);
+            var result = context.State.Stack[returnBase];
+            loaded[cacheKey] = result != LuaValue.Nil ? result : new LuaValue(true);
 
-            return context.Return(loaded[name]);
+            return context.Return(loaded[cacheKey]);
         });
 
         // Setup 'data' table
@@ -216,8 +220,29 @@ public class FactorioLuaEngine : IDisposable {
         await RunStage("settings", "settings.lua");
         await RunStage("settings updates", "settings-updates.lua");
         await RunStage("settings final fixes", "settings-final-fixes.lua");
+        PopulateSettings();
+        _state.LoadedModules.Clear();
         await RunStage("data", "data.lua");
         await RunStage("data updates", "data-updates.lua");
         await RunStage("data final fixes", "data-final-fixes.lua");
+    }
+
+    private void PopulateSettings() {
+        var settings = _state.Environment[(LuaValue)"settings"].Read<LuaTable>();
+        foreach (var prototypeType in new[] { "bool-setting", "int-setting", "double-setting", "string-setting" }) {
+            if (!_registry.Prototypes.TryGetValue(prototypeType, out var prototypes)) continue;
+
+            foreach (var name in prototypes.Keys) {
+                var raw = _registry.GetRawTable(prototypeType, name)!;
+                if (!raw["setting_type"].TryRead<string>(out var settingType)) continue;
+
+                var scopeName = settingType.Replace('-', '_');
+                if (!settings[scopeName].TryRead<LuaTable>(out var scope)) continue;
+
+                var value = new LuaTable();
+                value["value"] = raw["default_value"];
+                scope[name] = value;
+            }
+        }
     }
 }
