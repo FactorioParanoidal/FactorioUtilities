@@ -14,6 +14,7 @@ public class FactorioLuaEngine : IDisposable {
     private readonly ImmutableArray<IFactorioMod> _mods;
     private readonly PrototypeRegistry _registry;
     private readonly Dictionary<FactorioDataStage, PrototypeRegistry> _stageRegistries = [];
+    private readonly Dictionary<FactorioDataStage, FactorioStageResult> _stageResults = [];
     private PrototypeRegistry _activeRegistry;
     private LuaState _state = null!;
 
@@ -37,10 +38,18 @@ public class FactorioLuaEngine : IDisposable {
         _stageRegistries.GetValueOrDefault(FactorioDataStage.SettingsFinalFixes);
 
     public IReadOnlyDictionary<FactorioDataStage, PrototypeRegistry> StageRegistries => _stageRegistries;
+    public FactorioLoadResult? LastLoadResult { get; private set; }
+    public bool IsLoadSuccessful => LastLoadResult?.IsSuccessful == true;
 
     public void Dispose() {
         _logger.LogDebug("Disposing Factorio Lua engine");
         _state.Dispose();
+    }
+
+    public void EnsureLoadSuccessful() {
+        if (LastLoadResult is null)
+            throw new InvalidOperationException("RunAllStages must complete before checking its result.");
+        LastLoadResult.EnsureSuccessful();
     }
 
     private void ResetState(PrototypeRegistry registry) {
@@ -174,25 +183,32 @@ public class FactorioLuaEngine : IDisposable {
         }
     }
 
-    public async Task RunAllStages(Action<string, string, Exception>? onError = null) {
-        async Task Run(IFactorioMod mod, string file) {
+    public async Task<FactorioLoadResult> RunAllStages(Action<string, string, Exception>? onError = null) {
+        async Task Run(FactorioDataStage stage, IFactorioMod mod, string file,
+            ICollection<FactorioLoadError> errors) {
             try { await ExecuteModDataPhaseCore(mod, file); }
             catch (Exception ex) {
                 _logger.LogError(ex, "Failed to execute {ModName}/{FileName}", mod.Info.Name, file);
                 if (onError == null) throw;
+                errors.Add(new FactorioLoadError(stage, mod.Info.Name, file, ex));
                 onError(mod.Info.Name, file, ex);
             }
         }
 
         async Task RunStage(FactorioDataStage stage, string file) {
             _logger.LogDebug("Starting Factorio {Stage} stage", stage);
-            foreach (var mod in _mods) await Run(mod, file);
+            var errors = new List<FactorioLoadError>();
+            foreach (var mod in _mods) await Run(stage, mod, file, errors);
             _activeRegistry.RefreshPrototypes();
-            _stageRegistries[stage] = _activeRegistry.CreateSnapshot();
+            var snapshot = _activeRegistry.CreateSnapshot();
+            _stageRegistries[stage] = snapshot;
+            _stageResults[stage] = new FactorioStageResult(stage, snapshot, errors.ToArray());
             _logger.LogDebug("Completed Factorio {Stage} stage", stage);
         }
 
         _stageRegistries.Clear();
+        _stageResults.Clear();
+        LastLoadResult = null;
         var settingsRegistry = new PrototypeRegistry();
         ResetState(settingsRegistry);
         await RunStage(FactorioDataStage.Settings, "settings.lua");
@@ -206,6 +222,10 @@ public class FactorioLuaEngine : IDisposable {
         await RunStage(FactorioDataStage.Data, "data.lua");
         await RunStage(FactorioDataStage.DataUpdates, "data-updates.lua");
         await RunStage(FactorioDataStage.DataFinalFixes, "data-final-fixes.lua");
+
+        LastLoadResult = new FactorioLoadResult(
+            _stageResults.ToDictionary(entry => entry.Key, entry => entry.Value));
+        return LastLoadResult;
     }
 
     private static Dictionary<string, LuaValue> ReadStartupSettings(PrototypeRegistry registry) {

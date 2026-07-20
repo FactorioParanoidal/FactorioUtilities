@@ -194,4 +194,45 @@ public class FactorioLuaEngineTests {
         result.ExtraFields["count"].ToString().Should().Be("3");
         result.ExtraFields["packed_number"].ToString().Should().Be("4660");
     }
+
+    [Fact]
+    public async Task RunAllStages_ReturnsErrorsAlongsidePartialStageSnapshots() {
+        var brokenInfo = new FactorioModInfo
+            { Name = "broken", Version = new Version(1, 0, 0), Title = "broken", Author = "test" };
+        var broken = new InMemoryFactorioMod(brokenInfo);
+        broken.AddFile("data.lua", "error('expected failure')");
+
+        var workingInfo = new FactorioModInfo
+            { Name = "working", Version = new Version(1, 0, 0), Title = "working", Author = "test" };
+        var working = new InMemoryFactorioMod(workingInfo);
+        working.AddFile("data.lua", "data:extend({{type = 'item', name = 'loaded-after-error'}})");
+
+        using var engine = new FactorioLuaEngine(new[] { broken, working });
+
+        var result = await engine.RunAllStages(onError: (_, _, _) => { });
+
+        result.IsSuccessful.Should().BeFalse();
+        engine.IsLoadSuccessful.Should().BeFalse();
+        result.Errors.Should().ContainSingle(error =>
+            error.Stage == FactorioDataStage.Data && error.ModName == "broken" && error.FileName == "data.lua");
+        result.Stages[FactorioDataStage.Data].IsSuccessful.Should().BeFalse();
+        result.Stages[FactorioDataStage.Data].Registry.Prototypes["item"]
+            .Should().ContainKey("loaded-after-error");
+        result.Stages[FactorioDataStage.DataUpdates].IsSuccessful.Should().BeTrue();
+        var act = () => engine.EnsureLoadSuccessful();
+        act.Should().Throw<FactorioLoadException>().Which.Errors.Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task RunAllStages_SuccessCanBeCheckedImmediately() {
+        var info = new FactorioModInfo
+            { Name = "test-mod", Version = new Version(1, 0, 0), Title = "test", Author = "test" };
+        using var engine = new FactorioLuaEngine(new[] { new InMemoryFactorioMod(info) });
+
+        var result = await engine.RunAllStages();
+
+        result.IsSuccessful.Should().BeTrue();
+        engine.IsLoadSuccessful.Should().BeTrue();
+        engine.EnsureLoadSuccessful();
+    }
 }
