@@ -1,5 +1,6 @@
 using FactorioParanoidal.FactorioApi.Models.Data;
 using FactorioParanoidal.FactorioApi.ModPortal;
+using FactorioParanoidal.FactorioMods.Mods;
 
 namespace FactorioParanoidal.FactorioApi.Re146;
 
@@ -10,10 +11,10 @@ public sealed class Re146ModDownloadProvider(HttpClient client) : IModDownloadPr
         CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrWhiteSpace(modName);
         ArgumentNullException.ThrowIfNull(release);
-        return DownloadAsync(modName, new Version(release.Version), cancellationToken);
+        return DownloadAsync(modName, release.Version, cancellationToken);
     }
 
-    public async Task<Stream> DownloadAsync(string modName, Version version,
+    public async Task<Stream> DownloadAsync(string modName, FactorioVersion version,
         CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrWhiteSpace(modName);
         ArgumentNullException.ThrowIfNull(version);

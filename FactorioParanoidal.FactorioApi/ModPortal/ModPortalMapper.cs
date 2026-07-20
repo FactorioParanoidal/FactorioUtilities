@@ -1,5 +1,6 @@
 using FactorioParanoidal.FactorioApi.Models.Data;
 using FactorioParanoidal.FactorioApi.ModPortal.Models.Responses;
+using FactorioParanoidal.FactorioMods.Mods;
 
 namespace FactorioParanoidal.FactorioApi.ModPortal;
 
@@ -33,7 +34,7 @@ internal static class ModPortalMapper {
         return new ModRelease(
             response.DownloadUrl,
             response.FileName,
-            response.Version,
+            new FactorioVersion(response.Version),
             response.ReleasedAt,
             response.Sha1,
             response.InfoJson?.ToModel());
@@ -42,8 +43,8 @@ internal static class ModPortalMapper {
     private static ModReleaseInfo ToModel(this ModPortalReleaseInfoResponse response) {
         return new ModReleaseInfo(
             response.Name,
-            response.Version,
-            response.FactorioVersion,
+            response.Version is null ? null : new FactorioVersion(response.Version),
+            response.FactorioVersion is null ? null : new FactorioVersion(response.FactorioVersion),
             response.Dependencies);
     }
 }

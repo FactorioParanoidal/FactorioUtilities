@@ -19,7 +19,8 @@ public sealed class ModPortalInfoProvider(HttpClient client) : IModInfoProvider 
             $"hide_deprecated={request.HideDeprecated.ToString().ToLowerInvariant()}",
             $"sort={Uri.EscapeDataString(request.Sort)}", $"sort_order={Uri.EscapeDataString(request.SortOrder)}"
         };
-        if (request.Version is not null) parameters.Add($"version={Uri.EscapeDataString(request.Version)}");
+        if (request.Version is not null)
+            parameters.Add($"version={Uri.EscapeDataString(request.Version.ToString())}");
         if (request.Names is { Count: > 0 })
             parameters.AddRange(request.Names.Select(n => $"namelist={Uri.EscapeDataString(n)}"));
         var response =

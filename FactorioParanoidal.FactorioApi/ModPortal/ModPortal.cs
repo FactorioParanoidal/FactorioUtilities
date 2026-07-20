@@ -1,5 +1,6 @@
 using FactorioParanoidal.FactorioApi.Models.Data;
 using FactorioParanoidal.FactorioApi.Models.Requests;
+using FactorioParanoidal.FactorioMods.Mods;
 
 namespace FactorioParanoidal.FactorioApi.ModPortal;
 
@@ -12,7 +13,7 @@ public sealed class ModPortal(
     public Task<Mod> GetModAsync(string name, bool full = false, CancellationToken cancellationToken = default) =>
         infoProvider.GetModAsync(name, full, cancellationToken);
 
-    public Task<Stream> DownloadAsync(string modName, Version version,
+    public Task<Stream> DownloadAsync(string modName, FactorioVersion version,
         CancellationToken cancellationToken = default) =>
         downloadProvider.DownloadAsync(modName, version, cancellationToken);
 

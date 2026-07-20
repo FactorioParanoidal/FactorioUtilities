@@ -9,7 +9,7 @@ public class FactorioModInfo {
 
     [VersionParts(3)]
     [JsonPropertyName("version")]
-    public required Version Version { get; set; }
+    public required FactorioVersion Version { get; set; }
 
     [JsonPropertyName("title")] public required string Title { get; set; }
 
@@ -25,8 +25,7 @@ public class FactorioModInfo {
     [JsonPropertyName("factorio_version")]
     public Version? FactorioVersion { get; set; }
 
-    [JsonPropertyName("dependencies")]
-    public IList<FactorioModDependency>? Dependencies { get; set; }
+    [JsonPropertyName("dependencies")] public IList<FactorioModDependency>? Dependencies { get; set; }
 
     public bool HasExplicitDependencies => Dependencies != null;
 

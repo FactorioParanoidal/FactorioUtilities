@@ -1,7 +1,9 @@
+using FactorioParanoidal.FactorioMods.Mods;
+
 namespace FactorioParanoidal.FactorioApi.Models.Data;
 
 public sealed record ModReleaseInfo(
     string? Name,
-    string? Version,
-    string? FactorioVersion,
+    FactorioVersion? Version,
+    FactorioVersion? FactorioVersion,
     IReadOnlyList<string>? Dependencies);
