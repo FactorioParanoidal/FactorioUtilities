@@ -131,4 +131,46 @@ public class FactorioLuaEngineTests {
 
         engine.Registry.Prototypes["item"]["configured-item"].ExtraFields["value"].ToString().Should().Be("42");
     }
+
+    [Fact]
+    public async Task RunAllStages_ProvidesFactorioAuxiliaryLibraries() {
+        var info = new FactorioModInfo
+            { Name = "test-mod", Version = new Version(1, 0, 0), Title = "test", Author = "test" };
+        var mod = new InMemoryFactorioMod(info);
+        mod.AddFile("data.lua", """
+                                assert(loadfile == nil and dofile == nil and coroutine == nil and io == nil and os == nil)
+                                assert(debug.getinfo and debug.traceback and debug.getregistry == nil)
+                                assert(package.searchpath == nil)
+                                assert(type(localised_print) == "function")
+
+                                local packed = string.pack(">I2c3z", 0x1234, "abc", "ok")
+                                local number, fixed, terminated, position = string.unpack(">I2c3z", packed)
+                                assert(number == 0x1234 and fixed == "abc" and terminated == "ok" and position == 9)
+                                assert(string.packsize(">I2c3") == 5)
+                                assert(string.unpack("b", string.pack("b", -2)) == -2)
+
+                                local before_seed = math.random()
+                                math.randomseed(12345)
+                                local after_seed = math.random()
+                                assert(before_seed ~= after_seed)
+
+                                local serialized = serpent.line({answer = 42, nested = {true}})
+                                assert(serialized:match("answer = 42") and serialized:match("nested"))
+
+                                data:extend({{
+                                    type = "item",
+                                    name = "auxiliary-result",
+                                    count = table_size({[1] = true, [100] = true, key = true}),
+                                    packed_number = number
+                                }})
+                                """);
+
+        using var engine = new FactorioLuaEngine(new[] { mod });
+
+        await engine.RunAllStages();
+
+        var result = engine.Registry.Prototypes["item"]["auxiliary-result"];
+        result.ExtraFields["count"].ToString().Should().Be("3");
+        result.ExtraFields["packed_number"].ToString().Should().Be("4660");
+    }
 }

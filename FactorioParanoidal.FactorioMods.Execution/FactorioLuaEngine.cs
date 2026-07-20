@@ -43,7 +43,9 @@ public class FactorioLuaEngine : IDisposable {
         // Setup 'package.searchers' for resolving relative mod file requires
         var packageTable = _state.Environment[(LuaValue)"package"].Read<LuaTable>();
         var packageSearchers = packageTable[(LuaValue)"searchers"].Read<LuaTable>();
-        packageSearchers[3] = new LuaFunction("resolve_relative_mod_file_path", _loader.ResolveRelativeModFilePathLua);
+        packageSearchers[2] = new LuaFunction("resolve_relative_mod_file_path", _loader.ResolveRelativeModFilePathLua);
+        packageSearchers[3] = LuaValue.Nil;
+        packageTable["searchpath"] = LuaValue.Nil;
 
         // Replace require with a sentinel-aware version.
         // LuaCSharp runs the loader with 0 args so `...` inside a module chunk is nil, not the
@@ -119,28 +121,7 @@ public class FactorioLuaEngine : IDisposable {
         settingsTable["runtime_per_user"] = new LuaTable();
         _state.Environment["settings"] = settingsTable;
 
-        // Common Factorio globals
-        _state.Environment["log"] =
-            new LuaFunction(async (context, _) => {
-                if (context.ArgumentCount > 0) {
-                    _logger.LogInformation("Lua: {Message}", context.GetArgument(0));
-                }
-
-                return context.Return();
-            });
-
-        _state.Environment["table_size"] =
-            new LuaFunction(async (context, _) => {
-                if (context.ArgumentCount > 0 && context.GetArgument(0).TryRead<LuaTable>(out var t)) {
-                    return context.Return(t.ArrayLength + t.HashMapCount); // Approximate table size
-                }
-
-                return context.Return(0);
-            });
-
-        // Serpent is usually required. For now we might want to provide a dummy or a real one.
-        // If we want a real one, we should probably load it from a string or file.
-        _state.Environment["serpent"] = CreateSerpentMock();
+        FactorioAuxiliaryLibraries.Install(_state, _logger);
     }
 
     // Mirrors ModuleLibrary.FindLoader (internal) — iterates package.searchers
@@ -164,26 +145,6 @@ public class FactorioLuaEngine : IDisposable {
         }
 
         throw new FileNotFoundException($"Module '{name}' not found");
-    }
-
-    private LuaTable CreateSerpentMock() {
-        var serpent = new LuaTable();
-        serpent["dump"] =
-            new LuaFunction(async (context, _) => {
-                if (context.ArgumentCount > 0) return context.Return(context.GetArgument(0).ToString());
-                return context.Return("");
-            });
-        serpent["line"] =
-            new LuaFunction(async (context, _) => {
-                if (context.ArgumentCount > 0) return context.Return(context.GetArgument(0).ToString());
-                return context.Return("");
-            });
-        serpent["block"] =
-            new LuaFunction(async (context, _) => {
-                if (context.ArgumentCount > 0) return context.Return(context.GetArgument(0).ToString());
-                return context.Return("");
-            });
-        return serpent;
     }
 
     public async Task ExecuteModDataPhase(IFactorioMod mod, string fileName) {

@@ -20,4 +20,15 @@ public class FactorioModuleLoaderTests {
         loader.Exists("__base__.prototypes.entity").Should().BeTrue();
         loader.Exists("__base__/prototypes/entity.lua").Should().BeTrue();
     }
+
+    [Fact]
+    public void ResolvePath_WithParentDirectory_RejectsPath() {
+        var info = new FactorioModInfo
+            { Name = "base", Version = new Version(1, 0, 0), Title = "base", Author = "Wube" };
+        var loader = new FactorioModuleLoader(new[] { new InMemoryFactorioMod(info) });
+
+        var act = () => loader.Exists("__base__/../outside.lua");
+
+        act.Should().Throw<ArgumentException>().WithMessage("*Parent directory references*");
+    }
 }

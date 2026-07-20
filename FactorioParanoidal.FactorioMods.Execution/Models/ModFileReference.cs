@@ -10,6 +10,11 @@ public readonly struct ModFileReference {
     }
 
     private ModFileReference(string reference) {
+        if (reference.Split('/', '\\').Contains("..", StringComparer.Ordinal)) {
+            throw new ArgumentException("Parent directory references are not allowed in Factorio require paths.",
+                nameof(reference));
+        }
+
         if (!reference.EndsWith(".lua")) {
             reference = reference.Replace('.', '/') + ".lua";
         }
