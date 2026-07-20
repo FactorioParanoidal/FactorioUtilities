@@ -77,6 +77,31 @@ public class PrototypeRegistry {
         }
     }
 
+    public PrototypeRegistry CreateSnapshot() {
+        var snapshot = new PrototypeRegistry();
+        var tables = new Dictionary<LuaTable, LuaTable>(ReferenceEqualityComparer.Instance);
+        foreach (var (type, prototypes) in _prototypes) {
+            foreach (var (name, entry) in prototypes) {
+                snapshot.ConvertAndRegister(type, name, CloneTable(entry.Raw, tables));
+            }
+        }
+
+        return snapshot;
+    }
+
+    private static LuaTable CloneTable(LuaTable source, Dictionary<LuaTable, LuaTable> tables) {
+        if (tables.TryGetValue(source, out var existing)) return existing;
+
+        var clone = new LuaTable();
+        tables[source] = clone;
+        foreach (var entry in source) clone[CloneValue(entry.Key, tables)] = CloneValue(entry.Value, tables);
+        return clone;
+    }
+
+    private static LuaValue CloneValue(LuaValue value, Dictionary<LuaTable, LuaTable> tables) {
+        return value.TryRead<LuaTable>(out var table) ? CloneTable(table, tables) : value;
+    }
+
     private PrototypeBase CreatePrototypeInstance(string type) {
         if (TypeCache.TryGetValue(type, out var cachedType)) {
             return (PrototypeBase)Activator.CreateInstance(cachedType)!;

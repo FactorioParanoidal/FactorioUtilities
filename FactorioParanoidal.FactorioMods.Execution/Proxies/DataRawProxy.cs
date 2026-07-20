@@ -11,9 +11,19 @@ public static class DataRawProxy {
             new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
                 if (context.ArgumentCount < 2) return context.Return(LuaValue.Nil);
                 if (!context.GetArgument(1).TryRead<string>(out var type)) return context.Return(LuaValue.Nil);
+                if (!registry.HasType(type)) return context.Return(LuaValue.Nil);
 
                 return context.Return(CreatePrototypeTypeProxy(state, registry, type));
             });
+
+        mt["__pairs"] = new LuaFunction((context, _) => {
+            var snapshot = new LuaTable();
+            foreach (var type in registry.Prototypes.Keys) {
+                snapshot[type] = CreatePrototypeTypeProxy(state, registry, type);
+            }
+
+            return new ValueTask<int>(ReturnPairs(context, snapshot));
+        });
 
         mt["__newindex"] =
             new LuaFunction(async (LuaFunctionExecutionContext context, CancellationToken cancellationToken) => {
@@ -56,7 +66,29 @@ public static class DataRawProxy {
                 return context.Return();
             });
 
+        mt["__pairs"] = new LuaFunction((context, _) => {
+            var snapshot = new LuaTable();
+            if (registry.Prototypes.TryGetValue(type, out var prototypes)) {
+                foreach (var name in prototypes.Keys) snapshot[name] = registry.GetRawTable(type, name)!;
+            }
+
+            return new ValueTask<int>(ReturnPairs(context, snapshot));
+        });
+
         table.Metatable = mt;
         return table;
+    }
+
+    private static int ReturnPairs(LuaFunctionExecutionContext context, LuaTable snapshot) {
+        var entries = snapshot.ToArray();
+        var index = 0;
+        var iterator = new LuaFunction((iteratorContext, _) => {
+            if (index >= entries.Length)
+                return new ValueTask<int>(iteratorContext.Return(LuaValue.Nil));
+
+            var entry = entries[index++];
+            return new ValueTask<int>(iteratorContext.Return(entry.Key, entry.Value));
+        });
+        return context.Return(iterator, snapshot, LuaValue.Nil);
     }
 }

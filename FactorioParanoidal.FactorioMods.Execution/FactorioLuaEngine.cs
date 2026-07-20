@@ -13,7 +13,9 @@ public class FactorioLuaEngine : IDisposable {
     private readonly ILogger<FactorioLuaEngine> _logger;
     private readonly ImmutableArray<IFactorioMod> _mods;
     private readonly PrototypeRegistry _registry;
-    private readonly LuaState _state;
+    private readonly Dictionary<FactorioDataStage, PrototypeRegistry> _stageRegistries = [];
+    private PrototypeRegistry _activeRegistry;
+    private LuaState _state = null!;
 
     public FactorioLuaEngine(IEnumerable<IFactorioMod> mods, ILoggerFactory? loggerFactory = null) {
         loggerFactory ??= NullLoggerFactory.Instance;
@@ -21,22 +23,33 @@ public class FactorioLuaEngine : IDisposable {
         _mods = [..mods];
         _loader = new FactorioModuleLoader(_mods, loggerFactory.CreateLogger<FactorioModuleLoader>());
         _registry = new PrototypeRegistry();
+        _activeRegistry = _registry;
 
         _logger.LogDebug("Initializing Factorio Lua engine with {ModCount} mods", _mods.Length);
 
-        _state = LuaState.Create();
-        _state.OpenStandardLibraries();
-        _state.ModuleLoader = _loader;
-
-        SetupEnvironment();
+        ResetState(_registry);
         _logger.LogDebug("Factorio Lua engine initialized");
     }
 
     public PrototypeRegistry Registry => _registry;
 
+    public PrototypeRegistry? SettingsRegistry =>
+        _stageRegistries.GetValueOrDefault(FactorioDataStage.SettingsFinalFixes);
+
+    public IReadOnlyDictionary<FactorioDataStage, PrototypeRegistry> StageRegistries => _stageRegistries;
+
     public void Dispose() {
         _logger.LogDebug("Disposing Factorio Lua engine");
         _state.Dispose();
+    }
+
+    private void ResetState(PrototypeRegistry registry) {
+        _state?.Dispose();
+        _activeRegistry = registry;
+        _state = LuaState.Create();
+        _state.OpenStandardLibraries();
+        _state.ModuleLoader = _loader;
+        SetupEnvironment();
     }
 
     private void SetupEnvironment() {
@@ -86,7 +99,7 @@ public class FactorioLuaEngine : IDisposable {
 
         // Setup 'data' table
         var dataTable = new LuaTable();
-        dataTable["raw"] = DataRawProxy.Create(_state, _registry);
+        dataTable["raw"] = DataRawProxy.Create(_state, _activeRegistry);
 
         // data:extend(table)
         dataTable["extend"] =
@@ -94,7 +107,7 @@ public class FactorioLuaEngine : IDisposable {
                 var tableArgIndex = context.ArgumentCount > 1 ? 1 : 0;
                 if (context.ArgumentCount > tableArgIndex &&
                     context.GetArgument(tableArgIndex).TryRead<LuaTable>(out var t)) {
-                    _registry.Extend(t);
+                    _activeRegistry.Extend(t);
                 }
 
                 return context.Return();
@@ -149,7 +162,7 @@ public class FactorioLuaEngine : IDisposable {
 
     public async Task ExecuteModDataPhase(IFactorioMod mod, string fileName) {
         await ExecuteModDataPhaseCore(mod, fileName);
-        _registry.RefreshPrototypes();
+        _activeRegistry.RefreshPrototypes();
     }
 
     private async Task ExecuteModDataPhaseCore(IFactorioMod mod, string fileName) {
@@ -171,39 +184,53 @@ public class FactorioLuaEngine : IDisposable {
             }
         }
 
-        async Task RunStage(string stage, string file) {
+        async Task RunStage(FactorioDataStage stage, string file) {
             _logger.LogDebug("Starting Factorio {Stage} stage", stage);
             foreach (var mod in _mods) await Run(mod, file);
-            _registry.RefreshPrototypes();
+            _activeRegistry.RefreshPrototypes();
+            _stageRegistries[stage] = _activeRegistry.CreateSnapshot();
             _logger.LogDebug("Completed Factorio {Stage} stage", stage);
         }
 
-        await RunStage("settings", "settings.lua");
-        await RunStage("settings updates", "settings-updates.lua");
-        await RunStage("settings final fixes", "settings-final-fixes.lua");
-        PopulateSettings();
-        _state.LoadedModules.Clear();
-        await RunStage("data", "data.lua");
-        await RunStage("data updates", "data-updates.lua");
-        await RunStage("data final fixes", "data-final-fixes.lua");
+        _stageRegistries.Clear();
+        var settingsRegistry = new PrototypeRegistry();
+        ResetState(settingsRegistry);
+        await RunStage(FactorioDataStage.Settings, "settings.lua");
+        await RunStage(FactorioDataStage.SettingsUpdates, "settings-updates.lua");
+        await RunStage(FactorioDataStage.SettingsFinalFixes, "settings-final-fixes.lua");
+        var startupSettings = ReadStartupSettings(settingsRegistry);
+
+        // Factorio creates a fresh shared state for the prototype stage.
+        ResetState(_registry);
+        PopulateSettings(startupSettings);
+        await RunStage(FactorioDataStage.Data, "data.lua");
+        await RunStage(FactorioDataStage.DataUpdates, "data-updates.lua");
+        await RunStage(FactorioDataStage.DataFinalFixes, "data-final-fixes.lua");
     }
 
-    private void PopulateSettings() {
-        var settings = _state.Environment[(LuaValue)"settings"].Read<LuaTable>();
+    private static Dictionary<string, LuaValue> ReadStartupSettings(PrototypeRegistry registry) {
+        var settings = new Dictionary<string, LuaValue>();
         foreach (var prototypeType in new[] { "bool-setting", "int-setting", "double-setting", "string-setting" }) {
-            if (!_registry.Prototypes.TryGetValue(prototypeType, out var prototypes)) continue;
+            if (!registry.Prototypes.TryGetValue(prototypeType, out var prototypes)) continue;
 
             foreach (var name in prototypes.Keys) {
-                var raw = _registry.GetRawTable(prototypeType, name)!;
-                if (!raw["setting_type"].TryRead<string>(out var settingType)) continue;
-
-                var scopeName = settingType.Replace('-', '_');
-                if (!settings[scopeName].TryRead<LuaTable>(out var scope)) continue;
-
-                var value = new LuaTable();
-                value["value"] = raw["default_value"];
-                scope[name] = value;
+                var raw = registry.GetRawTable(prototypeType, name)!;
+                if (raw["setting_type"].TryRead<string>(out var settingType) && settingType == "startup") {
+                    settings[name] = raw["default_value"];
+                }
             }
+        }
+
+        return settings;
+    }
+
+    private void PopulateSettings(IReadOnlyDictionary<string, LuaValue> startupSettings) {
+        var settings = _state.Environment[(LuaValue)"settings"].Read<LuaTable>();
+        var startup = settings[(LuaValue)"startup"].Read<LuaTable>();
+        foreach (var (name, defaultValue) in startupSettings) {
+            var value = new LuaTable();
+            value["value"] = defaultValue;
+            startup[name] = value;
         }
     }
 }

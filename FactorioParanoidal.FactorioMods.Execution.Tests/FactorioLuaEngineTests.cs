@@ -48,6 +48,10 @@ public class FactorioLuaEngineTests {
             data:extend({{type = 'item', name = 'test-item', value = 1}})
         ");
         mod.AddFile("data-updates.lua", @"
+            local type_count, item_count = 0, 0
+            for prototype_type in pairs(data.raw) do type_count = type_count + 1 end
+            for name in pairs(data.raw.item) do item_count = item_count + 1 end
+            assert(type_count == 1 and item_count == 1)
             data.raw['item']['test-item'].value = 2
         ");
 
@@ -121,15 +125,32 @@ public class FactorioLuaEngineTests {
             { Name = "test-mod", Version = new Version(1, 0, 0), Title = "test", Author = "test" };
         var mod = new InMemoryFactorioMod(info);
         mod.AddFile("settings.lua",
-            "data:extend({{type = 'int-setting', name = 'test-setting', setting_type = 'startup', default_value = 42}})");
+            "stage_global = 'settings'; data:extend({{type = 'int-setting', name = 'test-setting', setting_type = 'startup', default_value = 42}})");
+        mod.AddFile("settings-updates.lua", "data.raw['int-setting']['test-setting'].default_value = 43");
+        mod.AddFile("settings-final-fixes.lua", "data.raw['int-setting']['test-setting'].default_value = 44");
         mod.AddFile("data.lua",
+            "assert(stage_global == nil); assert(data.raw['int-setting'] == nil); " +
             "data:extend({{type = 'item', name = 'configured-item', value = settings.startup['test-setting'].value}})");
+        mod.AddFile("data-updates.lua", "data.raw.item['configured-item'].value = 45");
+        mod.AddFile("data-final-fixes.lua", "data.raw.item['configured-item'].value = 46");
 
         using var engine = new FactorioLuaEngine(new[] { mod });
 
         await engine.RunAllStages();
 
-        engine.Registry.Prototypes["item"]["configured-item"].ExtraFields["value"].ToString().Should().Be("42");
+        engine.Registry.Prototypes["item"]["configured-item"].ExtraFields["value"].ToString().Should().Be("46");
+        engine.Registry.Prototypes.Should().NotContainKey("int-setting");
+        engine.SettingsRegistry!.GetRawTable("int-setting", "test-setting")!["default_value"].ToString()
+            .Should().Be("44");
+        engine.StageRegistries.Should().HaveCount(6);
+        engine.StageRegistries[FactorioDataStage.Settings].GetRawTable("int-setting", "test-setting")!["default_value"]
+            .ToString().Should().Be("42");
+        engine.StageRegistries[FactorioDataStage.SettingsUpdates]
+            .GetRawTable("int-setting", "test-setting")!["default_value"].ToString().Should().Be("43");
+        engine.StageRegistries[FactorioDataStage.Data].GetRawTable("item", "configured-item")!["value"]
+            .ToString().Should().Be("44");
+        engine.StageRegistries[FactorioDataStage.DataUpdates].GetRawTable("item", "configured-item")!["value"]
+            .ToString().Should().Be("45");
     }
 
     [Fact]
