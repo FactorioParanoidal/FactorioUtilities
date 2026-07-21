@@ -1,5 +1,9 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace FactorioParanoidal.FactorioMods.Mods;
 
+[JsonConverter(typeof(FactorioVersionJsonConverter))]
 public sealed class FactorioVersion : IEquatable<FactorioVersion>, IComparable<FactorioVersion> {
     private readonly string _text;
     private readonly Version _version;
@@ -58,4 +62,12 @@ public sealed class FactorioVersion : IEquatable<FactorioVersion>, IComparable<F
     public static bool operator >(FactorioVersion left, FactorioVersion right) => left.CompareTo(right) > 0;
 
     public static bool operator >=(FactorioVersion left, FactorioVersion right) => left.CompareTo(right) >= 0;
+}
+
+public sealed class FactorioVersionJsonConverter : JsonConverter<FactorioVersion> {
+    public override FactorioVersion Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        => new(reader.GetString()!);
+
+    public override void Write(Utf8JsonWriter writer, FactorioVersion value, JsonSerializerOptions options)
+        => writer.WriteStringValue(value.ToString());
 }

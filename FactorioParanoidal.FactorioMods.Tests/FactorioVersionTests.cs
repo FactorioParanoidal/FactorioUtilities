@@ -6,6 +6,17 @@ namespace FactorioParanoidal.FactorioMods.Tests;
 
 public class FactorioVersionTests {
     [Fact]
+    public void JsonSerialization_ShouldUseStringRepresentation() {
+        var version = new FactorioVersion("0.1.07");
+
+        var json = JsonSerializer.Serialize(version);
+        var deserialized = JsonSerializer.Deserialize<FactorioVersion>(json);
+
+        json.Should().Be("\"0.1.07\"");
+        deserialized!.ToString().Should().Be("0.1.07");
+    }
+
+    [Fact]
     public void ModInfoVersion_ShouldPreserveOriginalFormatting() {
         const string json = """
                             {
